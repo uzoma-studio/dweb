@@ -1,3 +1,10 @@
+ ## Dweb for Creators 2025
+
+A website to showcase and archive the 2025 DWeb for Creators course. The site will host key course information alongside student projects, serving as both a resource hub for participants and a public platform to highlight the outcomes of the program.
+
+
+##
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
