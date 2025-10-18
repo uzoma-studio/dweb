@@ -5,6 +5,34 @@
   --foreground: #171717;
 }
 
+@font-face {
+  font-family: 'IBMregular';
+  src: url('/fonts/IBMPlexSans-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'IBMmedium';
+  src: url('/fonts/IBMPlexSans-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'IBMbold';
+  src: url('/fonts/IBMPlexSans-Bold.ttf') format('truetype');
+}
+
+.IBMregular {
+  font-family: 'IBMregular' !important;
+}
+
+.IBMmedium {
+  font-family: 'IBMmedium' !important;
+}
+
+.IBMbold {
+  font-family: 'IBMbold' !important;
+}
+
+
 /* Reset */
 * {
   box-sizing: border-box;
@@ -13,10 +41,22 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Arial', sans-serif;
+  font-family: 'IBMregular', sans-serif;
+  overflow-x: hidden; /* Only hide horizontal overflow */
+  overflow-y: auto; /* Allow vertical scrolling */
+}
+
+/* Add a fixed background layer */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  overflow: hidden;
-  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
 }
 
 a {
@@ -127,4 +167,12 @@ canvas {
 @keyframes pulse {
   0%, 100% { opacity: 0.6; }
   50% { opacity: 1; }
+}
+
+.left30 {
+  left: 30%;
+}
+
+.textgreen{
+ color: #BBFF00;
 }

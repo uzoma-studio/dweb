@@ -178,7 +178,7 @@ export default function GlobeSection() {
         size: 0.08, 
         vertexColors: true, 
         transparent: true, 
-        opacity: 0.7 
+        opacity: 0.2 
       });
       innerParticles = new THREE.Points(geometry, material);
       scene.add(innerParticles);
