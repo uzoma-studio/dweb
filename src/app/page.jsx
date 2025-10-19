@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "motion/react";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';

@@ -24,7 +24,7 @@ export default function Header() {
           href="https://grayarea.org/course/dweb/"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center p-2 md:p-4"
+          className="flex items-center p-2 md:p-4 z-100"
         >
           <Image
             src="/GALOGO.svg"

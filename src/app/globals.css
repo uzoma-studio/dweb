@@ -184,3 +184,11 @@ canvas {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.Aunderline {
+  text-decoration: underline !important;
+}
+
+.bg-offW{
+  background-color: #f0f0fe;
+}

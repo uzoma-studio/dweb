@@ -14,7 +14,7 @@ export default function Projects() {
       <div className="hidden lg:flex h-screen">
         {/* Globe section - 50% width, fixed */}
         <motion.div
-          className="w-1/2 h-screen fixed left-0 z-100"
+          className="w-1/2 h-screen fixed left-0 z-99"
           initial={{ opacity: 0, x: -100 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{
