@@ -3,10 +3,9 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion } from "motion/react";
 import projectsData from '../../data/dweb-project-data.json';
-import SelectedProjectModal from "./SelectedProjectModal";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
-const ArcScrollProjects = () => {
+const ArcScrollProjects = ({ openProject, selectedProject }) => {
   const [scrollOffset, setScrollOffset] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
@@ -15,7 +14,7 @@ const ArcScrollProjects = () => {
   const mobileScrollRef = useRef(null); // mobile horizontal scroller
   const rafRef = useRef(null);
   const tickingRef = useRef(false);
-  const [selectedProject, setSelectedProject] = useState(null);
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const slugParam = searchParams.get("slug");
@@ -40,23 +39,6 @@ const ArcScrollProjects = () => {
     []
   );
 
-  // When user clicks a project
-  const openProject = (project) => {
-    setSelectedProject(project);
-    router.push(`/projects?slug=${project.slug}`, { shallow: true });
-  };
-
-  // Sync modal state with URL slug
-  useEffect(() => {
-    if (slugParam) {
-      // Open modal if slug exists and no project is selected
-      const found = formattedProjects.find((p) => p.slug === slugParam);
-      if (found) setSelectedProject(found);
-    } else {
-      // Close modal if slug is removed from URL
-      setSelectedProject(null);
-    }
-  }, [slugParam, formattedProjects]);
 
 
   useEffect(() => {
@@ -350,13 +332,7 @@ useEffect(() => {
         </div>
       )}
 
-        {/* Modal */}
-        {selectedProject && (
-          <SelectedProjectModal
-            project={selectedProject}
-            onClose={() => router.replace("/projects", { shallow: true })}
-          />
-        )}
+      
 
       {mounted && (
         <div className="fixed bottom-8 right-8 text-white/50 text-sm pointer-events-none">
