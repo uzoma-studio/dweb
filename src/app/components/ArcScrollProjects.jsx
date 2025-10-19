@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
+import { motion } from "motion/react";
 import projectsData from '../../data/dweb-project-data.json'; // Adjust path as needed
 
 const ArcScrollProjects = () => {
@@ -9,6 +10,14 @@ const ArcScrollProjects = () => {
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
   const containerRef = useRef(null);
   const lastScrollY = useRef(0);
+  const [highlightIndex, setHighlightIndex] = useState(0); // real project index (0..n-1)
+
+  const mobileScrollRef = useRef(null); // mobile horizontal scroller
+  const rafRef = useRef(null);
+  const tickingRef = useRef(false);
+
+
+
 
   useEffect(() => {
     setMounted(true);
@@ -29,6 +38,8 @@ const ArcScrollProjects = () => {
   }, []);
   
   const projects = projectsData;
+
+    const n = projects.length
 
   useEffect(() => {
     let animationFrame;
@@ -106,14 +117,105 @@ const ArcScrollProjects = () => {
     // ✅ CHANGE 4: Return isCenter flag and rotation
     return { x, y, opacity, scale, normalizedOffset, isCenter, rotation };
   };
+  // =========== MOBILE: helpers =============
+  // compute index inside the tripled list that corresponds to "center of middle repetition"
+  const mobileInitialChildIndex = () => {
+    // children length = n * 3; middle is at index floor(n*3/2) = n + floor(n/2)
+    return n + Math.floor(n / 2);
+  };
+
+  // center the mobile scroller on the chosen child (called after layout)
+  const centerMobileOnMiddle = () => {
+    const container = mobileScrollRef.current;
+    if (!container) return;
+    const children = Array.from(container.children);
+    if (children.length === 0) return;
+    const midIdx = mobileInitialChildIndex();
+    const midChild = children[midIdx];
+    if (!midChild) return;
+
+    const scrollLeft = midChild.offsetLeft - container.offsetWidth / 2 + midChild.offsetWidth / 2;
+    container.scrollLeft = scrollLeft;
+
+    // set highlight to the real project in the middle
+    setHighlightIndex(midIdx % n);
+  };
+
+  // onScroll handler optimized with RAF; calculates which child is centered
+  const handleMobileScroll = (e) => {
+    const container = e.target;
+    if (!container) return;
+
+    // throttle via requestAnimationFrame
+    if (tickingRef.current) return;
+    tickingRef.current = true;
+
+    rafRef.current = requestAnimationFrame(() => {
+      const scrollLeft = container.scrollLeft;
+      const visibleCenter = scrollLeft + container.offsetWidth / 2;
+      const children = Array.from(container.children);
+      let closestIndex = 0;
+      let closestDistance = Infinity;
+
+      children.forEach((child, i) => {
+        const boxCenter = child.offsetLeft + child.offsetWidth / 2;
+        const d = Math.abs(visibleCenter - boxCenter);
+        if (d < closestDistance) {
+          closestDistance = d;
+          closestIndex = i;
+        }
+      });
+
+      // map to real project index (0..n-1) since we duplicated list 3x
+      const realIndex = ((closestIndex % n) + n) % n;
+      setHighlightIndex(realIndex);
+
+      // loop seam fix: if the user scrolls to the cloned edges, jump back to center block
+      // but keep visual continuity by mapping equivalent offset.
+      const totalWidth = container.scrollWidth;
+      // left boundary: near 0, right boundary: near totalWidth - visibleWidth
+      const visibleWidth = container.offsetWidth;
+      const leftThreshold = Math.floor(n * 0.5) * children[0]?.offsetWidth || 0;
+      const rightThreshold = totalWidth - visibleWidth - leftThreshold;
+
+      // If we reach near the left / right extremes, jump to middle repetition preserving center child
+      if (scrollLeft < 10 || scrollLeft > totalWidth - visibleWidth - 10) {
+        // Calculate equivalent center child in middle block:
+        const middleIdx = mobileInitialChildIndex();
+        const offsetFromBlockStart = closestIndex % n;
+        const targetChild = children[middleIdx + offsetFromBlockStart];
+        if (targetChild) {
+          const newScroll =
+            targetChild.offsetLeft - container.offsetWidth / 2 + targetChild.offsetWidth / 2;
+          container.scrollLeft = newScroll;
+        }
+      }
+
+      tickingRef.current = false;
+    });
+  };
+
+  // center at initial load on small screens
+  useEffect(() => {
+    if (windowSize.width < 1024) {
+      // wait a frame for layout to settle then center
+      requestAnimationFrame(() => {
+        // additional small delay to ensure images/fonts/layout measured
+        setTimeout(centerMobileOnMiddle, 50);
+      });
+    }
+    // cleanup any pending rAF
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [windowSize.width, n]);
 
   return (
     <div 
       ref={containerRef}
-      style={{ minHeight: '300vh' }}
-      className="relative w-full"
+      className="relative w-full lg:min-h-[300vh]"
     >
-      {mounted && (
+      {mounted && windowSize.width >= 1024 ?  (
         <div className="sticky top-0 h-screen w-full pointer-events-none">
           {/* ✅ Arc path moved left */}
           <svg className="absolute inset-0 opacity-10 pointer-events-none">
@@ -179,7 +281,48 @@ const ArcScrollProjects = () => {
             );
           })}
         </div>
+        ) : (
+
+             // ---------- MOBILE: looped horizontal scroller ----------
+        <div className="relative w-full overflow-hidden py-10">
+          <div
+            ref={mobileScrollRef}
+            className="flex items-center space-x-6 px-6 snap-x snap-mandatory overflow-x-scroll no-scrollbar"
+            onScroll={handleMobileScroll}
+          >
+            {/* triple the list so we can loop seamlessly */}
+            {[...projects, ...projects, ...projects].map((project, idx) => {
+              const realIndex = idx % n;
+              const isCenter = realIndex === highlightIndex;
+              return (
+                <motion.div
+                  key={idx}
+                  className={`snap-center shrink-0 w-[260px] h-[140px] rounded-xl flex flex-col items-center justify-center text-center transition-all duration-300 border
+                    ${isCenter ? project.color + " scale-105 border-none bg-white/5 backdrop-blur-sm" : "bg-white/5 border-white/10"}
+                  `}
+                  whileTap={{ scale: 0.97 }}
+                >
+                  <p
+                    className={`text-base leading-none ${
+                      isCenter ? "text-white IBMmedium " : "text-gray-400 IBMregular"
+                    }`}
+                  >
+                    {project.projectName}
+                  </p>
+
+                  {isCenter && (
+                    <p className="text-sm leading-none mt-2 text-gray-200 transition-opacity duration-300 IBMregular textgreen">
+                      {project.artistName}
+                    </p>
+                  )}
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
       )}
+
+
       
       {mounted && (
         <div className="fixed bottom-8 right-8 text-white/50 text-sm pointer-events-none">

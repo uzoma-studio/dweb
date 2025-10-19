@@ -39,7 +39,7 @@ export default function Projects() {
       
 
       {/* Small screen: stacked layout */}
-      <div className="lg:hidden flex flex-col">
+      <div className="lg:hidden h-screen flex flex-col overflow-hidden">
         {/* Globe at top */}
         <motion.div
           className="w-full h-screen"
@@ -56,6 +56,14 @@ export default function Projects() {
         </motion.div>
 
         {/* Arc scroll below */}
+         <motion.div
+          className="w-full absolute bottom-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
+          <ArcScrollProjects />
+        </motion.div>
      
       </div>
 
@@ -65,7 +73,7 @@ export default function Projects() {
         >
           {/* Left side */}
           <div className="w-1/2 flex items-center justify-start lg:px-10 px-6 py-4">
-            <h1 className="text-xl font-bold text-white IBMbold">
+            <h1 className="text-xl font-bold text-white IBMbold leading-none">
               DWeb for Creators 2025
             </h1>
           </div>
