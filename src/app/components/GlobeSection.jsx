@@ -234,72 +234,72 @@ export default function GlobeSection({projects, openProject }) {
       scene.add(outwardParticles);
     }
 
-    function createHotspots() {
-      const projects = projectData.projects || projectData;
+  function createHotspots() {
+  const projects = projectData.projects || projectData;
 
-      const locs = [
-        { x: 0, y: 1.5, z: 2.8 },
-        { x: -1.2, y: 0.8, z: 2.5 },
-        { x: 1.2, y: 0.8, z: 2.5 },
-        { x: -0.8, y: -1.2, z: 2.6 },
-        { x: 0.8, y: -1.2, z: 2.6 },
-        { x: -2.5, y: 0.5, z: 1 },
-        { x: 2.5, y: 0.5, z: 1 },
-        { x: -1.8, y: 1.8, z: 0.5 },
-        { x: 1.8, y: 1.8, z: 0.5 },
-        { x: 0, y: -2.2, z: 1.5 },
-      ];
+  const hotspotGeometry = new THREE.BufferGeometry();
+  const hotspotPositions = [];
+  const hotspotColors = [];
+  const hotspotData = [];
 
-      const hotspotGeometry = new THREE.BufferGeometry();
-      const hotspotPositions = [];
-      const hotspotColors = [];
+  const greenColor = new THREE.Color("#BBFF00"); // your green
 
-      for (let i = 0; i < projects.length && i < locs.length; i++) {
-        const project = projects[i];
-        const s = NEW_GLOBE_RADIUS / 3;
-        const pos = new THREE.Vector3(locs[i].x * s, locs[i].y * s, locs[i].z * s);
+  // Helper: random point on a sphere
+  function randomPointOnSphere(radius) {
+    const u = Math.random();
+    const v = Math.random();
+    const theta = 2 * Math.PI * u;
+    const phi = Math.acos(2 * v - 1);
 
-        hotspotPositions.push(pos.x, pos.y, pos.z);
-        hotspotColors.push(
-          i % 2 === 0 ? 1 : 0.2,
-          i % 2 === 0 ? 0.8 : 1,
-          i % 2 === 0 ? 0.2 : 1
-        );
+    const x = radius * Math.sin(phi) * Math.cos(theta);
+    const y = radius * Math.sin(phi) * Math.sin(theta);
+    const z = radius * Math.cos(phi);
 
-        // store project info directly on the geometry for later use
-        hotspotData.push({
-          id: i,
-          position: pos,
-          title: project.projectName || "Untitled Project",
-          description: project.artistName || "No artist available",
-          project, // save full project object here
-        });
-      }
+    return new THREE.Vector3(x, y, z);
+  }
 
-      hotspotGeometry.setAttribute(
-        "position",
-        new THREE.Float32BufferAttribute(hotspotPositions, 3)
-      );
-      hotspotGeometry.setAttribute(
-        "color",
-        new THREE.Float32BufferAttribute(hotspotColors, 3)
-      );
+  for (let i = 0; i < projects.length; i++) {
+    const project = projects[i];
+    // Slightly above globe radius so it doesn't get hidden
+    const pos = randomPointOnSphere(NEW_GLOBE_RADIUS + 0.05);
 
-      const hotspotMaterial = new THREE.PointsMaterial({
-        size: 0.22,
-        vertexColors: true,
-        transparent: true,
-        opacity: 0.95,
-        blending: THREE.AdditiveBlending,
-      });
+    hotspotPositions.push(pos.x, pos.y, pos.z);
+    hotspotColors.push(greenColor.r, greenColor.g, greenColor.b);
 
-      hotspots = new THREE.Points(hotspotGeometry, hotspotMaterial);
+    hotspotData.push({
+      id: i,
+      position: pos,
+      title: project.projectName || "Untitled Project",
+      description: project.artistName || "No artist available",
+      project,
+    });
+  }
 
-      // 🔥 Attach each hotspot’s data to the Points object
-      hotspots.userData = hotspotData;
+  hotspotGeometry.setAttribute(
+    "position",
+    new THREE.Float32BufferAttribute(hotspotPositions, 3)
+  );
+  hotspotGeometry.setAttribute(
+    "color",
+    new THREE.Float32BufferAttribute(hotspotColors, 3)
+  );
 
-      scene.add(hotspots);
-    }
+  const hotspotMaterial = new THREE.PointsMaterial({
+    size: 0.22,
+    vertexColors: true,
+    transparent: true,
+    opacity: 1.0,
+    blending: THREE.AdditiveBlending,
+    depthTest: false, // ensures hotspots are always on top
+  });
+
+  hotspots = new THREE.Points(hotspotGeometry, hotspotMaterial);
+  hotspots.userData = hotspotData;
+  hotspots.renderOrder = 999; // makes sure they render on top of the globe
+
+  scene.add(hotspots);
+}
+
 
     function onMouseMove(event) {
       const rect = event.currentTarget.getBoundingClientRect();
