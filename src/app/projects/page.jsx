@@ -1,15 +1,16 @@
 "use client";
 
+import { Suspense, useState, useEffect, useMemo } from "react";
 import { motion } from "motion/react";
 import GlobeSection from "../../app/components/GlobeSection";
 import Header from "../components/Header";
 import ArcScrollProjects from "../components/ArcScrollProjects";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect, useMemo } from "react";
 import projectsData from "../../data/dweb-project-data.json";
 import SelectedProjectModal from "../components/SelectedProjectModal";
 
-export default function Projects() {
+// 🧩 Inner component (contains useSearchParams)
+function ProjectsInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const slugParam = searchParams.get("slug");
@@ -49,7 +50,7 @@ export default function Projects() {
     <div className="min-h-screen text-white relative">
       <Header />
 
-      {/* Large screen: side by side */}
+      {/* Large screen */}
       <div className="hidden lg:flex h-screen">
         <motion.div
           className="w-1/2 h-screen fixed left-0 z-50"
@@ -57,16 +58,22 @@ export default function Projects() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ type: "spring", stiffness: 100, damping: 20 }}
         >
-          <GlobeSection openProject={openProject} projects={formattedProjects}  />
+          <GlobeSection
+            openProject={openProject}
+            projects={formattedProjects}
+          />
         </motion.div>
 
-          <motion.div
+        <motion.div
           className="w-1/2 absolute left30"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
-          <ArcScrollProjects openProject={openProject} selectedProject={selectedProject} />
+          <ArcScrollProjects
+            openProject={openProject}
+            selectedProject={selectedProject}
+          />
         </motion.div>
       </div>
 
@@ -79,7 +86,10 @@ export default function Projects() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: "spring", stiffness: 100, damping: 20 }}
         >
-          <GlobeSection openProject={openProject} projects={formattedProjects}  />
+          <GlobeSection
+            openProject={openProject}
+            projects={formattedProjects}
+          />
         </motion.div>
 
         <motion.div
@@ -88,7 +98,10 @@ export default function Projects() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
-          <ArcScrollProjects openProject={openProject} selectedProject={selectedProject} />
+          <ArcScrollProjects
+            openProject={openProject}
+            selectedProject={selectedProject}
+          />
         </motion.div>
       </div>
 
@@ -107,5 +120,14 @@ export default function Projects() {
         </div>
       </motion.footer>
     </div>
+  );
+}
+
+// 🧠 Suspense wrapper — fixes the build error
+export default function Projects() {
+  return (
+    <Suspense fallback={<div className="text-white">Loading projects...</div>}>
+      <ProjectsInner />
+    </Suspense>
   );
 }
