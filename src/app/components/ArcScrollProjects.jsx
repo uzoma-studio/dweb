@@ -1,21 +1,43 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion } from "motion/react";
-import projectsData from '../../data/dweb-project-data.json'; // Adjust path as needed
+import projectsData from '../../data/dweb-project-data.json';
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
-const ArcScrollProjects = () => {
+const ArcScrollProjects = ({ openProject, selectedProject }) => {
   const [scrollOffset, setScrollOffset] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
   const containerRef = useRef(null);
-  const lastScrollY = useRef(0);
   const [highlightIndex, setHighlightIndex] = useState(0); // real project index (0..n-1)
-
   const mobileScrollRef = useRef(null); // mobile horizontal scroller
   const rafRef = useRef(null);
   const tickingRef = useRef(false);
 
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const slugParam = searchParams.get("slug");
+  const targetOffsetRef = useRef(0);
+  const currentOffsetRef = useRef(0);
+  const velocityRef = useRef(0);
+  const animationFrameRef = useRef(null);
+  const isPausedRef = useRef(false);
+
+
+  const formattedProjects = useMemo(
+    () =>
+      projectsData.map((p) => ({
+        ...p,
+        slug: p.projectName
+          .toLowerCase()
+          .trim()
+          .replace(/[^\w\s-]/g, "")
+          .replace(/\s+/g, "-")
+          .replace(/-+$/, ""),
+      })),
+    []
+  );
 
 
 
@@ -37,48 +59,43 @@ const ArcScrollProjects = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   
-  const projects = projectsData;
+  const projects = formattedProjects;
 
-    const n = projects.length
+  const n = projects.length
 
-  useEffect(() => {
-    let animationFrame;
-    let targetOffset = 0;
-    let currentOffset = 0;
-    let velocity = 0;
-    let isUserScrolling = false;
 
+useEffect(() => {
     const handleWheel = (e) => {
-      // Add scroll velocity (scroll faster = stronger impulse)
-      velocity += e.deltaY * 0.0002;
-      isUserScrolling = true;
+      if (isPausedRef.current) return; // Pause while modal is open
+      velocityRef.current += e.deltaY * 0.0002;
     };
 
     const animate = () => {
-      // Apply damping for smooth deceleration
-      velocity *= 0.92;
+      if (!isPausedRef.current) {
+        velocityRef.current *= 0.92;
+        targetOffsetRef.current += velocityRef.current;
+        currentOffsetRef.current +=
+          (targetOffsetRef.current - currentOffsetRef.current) * 0.08;
 
-      // Add velocity to target offset
-      targetOffset += velocity;
-
-      // Smoothly interpolate current offset toward target offset (lerp)
-      currentOffset += (targetOffset - currentOffset) * 0.08;
-
-      // Update state (with modulo for looping)
-      setScrollOffset((currentOffset % 1 + 1) % 1);
-
-      // Continue animation
-      animationFrame = requestAnimationFrame(animate);
+        setScrollOffset((currentOffsetRef.current % 1 + 1) % 1);
+      }
+      animationFrameRef.current = requestAnimationFrame(animate);
     };
 
-    animationFrame = requestAnimationFrame(animate);
-    window.addEventListener('wheel', handleWheel, { passive: true });
+    animationFrameRef.current = requestAnimationFrame(animate);
+    window.addEventListener("wheel", handleWheel, { passive: true });
 
     return () => {
-      cancelAnimationFrame(animationFrame);
-      window.removeEventListener('wheel', handleWheel);
+      cancelAnimationFrame(animationFrameRef.current);
+      window.removeEventListener("wheel", handleWheel);
     };
   }, []);
+
+  // 🔹 React to modal open/close (pause/resume scroll)
+  useEffect(() => {
+    isPausedRef.current = !!selectedProject;
+  }, [selectedProject]);
+
 
 
   const getProjectPosition = (index) => {
@@ -190,7 +207,6 @@ const ArcScrollProjects = () => {
           container.scrollLeft = newScroll;
         }
       }
-
       tickingRef.current = false;
     });
   };
@@ -245,28 +261,22 @@ const ArcScrollProjects = () => {
                 style={{
                   left: `${x}px`,
                   top: `${y}px`,
-                  // ✅ CHANGE 6: Use dynamic rotation value (0deg for center, -30deg to 30deg for top to bottom)
+                  // ✅ CHANGE 6: Use dynamic rotation value (0deg for center, -50deg to 50deg for top to bottom)
                   transform: `translate(-50%, -50%) scale(${scale}) rotateZ(${rotation}deg)`,
                   opacity: opacity,
                   transition: 'transform 0.1s ease-out, opacity 0.1s ease-out'
-                }}
-              >
+                }}>
                 <div 
-                  // ✅ CHANGE 7: Conditional class - use project.color when centered, grey when not
-                  className={`${isCenter ? project.color  : ' bg-transparent py-20'} w-80 h-20 rounded-xl cursor-pointer transition-all flex items-center justify-start px-4 relative group`}
-                >
+                 onClick={isCenter ? () => openProject(project) : undefined}
+                  className={`${isCenter ? 'bg-transparent'  : ' bg-transparent py-20'} w-80 h-20 rounded-xl cursor-pointer transition-all flex items-center justify-start px-4 relative group`}>
                   <div>
                     <p className={`${isCenter ? 'text-white IBMbold text-lg' : 'text-gray-300'} text-base transition-colors leading-none`}>
                     {project.projectName}
                     </p>
                    {isCenter && (
                     <p className="text-white text-sm pt-2 textgreen IBMregular leading-none">{project.artistName}</p>
-                    
-                  )}
+                    )}
                   </div>
-                  
-                  {/* ✅ CHANGE 8: Text color - white when centered, grey when not */}
-               
                   
                   {/* ✅ CHANGE 9: Tooltip only shows when project is centered */}
                   {isCenter && (
@@ -282,8 +292,7 @@ const ArcScrollProjects = () => {
           })}
         </div>
         ) : (
-
-             // ---------- MOBILE: looped horizontal scroller ----------
+        // ---------- MOBILE: looped horizontal scroller ----------
         <div className="relative w-full overflow-hidden py-10">
           <div
             ref={mobileScrollRef}
@@ -296,9 +305,10 @@ const ArcScrollProjects = () => {
               const isCenter = realIndex === highlightIndex;
               return (
                 <motion.div
+                  onClick={isCenter ? () => openProject(project) : undefined}
                   key={idx}
                   className={`snap-center shrink-0 w-[260px] h-[140px] rounded-xl flex flex-col items-center justify-center text-center transition-all duration-300 border
-                    ${isCenter ? project.color + " scale-105 border-none bg-white/5 backdrop-blur-sm" : "bg-white/5 border-white/10"}
+                    ${isCenter ? " scale-105 border-none bg-white/5 backdrop-blur-sm" : "bg-white/5 border-white/10"}
                   `}
                   whileTap={{ scale: 0.97 }}
                 >
@@ -322,8 +332,8 @@ const ArcScrollProjects = () => {
         </div>
       )}
 
-
       
+
       {mounted && (
         <div className="fixed bottom-8 right-8 text-white/50 text-sm pointer-events-none">
           Scroll to navigate

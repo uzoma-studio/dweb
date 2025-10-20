@@ -2,8 +2,9 @@
 
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import projectData from "@/data/dweb-project-data.json";
 
-export default function GlobeSection() {
+export default function GlobeSection({projects, openProject }) {
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -233,79 +234,72 @@ export default function GlobeSection() {
       scene.add(outwardParticles);
     }
 
-    function createHotspots() {
-      const titles = [
-        "Mothership Media Collective- The Etherdrive",
-        "{B/qKC}: a Black queer archive",
-        "Right to Belong",
-        "In the Name of the Moon",
-        "underground scheme",
-        "Data Caring & Networked Narratives",
-        "c0de switch",
-        "Mobility Independence Foundation Web Portal",
-        "Ancestral AI Mesh",
-        "guacamaya net.work"
-      ];
-      
-      const descriptions = [
-        "Mothership Media Collective (MMC) is a decentralized media and digital archiving platform that centers Black, queer, and diasporic stories.",
-        "Challenges outdated archival practices through accessible storytelling and intergenerational power building.",
-        "A resource built by and for immigrants and refugees.",
-        "GPS-based AR app inviting users to share stories tied to locations.",
-        "A small network of artists and makers focused on media archaeology.",
-        "Collaborative storytelling on distributed networks.",
-        "Participatory action research to seed surveillance-resistant infrastructure.",
-        "A portal for organizations to share knowledge.",
-        "Explores decentralized tech carrying ancestral knowledge.",
-        "A decentralized archive of Honduran art, culture and music."
-      ];
-      
-      const locs = [
-        {x: 0, y: 1.5, z: 2.8},
-        {x: -1.2, y: 0.8, z: 2.5},
-        {x: 1.2, y: 0.8, z: 2.5},
-        {x: -0.8, y: -1.2, z: 2.6},
-        {x: 0.8, y: -1.2, z: 2.6},
-        {x: -2.5, y: 0.5, z: 1},
-        {x: 2.5, y: 0.5, z: 1},
-        {x: -1.8, y: 1.8, z: 0.5},
-        {x: 1.8, y: 1.8, z: 0.5},
-        {x: 0, y: -2.2, z: 1.5}
-      ];
-      
-      const hotspotPositions = [];
-      const hotspotColors = [];
-      hotspotData = [];
-      
-      for (let i = 0; i < 10; i++) {
-        const s = NEW_GLOBE_RADIUS / 3;
-        hotspotPositions.push(locs[i].x * s, locs[i].y * s, locs[i].z * s);
-        hotspotColors.push(
-          i % 2 === 0 ? 1 : 0.2,
-          i % 2 === 0 ? 0.8 : 1,
-          i % 2 === 0 ? 0.2 : 1
-        );
-        hotspotData.push({
-          id: i,
-          position: new THREE.Vector3(locs[i].x * s, locs[i].y * s, locs[i].z * s),
-          title: titles[i],
-          description: descriptions[i]
-        });
-      }
-      
-      const geometry = new THREE.BufferGeometry();
-      geometry.setAttribute('position', new THREE.Float32BufferAttribute(hotspotPositions, 3));
-      geometry.setAttribute('color', new THREE.Float32BufferAttribute(hotspotColors, 3));
-      const material = new THREE.PointsMaterial({
-        size: 0.22,
-        vertexColors: true,
-        transparent: true,
-        opacity: 0.95,
-        blending: THREE.AdditiveBlending
-      });
-      hotspots = new THREE.Points(geometry, material);
-      scene.add(hotspots);
-    }
+  function createHotspots() {
+  const projects = projectData.projects || projectData;
+
+  const hotspotGeometry = new THREE.BufferGeometry();
+  const hotspotPositions = [];
+  const hotspotColors = [];
+  const hotspotData = [];
+
+  const greenColor = new THREE.Color("#BBFF00"); // your green
+
+  // Helper: random point on a sphere
+  function randomPointOnSphere(radius) {
+    const u = Math.random();
+    const v = Math.random();
+    const theta = 2 * Math.PI * u;
+    const phi = Math.acos(2 * v - 1);
+
+    const x = radius * Math.sin(phi) * Math.cos(theta);
+    const y = radius * Math.sin(phi) * Math.sin(theta);
+    const z = radius * Math.cos(phi);
+
+    return new THREE.Vector3(x, y, z);
+  }
+
+  for (let i = 0; i < projects.length; i++) {
+    const project = projects[i];
+    // Slightly above globe radius so it doesn't get hidden
+    const pos = randomPointOnSphere(NEW_GLOBE_RADIUS + 0.05);
+
+    hotspotPositions.push(pos.x, pos.y, pos.z);
+    hotspotColors.push(greenColor.r, greenColor.g, greenColor.b);
+
+    hotspotData.push({
+      id: i,
+      position: pos,
+      title: project.projectName || "Untitled Project",
+      description: project.artistName || "No artist available",
+      project,
+    });
+  }
+
+  hotspotGeometry.setAttribute(
+    "position",
+    new THREE.Float32BufferAttribute(hotspotPositions, 3)
+  );
+  hotspotGeometry.setAttribute(
+    "color",
+    new THREE.Float32BufferAttribute(hotspotColors, 3)
+  );
+
+  const hotspotMaterial = new THREE.PointsMaterial({
+    size: 0.22,
+    vertexColors: true,
+    transparent: true,
+    opacity: 1.0,
+    blending: THREE.AdditiveBlending,
+    depthTest: false, // ensures hotspots are always on top
+  });
+
+  hotspots = new THREE.Points(hotspotGeometry, hotspotMaterial);
+  hotspots.userData = hotspotData;
+  hotspots.renderOrder = 999; // makes sure they render on top of the globe
+
+  scene.add(hotspots);
+}
+
 
     function onMouseMove(event) {
       const rect = event.currentTarget.getBoundingClientRect();
@@ -337,19 +331,24 @@ export default function GlobeSection() {
       camera.updateProjectionMatrix();
     }
 
-    function onMouseClick(e) {
-      const rect = e.currentTarget.getBoundingClientRect();
-      const mouseX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      const mouseY = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-      mouseVector.x = mouseX;
-      mouseVector.y = mouseY;
-      raycaster.setFromCamera(mouseVector, camera);
+
+    function onMouseClick(event) {
+      const rect = renderer.domElement.getBoundingClientRect();
+      mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObject(hotspots);
       if (intersects.length > 0) {
-        const i = Math.floor(intersects[0].index);
-        if (hotspotData[i]) {
-          showNotification(hotspotData[i]);
-          pulseHotspot();
+        const index = intersects[0].index; // index of clicked point
+        const clickedProject = hotspots.userData[index]; // 🔥 this now works
+
+        if (clickedProject && openProject) {
+          const projectName =
+            clickedProject.project?.projectName || clickedProject.projectName;
+           if (!projectName) return;
+          const formatted = projects.find((p) => p.projectName === projectName);
+          if (formatted) openProject(formatted);
         }
       }
     }
@@ -476,7 +475,6 @@ export default function GlobeSection() {
 return (
   <div className="container">
     <div id="canvas-container" ref={containerRef}></div>
-    <div id="hotspot-notification" className="hotspot-notification"></div>
   </div>
 );
 }

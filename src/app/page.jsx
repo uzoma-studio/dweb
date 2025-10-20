@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "motion/react";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -27,7 +26,7 @@ export default function Home() {
       <Header />
 
       {/* Main Content */}
-     <main className="pt-30 lg:pt-0 flex flex-col lg:flex-row justify-between items-center min-h-screen relative lg:px-0 overflow-hidden">
+     <main className="pt-30 lg:pt-0 flex flex-col lg:flex-row justify-between items-center h-screen relative lg:px-0 overflow-hidden">
       {/* Left Text */}
         <motion.div 
           className="lg:w-[60%] z-10 text-left lg:pl-16 px-6"

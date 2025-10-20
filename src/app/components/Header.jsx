@@ -11,6 +11,13 @@ export default function Header() {
   const pathname = usePathname();
   const isLanding = pathname === "/";
 
+    const socialLinks = {
+      TWITTER: "https://x.com/grayareaorg",
+      FB: "https://www.facebook.com/GrayArea",
+      IG: "https://www.instagram.com/grayareaorg",
+      LINKEDIN: "https://www.linkedin.com/company/gray-area-foundation-for-the-arts",
+    };
+
   return (
     <motion.header
       initial={{ opacity: 0, y: -30 }}
@@ -24,7 +31,7 @@ export default function Header() {
           href="https://grayarea.org/course/dweb/"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center p-2 md:p-4"
+          className="flex items-center p-2 md:p-4 z-100"
         >
           <Image
             src="/GALOGO.svg"
@@ -71,29 +78,34 @@ export default function Header() {
                   <span>About</span>
                 </Link>
               </>
+            
+            )}
 
-        )}
+    
 
-        {["TWITTER", "FB", "IG", "LINKEDIN"].map((icon) => (
-          <motion.div
-            key={icon}
-            whileHover={{ scale: 1.2, rotate: 5 }}
-            transition={{ type: "spring", stiffness: 250 }}
-          >
-            <Link
-              href="/explore-projects"
-              className="flex items-center justify-center px-2 lg:px-3 py-2 hover:bg-white/10 transition"
-            >
-              <Image
-                src={`/${icon}.svg`}
-                alt={`${icon} Icon`}
-                width={22}
-                height={22}
-                className="object-contain lg:w-[22px] w-[18px] h-auto"
-              />
-            </Link>
-          </motion.div>
-        ))}
+            {Object.entries(socialLinks).map(([icon, url]) => (
+              <motion.div
+                key={icon}
+                whileHover={{ scale: 1.2, rotate: 5 }}
+                transition={{ type: "spring", stiffness: 250 }}
+              >
+                <Link
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center px-2 lg:px-3 py-2 hover:bg-white/10 transition"
+                >
+                  <Image
+                    src={`/${icon}.svg`}
+                    alt={`${icon} Icon`}
+                    width={22}
+                    height={22}
+                    className="object-contain lg:w-[22px] w-[18px] h-auto"
+                  />
+                </Link>
+              </motion.div>
+            ))}
+
       </motion.nav>
     </motion.header>
   );
