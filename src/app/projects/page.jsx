@@ -53,7 +53,7 @@ function ProjectsInner() {
       {/* Large screen */}
       <div className="hidden md:flex h-screen">
         <motion.div
-          className="w-1/2 h-screen fixed left-0 z-50"
+          className="w-1/2  h-screen fixed left-0 z-50"
           initial={{ opacity: 0, x: -100 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ type: "spring", stiffness: 100, damping: 20 }}
@@ -63,6 +63,8 @@ function ProjectsInner() {
             projects={formattedProjects}
           />
         </motion.div>
+
+    
 
         <motion.div
           className="w-1/2 absolute left30"
