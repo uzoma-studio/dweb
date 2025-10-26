@@ -3,21 +3,18 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion } from "motion/react";
 import projectsData from '../../data/dweb-project-data.json';
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const ArcScrollProjects = ({ openProject, selectedProject }) => {
   const [scrollOffset, setScrollOffset] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
   const containerRef = useRef(null);
-  const [highlightIndex, setHighlightIndex] = useState(0); // real project index (0..n-1)
+  const [highlightIndex, setHighlightIndex] = useState(0); 
   const mobileScrollRef = useRef(null); // mobile horizontal scroller
   const rafRef = useRef(null);
   const tickingRef = useRef(false);
 
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const slugParam = searchParams.get("slug");
   const targetOffsetRef = useRef(0);
   const currentOffsetRef = useRef(0);
   const velocityRef = useRef(0);
@@ -64,7 +61,8 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
   const n = projects.length
 
 
-useEffect(() => {
+// Original wheel scroll effect - UNTOUCHED
+  useEffect(() => {
     const handleWheel = (e) => {
       if (isPausedRef.current) return; // Pause while modal is open
       velocityRef.current += e.deltaY * 0.0002;
@@ -88,6 +86,69 @@ useEffect(() => {
     return () => {
       cancelAnimationFrame(animationFrameRef.current);
       window.removeEventListener("wheel", handleWheel);
+    };
+  }, []);
+
+  // Separate keyboard controls effect
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (isPausedRef.current) return;
+      
+      // Arrow keys - move one project at a time
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        const direction = e.key === 'ArrowDown' ? 1 : -1;
+        const projectStep = 1 / projects.length;
+        // Reduced multiplier for exactly one project step
+        velocityRef.current += direction * projectStep * 0.08;
+      }
+      
+      // PageDown/PageUp - larger jumps
+      if (e.key === 'PageDown' || e.key === 'PageUp') {
+        e.preventDefault();
+        const direction = e.key === 'PageDown' ? 1 : -1;
+        const projectStep = 1 / projects.length;
+        velocityRef.current += direction * projectStep * 0.3;
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [projects.length]);
+
+   // Separate scrollbar dragging effect
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+    let lastTime = Date.now();
+
+    const handleScroll = () => {
+      if (isPausedRef.current) return;
+      
+      const currentScrollY = window.scrollY;
+      const currentTime = Date.now();
+      const deltaY = currentScrollY - lastScrollY;
+      const deltaTime = currentTime - lastTime;
+      
+      // Only apply if there's actual scroll movement
+      if (Math.abs(deltaY) > 0 && deltaTime > 0) {
+        // Calculate velocity based on scroll speed
+        const scrollVelocity = deltaY / deltaTime;
+        
+        // Add to velocity similar to wheel, scaled appropriately
+        velocityRef.current += scrollVelocity * 0.002;
+      }
+      
+      lastScrollY = currentScrollY;
+      lastTime = currentTime;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -229,9 +290,9 @@ useEffect(() => {
   return (
     <div 
       ref={containerRef}
-      className="relative w-full lg:min-h-[300vh]"
+      className="md:fixed relative w-full md:min-h-[300vh]"
     >
-      {mounted && windowSize.width >= 1024 ?  (
+      {mounted && windowSize.width >= 765 ?  (
         <div className="sticky top-0 h-screen w-full pointer-events-none">
           {/* ✅ Arc path moved left */}
           <svg className="absolute inset-0 opacity-10 pointer-events-none">
@@ -293,7 +354,7 @@ useEffect(() => {
         </div>
         ) : (
         // ---------- MOBILE: looped horizontal scroller ----------
-        <div className="relative w-full overflow-hidden py-10">
+        <div className="w-full overflow-hidden py-10">
           <div
             ref={mobileScrollRef}
             className="flex items-center space-x-6 px-6 snap-x snap-mandatory overflow-x-scroll no-scrollbar"
@@ -335,7 +396,7 @@ useEffect(() => {
       
 
       {mounted && (
-        <div className="fixed bottom-8 right-8 text-white/50 text-sm pointer-events-none">
+        <div className="fixed bottom-6 right-8 text-white/50 text-sm pointer-events-none">
           Scroll to navigate
         </div>
       )}

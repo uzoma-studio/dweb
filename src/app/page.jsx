@@ -22,17 +22,16 @@ export default function Home() {
 
 
   return (
-    <div className="min-h-screen flex flex-col text-white relative overflow-hidden">
+    <div className="fixed inset-0 flex flex-col text-white overflow-hidden">
       <Header />
 
       {/* Main Content */}
-     <main className="pt-30 lg:pt-0 flex flex-col lg:flex-row justify-between items-center h-screen relative lg:px-0 overflow-hidden">
+     <main className="pt-30 lg:pt-0 flex flex-col md:flex-row justify-between items-center relative md:px-0 overflow-hidden">
       {/* Left Text */}
         <motion.div 
-          className="lg:w-[60%] z-10 text-left lg:pl-16 px-6"
+          className="md:w-[60%] z-10 text-left lg:pl-16 px-6"
           animate={{ opacity: isExpanding ? 0 : 1 }}
-          transition={{ duration: 0.5 }}
-        >
+          transition={{ duration: 0.5 }}>
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -56,7 +55,7 @@ export default function Home() {
 
         {/* Right Globe */}
         <motion.div 
-          className="w-full lg:w-[50%] flex justify-start items-center relative lg:translate-x-[15%]"
+          className="w-full md:w-[50%] flex justify-start items-center relative md:translate-x-[15%]"
           layoutId="globe-container"
           animate={{
             x: isExpanding ? "0%" : "0%",
@@ -70,7 +69,7 @@ export default function Home() {
             damping: 20
           }}
         >
-          <div className="w-full h-full lg:min-w-[800px]">
+          <div className="w-full h-full md:min-w-[800px]">
             <GlobeSection />
           </div>
         </motion.div>
@@ -83,8 +82,8 @@ export default function Home() {
             transition={{ duration: 0.5 }}
           >
           {/* Left side */}
-          <div className="w-1/2 flex items-center justify-start lg:px-10 px-6 py-4">
-            <h1 className="text-xl font-bold text-white IBMbold">
+          <div className="w-1/2 flex items-center justify-start md:px-10 px-6 py-4">
+            <h1 className="md:text-xl text-base text-white IBMbold">
               2025 Student Project Gallery
             </h1>
           </div>
@@ -96,7 +95,7 @@ export default function Home() {
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 200 }}
               onClick={handleExploreClick}
-              className="lg:px-8 px-4 py-3 IBMregular bg-white/5 backdrop-blur-sm border border-white text-white font-semibold rounded-lg cursor-pointer hover:bg-white/10 transition"
+              className="lg:px-8 px-4 py-3 md:text-base text-sm IBMmedium bg-white/5 backdrop-blur-sm border border-white text-white rounded-lg cursor-pointer hover:bg-white/10 transition"
             >
               Explore Projects
             </motion.button>

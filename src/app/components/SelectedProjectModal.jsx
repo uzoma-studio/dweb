@@ -50,7 +50,7 @@ const videoId = project.videoLink ? getYouTubeId(project.videoLink) : null;
                 onClick={handleClose}
                 className="fixed cursor-pointer top-6 right-8 text-black text-xl group transition-all">
                 <MdOutlineCircle className="block group-hover:hidden" />
-                <MdCircle className="hidden group-hover:block textgreen" />
+                <MdCircle className="hidden group-hover:block text-red-500" />
                 </button>
                 <p className="text-sm text-gray-400 ">Student Project</p>
                 <h2 className="text-2xl lg:w-xl w-full IBMbold pt-2 ">{project.projectName}</h2>
@@ -62,7 +62,7 @@ const videoId = project.videoLink ? getYouTubeId(project.videoLink) : null;
                     <p className="text-base leading-relaxed IBMregular mb-6">{project.projectDescription}</p>
                     )}
                    {videoId && (
-                    <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-6">
+                    <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-">
                         <iframe
                         src={`https://www.youtube.com/embed/${videoId}?rel=0`}
                         title={project.projectName}

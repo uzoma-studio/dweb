@@ -51,7 +51,7 @@ function ProjectsInner() {
       <Header />
 
       {/* Large screen */}
-      <div className="hidden lg:flex h-screen">
+      <div className="hidden md:flex h-screen">
         <motion.div
           className="w-1/2 h-screen fixed left-0 z-50"
           initial={{ opacity: 0, x: -100 }}
@@ -78,9 +78,9 @@ function ProjectsInner() {
       </div>
 
       {/* Mobile layout */}
-      <div className="lg:hidden h-screen flex flex-col overflow-hidden">
+      <div className="md:hidden h-screen flex flex-col overflow-hidden">
         <motion.div
-          className="w-full h-screen"
+          className="w-full"
           layoutId="globe-container"
           initial={{ opacity: 0, y: -100 }}
           animate={{ opacity: 1, y: 0 }}
@@ -111,10 +111,9 @@ function ProjectsInner() {
 
       <motion.footer
         className="fixed bottom-0 left-0 w-full flex"
-        transition={{ duration: 0.5 }}
-      >
-        <div className="w-1/2 flex items-center justify-start lg:px-10 px-6 py-4">
-          <h1 className="text-xl font-bold text-white IBMbold leading-none">
+        transition={{ duration: 0.5 }}>
+        <div className="w-1/2 flex items-center justify-start md:px-10 px-6 py-4">
+          <h1 className="md:text-xl text-base text-white IBMbold leading-none">
             DWeb for Creators 2025
           </h1>
         </div>
@@ -123,7 +122,7 @@ function ProjectsInner() {
   );
 }
 
-// 🧠 Suspense wrapper — fixes the build error
+//  Suspense wrapper to fix the build error
 export default function Projects() {
   return (
     <Suspense fallback={<div className="text-white">Loading projects...</div>}>
