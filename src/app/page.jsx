@@ -29,14 +29,14 @@ export default function Home() {
      <main className="pt-30 lg:pt-0 flex flex-col md:flex-row justify-between items-center relative md:px-0 overflow-hidden">
       {/* Left Text */}
         <motion.div 
-          className="md:w-[60%] z-10 text-left lg:pl-16 px-6"
+          className="md:w-[70%] flex flex-col  z-10 text-left lg:pl-16 px-6 pr-0"
           animate={{ opacity: isExpanding ? 0 : 1 }}
           transition={{ duration: 0.5 }}>
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
-            className="text-4xl md:text-6xl  z-10 text-left relative IBMbold 
+            className="text-4xl md:text-6xl text50 z-10 text-left relative IBMbold 
                       lg:pb-16 pb-8
                       bg-[url('/wave1.svg')] bg-no-repeat bg-[length:70%] 
                       bg-[position:50%_50%]">
@@ -55,18 +55,18 @@ export default function Home() {
 
         {/* Right Globe */}
         <motion.div 
-          className="w-full md:w-[50%] flex justify-start items-center relative md:translate-x-[15%]"
+          className="w-full md:w-[50%] flex flex-auto justify-start items-center relative md:translate-x-[15%]"
           layoutId="globe-container"
           animate={{
             x: isExpanding ? "0%" : "0%",
             y: isExpanding ? "-10%" : "0%",
-            scale: isExpanding ? 4.5 : 1,
+            scale: isExpanding ? 3 : 1,
            
           }}
           transition={{
             type: "spring",
-            stiffness: 100,
-            damping: 20
+            stiffness: 60,
+            damping: 80
           }}
         >
           <div className="w-full h-full md:min-w-[800px]">
