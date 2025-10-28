@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import projectData from "@/data/dweb-project-data.json";
 
-export default function GlobeSection({projects, openProject }) {
+export default function GlobeSection({ projects, openProject }) {
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -13,8 +13,13 @@ export default function GlobeSection({projects, openProject }) {
     let scene, camera, renderer, globe, particles, connections, innerParticles, hotspots;
     let outwardParticles, outwardVelocities = [];
     let mouse = { x: 0, y: 0 }, targetRotation = { x: 0, y: 0 };
-    let hotspotData = [], raycaster, mouseVector;
+    let raycaster, mouseVector;
     let autoRotationY = 0;
+
+    // DRAG state refs (persistent across renders)
+    const isDraggingRef = { current: false };
+    const lastPointer = { x: 0, y: 0 };
+    const dragSensitivity = 0.005; // tweak this to taste
 
     const OLD_PARTICLE_RADIUS = 3.1;
     const NEW_GLOBE_RADIUS = 5.5;
@@ -45,9 +50,14 @@ export default function GlobeSection({projects, openProject }) {
       createOutwardParticles();
       createHotspots();
 
-      containerRef.current.addEventListener('mousemove', onMouseMove);
-      containerRef.current.addEventListener('mouseleave', onMouseLeave);
-      //containerRef.current.addEventListener('wheel', onMouseWheel);
+      // pointer events for unified mouse + touch dragging
+      containerRef.current.addEventListener('pointerdown', onPointerDown, { passive: false });
+      containerRef.current.addEventListener('pointermove', onPointerMove, { passive: false });
+      containerRef.current.addEventListener('pointerup', onPointerUp, { passive: false });
+      containerRef.current.addEventListener('pointercancel', onPointerUp, { passive: false });
+      containerRef.current.addEventListener('mouseleave', onPointerLeave, { passive: true });
+
+      // click for hotspots
       containerRef.current.addEventListener('click', onMouseClick);
       window.addEventListener('resize', onWindowResize);
 
@@ -234,77 +244,100 @@ export default function GlobeSection({projects, openProject }) {
       scene.add(outwardParticles);
     }
 
-  function createHotspots() {
-  const projects = projectData.projects || projectData;
+    function createHotspots() {
+      const projectsList = projectData.projects || projectData;
 
-  const hotspotGeometry = new THREE.BufferGeometry();
-  const hotspotPositions = [];
-  const hotspotColors = [];
-  const hotspotData = [];
+      const hotspotGeometry = new THREE.BufferGeometry();
+      const hotspotPositions = [];
+      const hotspotColors = [];
+      const hotspotDataList = [];
 
-  const greenColor = new THREE.Color("#BBFF00"); // your green
+      const greenColor = new THREE.Color("#BBFF00");
 
-  // Helper: random point on a sphere
-  function randomPointOnSphere(radius) {
-    const u = Math.random();
-    const v = Math.random();
-    const theta = 2 * Math.PI * u;
-    const phi = Math.acos(2 * v - 1);
+      function randomPointOnSphere(radius) {
+        const u = Math.random();
+        const v = Math.random();
+        const theta = 2 * Math.PI * u;
+        const phi = Math.acos(2 * v - 1);
 
-    const x = radius * Math.sin(phi) * Math.cos(theta);
-    const y = radius * Math.sin(phi) * Math.sin(theta);
-    const z = radius * Math.cos(phi);
+        const x = radius * Math.sin(phi) * Math.cos(theta);
+        const y = radius * Math.sin(phi) * Math.sin(theta);
+        const z = radius * Math.cos(phi);
 
-    return new THREE.Vector3(x, y, z);
-  }
+        return new THREE.Vector3(x, y, z);
+      }
 
-  for (let i = 0; i < projects.length; i++) {
-    const project = projects[i];
-    // Slightly above globe radius so it doesn't get hidden
-    const pos = randomPointOnSphere(NEW_GLOBE_RADIUS + 0.05);
+      for (let i = 0; i < projectsList.length; i++) {
+        const project = projectsList[i];
+        const pos = randomPointOnSphere(NEW_GLOBE_RADIUS + 0.05);
 
-    hotspotPositions.push(pos.x, pos.y, pos.z);
-    hotspotColors.push(greenColor.r, greenColor.g, greenColor.b);
+        hotspotPositions.push(pos.x, pos.y, pos.z);
+        hotspotColors.push(greenColor.r, greenColor.g, greenColor.b);
 
-    hotspotData.push({
-      id: i,
-      position: pos,
-      title: project.projectName || "Untitled Project",
-      description: project.artistName || "No artist available",
-      project,
-    });
-  }
+        hotspotDataList.push({
+          id: i,
+          position: pos,
+          title: project.projectName || "Untitled Project",
+          description: project.artistName || "No artist available",
+          project,
+        });
+      }
 
-  hotspotGeometry.setAttribute(
-    "position",
-    new THREE.Float32BufferAttribute(hotspotPositions, 3)
-  );
-  hotspotGeometry.setAttribute(
-    "color",
-    new THREE.Float32BufferAttribute(hotspotColors, 3)
-  );
+      hotspotGeometry.setAttribute(
+        "position",
+        new THREE.Float32BufferAttribute(hotspotPositions, 3)
+      );
+      hotspotGeometry.setAttribute(
+        "color",
+        new THREE.Float32BufferAttribute(hotspotColors, 3)
+      );
 
-  const hotspotMaterial = new THREE.PointsMaterial({
-    size: 0.22,
-    vertexColors: true,
-    transparent: true,
-    opacity: 1.0,
-    blending: THREE.AdditiveBlending,
-    depthTest: false, // ensures hotspots are always on top
-  });
+      const hotspotMaterial = new THREE.PointsMaterial({
+        size: 0.22,
+        vertexColors: true,
+        transparent: true,
+        opacity: 1.0,
+        blending: THREE.AdditiveBlending,
+        depthTest: false,
+      });
 
-  hotspots = new THREE.Points(hotspotGeometry, hotspotMaterial);
-  hotspots.userData = hotspotData;
-  hotspots.renderOrder = 999; // makes sure they render on top of the globe
+      hotspots = new THREE.Points(hotspotGeometry, hotspotMaterial);
+      hotspots.userData = hotspotDataList;
+      hotspots.renderOrder = 999;
+      scene.add(hotspots);
+    }
 
-  scene.add(hotspots);
-}
+    // Unified pointermove handler:
+    function onPointerMove(event) {
+      // Use client coords relative to element
+      const rect = containerRef.current.getBoundingClientRect();
+      const clientX = event.clientX;
+      const clientY = event.clientY;
 
+      if (isDraggingRef.current) {
+        // DRAG: rotate by delta movement
+        const dx = clientX - lastPointer.x;
+        const dy = clientY - lastPointer.y;
 
-    function onMouseMove(event) {
-      const rect = event.currentTarget.getBoundingClientRect();
-      const mouseX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-      const mouseY = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+        // update rotation targets directly so animate() picks them up
+        targetRotation.y += dx * dragSensitivity;
+        targetRotation.x += dy * dragSensitivity;
+
+        // store last pointer for next delta
+        lastPointer.x = clientX;
+        lastPointer.y = clientY;
+
+        // update mouseVector too (for hover/hotspot detection alignment)
+        mouseVector.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+        mouseVector.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+
+        checkHotspotHover();
+        return;
+      }
+
+      // Not dragging → hover behavior (preserve earlier logic)
+      const mouseX = ((clientX - rect.left) / rect.width) * 2 - 1;
+      const mouseY = -((clientY - rect.top) / rect.height) * 2 + 1;
       targetRotation.y = mouseX * 0.3;
       targetRotation.x = mouseY * 0.9;
       mouseVector.x = mouseX;
@@ -312,15 +345,35 @@ export default function GlobeSection({projects, openProject }) {
       checkHotspotHover();
     }
 
-    function onMouseLeave() {
+    function onPointerDown(event) {
+      // start dragging
+      isDraggingRef.current = true;
+      lastPointer.x = event.clientX;
+      lastPointer.y = event.clientY;
+
+      try {
+        containerRef.current.setPointerCapture(event.pointerId);
+      } catch (err) {
+        // some browsers may throw if pointer capture not supported
+      }
+    }
+
+    function onPointerUp(event) {
+      if (!isDraggingRef.current) return;
+      isDraggingRef.current = false;
+      try {
+        containerRef.current.releasePointerCapture(event.pointerId);
+      } catch (err) {}
+      // optional: add subtle auto-rotation kick from last release (not implemented here)
+    }
+
+    function onPointerLeave() {
+      // When pointer leaves element—stop dragging and reset hover targets
+      isDraggingRef.current = false;
       targetRotation.x = 0;
       targetRotation.y = 0;
       hideNotification();
     }
-
-    //function onMouseWheel(e) {
-    //  camera.position.z = Math.max(7, Math.min(25, camera.position.z + e.deltaY * 0.01));
-   // }
 
     function onWindowResize() {
       if (!containerRef.current) return;
@@ -331,7 +384,6 @@ export default function GlobeSection({projects, openProject }) {
       camera.updateProjectionMatrix();
     }
 
-
     function onMouseClick(event) {
       const rect = renderer.domElement.getBoundingClientRect();
       mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
@@ -340,14 +392,12 @@ export default function GlobeSection({projects, openProject }) {
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObject(hotspots);
       if (intersects.length > 0) {
-        const index = intersects[0].index; // index of clicked point
-        const clickedProject = hotspots.userData[index]; // 🔥 this now works
-
+        const index = intersects[0].index;
+        const clickedProject = hotspots.userData[index];
         if (clickedProject && openProject) {
-          const projectName =
-            clickedProject.project?.projectName || clickedProject.projectName;
-           if (!projectName) return;
-          const formatted = projects.find((p) => p.projectName === projectName);
+          const projectName = clickedProject.project?.projectName || clickedProject.projectName;
+          if (!projectName) return;
+          const formatted = (projectData.projects || projectData).find((p) => p.projectName === projectName);
           if (formatted) openProject(formatted);
         }
       }
@@ -396,6 +446,7 @@ export default function GlobeSection({projects, openProject }) {
       autoRotationY += rotationSpeed;
       const desiredY = autoRotationY + targetRotation.y;
       
+      // smooth interpolation
       globe.rotation.y += (desiredY - globe.rotation.y) * 0.1;
       globe.rotation.x += (targetRotation.x - globe.rotation.x) * 0.1;
 
@@ -461,20 +512,24 @@ export default function GlobeSection({projects, openProject }) {
 
     return () => {
       if (containerRef.current) {
-        containerRef.current.removeEventListener('mousemove', onMouseMove);
-        containerRef.current.removeEventListener('mouseleave', onMouseLeave);
-        //containerRef.current.removeEventListener('wheel', onMouseWheel);
+        containerRef.current.removeEventListener('pointerdown', onPointerDown);
+        containerRef.current.removeEventListener('pointermove', onPointerMove);
+        containerRef.current.removeEventListener('pointerup', onPointerUp);
+        containerRef.current.removeEventListener('pointercancel', onPointerUp);
+        containerRef.current.removeEventListener('mouseleave', onPointerLeave);
         containerRef.current.removeEventListener('click', onMouseClick);
       }
       window.removeEventListener('resize', onWindowResize);
-      renderer.dispose();
+      // Dispose renderer & three objects
+      try {
+        renderer.dispose();
+      } catch (err) {}
     };
   }, []);
 
-
-return (
-  <div className="container">
-    <div id="canvas-container" ref={containerRef}></div>
-  </div>
-);
+  return (
+    <div className="container">
+      <div id="canvas-container" ref={containerRef}></div>
+    </div>
+  );
 }

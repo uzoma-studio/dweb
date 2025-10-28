@@ -47,11 +47,11 @@ function ProjectsInner() {
   const closeProject = () => router.replace("/projects", { shallow: true });
 
   return (
-    <div className="min-h-screen text-white relative">
+    <div className="fixed inset-0 text-white ">
       <Header />
 
       {/* Large screen */}
-      <div className="hidden md:flex h-screen">
+      <div className="hidden md:flex h-screen relative">
         <motion.div
           className="w-1/2  h-screen fixed left-0 z-50"
           initial={{ opacity: 0, x: -100 }}
@@ -80,7 +80,7 @@ function ProjectsInner() {
       </div>
 
       {/* Mobile layout */}
-      <div className="md:hidden h-screen flex flex-col overflow-hidden">
+      <div className="md:hidden h-screen flex flex-col relative overflow-hidden">
         <motion.div
           className="w-full"
           layoutId="globe-container"
