@@ -405,7 +405,7 @@ useEffect(() => {
       {mounted && (
         <div className="fixed w-36 leading-none bottom-6 text-right right-4 text-white/50 lg:text-sm text-xs pointer-events-none">
          <div className="flex items-center gap-1">
-          <span>Scroll to navigate or use arrow keys</span>
+          <span>scroll to navigate or use arrow keys</span>
           <div>
             <FiArrowUp className="text-white/50" />
             <FiArrowDown className="text-white/50" />
