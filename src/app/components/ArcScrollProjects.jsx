@@ -105,7 +105,7 @@ useEffect(() => {
       // Arrow keys - move one project at a time
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
         e.preventDefault();
-        const direction = e.key === 'ArrowDown' ? 1 : -1;
+        const direction = e.key === 'ArrowDown' ? -1 : 1;
         const projectStep = 1 / projects.length;
         // Reduced multiplier for exactly one project step
         velocityRef.current += direction * projectStep * 0.08;
@@ -114,7 +114,7 @@ useEffect(() => {
       // PageDown/PageUp - larger jumps
       if (e.key === 'PageDown' || e.key === 'PageUp') {
         e.preventDefault();
-        const direction = e.key === 'PageDown' ? 1 : -1;
+        const direction = e.key === 'PageDown' ? -1 : 1;
         const projectStep = 1 / projects.length;
         velocityRef.current += direction * projectStep * 0.3;
       }
