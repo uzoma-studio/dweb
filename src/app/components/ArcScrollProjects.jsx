@@ -3,21 +3,19 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion } from "motion/react";
 import projectsData from '../../data/dweb-project-data.json';
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { FiArrowUp, FiArrowDown } from "react-icons/fi";
 
 const ArcScrollProjects = ({ openProject, selectedProject }) => {
   const [scrollOffset, setScrollOffset] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
   const containerRef = useRef(null);
-  const [highlightIndex, setHighlightIndex] = useState(0); // real project index (0..n-1)
+  const [highlightIndex, setHighlightIndex] = useState(0); 
   const mobileScrollRef = useRef(null); // mobile horizontal scroller
   const rafRef = useRef(null);
   const tickingRef = useRef(false);
 
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const slugParam = searchParams.get("slug");
   const targetOffsetRef = useRef(0);
   const currentOffsetRef = useRef(0);
   const velocityRef = useRef(0);
@@ -59,12 +57,20 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   
-  const projects = formattedProjects;
+const [projects, setProjects] = useState(formattedProjects);
+
+useEffect(() => {
+  // Shuffle only on the client
+  const shuffled = [...formattedProjects].sort(() => Math.random() - 0.5);
+  setProjects(shuffled);
+}, [formattedProjects]);
+
 
   const n = projects.length
 
 
-useEffect(() => {
+// Original wheel scroll effect - UNTOUCHED
+  useEffect(() => {
     const handleWheel = (e) => {
       if (isPausedRef.current) return; // Pause while modal is open
       velocityRef.current += e.deltaY * 0.0002;
@@ -88,6 +94,69 @@ useEffect(() => {
     return () => {
       cancelAnimationFrame(animationFrameRef.current);
       window.removeEventListener("wheel", handleWheel);
+    };
+  }, []);
+
+  // Separate keyboard controls effect
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (isPausedRef.current) return;
+      
+      // Arrow keys - move one project at a time
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        const direction = e.key === 'ArrowDown' ? -1 : 1;
+        const projectStep = 1 / projects.length;
+        // Reduced multiplier for exactly one project step
+        velocityRef.current += direction * projectStep * 0.08;
+      }
+      
+      // PageDown/PageUp - larger jumps
+      if (e.key === 'PageDown' || e.key === 'PageUp') {
+        e.preventDefault();
+        const direction = e.key === 'PageDown' ? -1 : 1;
+        const projectStep = 1 / projects.length;
+        velocityRef.current += direction * projectStep * 0.3;
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [projects.length]);
+
+   // Separate scrollbar dragging effect
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+    let lastTime = Date.now();
+
+    const handleScroll = () => {
+      if (isPausedRef.current) return;
+      
+      const currentScrollY = window.scrollY;
+      const currentTime = Date.now();
+      const deltaY = currentScrollY - lastScrollY;
+      const deltaTime = currentTime - lastTime;
+      
+      // Only apply if there's actual scroll movement
+      if (Math.abs(deltaY) > 0 && deltaTime > 0) {
+        // Calculate velocity based on scroll speed
+        const scrollVelocity = deltaY / deltaTime;
+        
+        // Add to velocity similar to wheel, scaled appropriately
+        velocityRef.current += scrollVelocity * 0.002;
+      }
+      
+      lastScrollY = currentScrollY;
+      lastTime = currentTime;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -134,104 +203,103 @@ useEffect(() => {
     // ✅ CHANGE 4: Return isCenter flag and rotation
     return { x, y, opacity, scale, normalizedOffset, isCenter, rotation };
   };
-  // =========== MOBILE: helpers =============
-  // compute index inside the tripled list that corresponds to "center of middle repetition"
-  const mobileInitialChildIndex = () => {
-    // children length = n * 3; middle is at index floor(n*3/2) = n + floor(n/2)
-    return n + Math.floor(n / 2);
-  };
+  
+ // =========== MOBILE: helpers =============
 
-  // center the mobile scroller on the chosen child (called after layout)
-  const centerMobileOnMiddle = () => {
-    const container = mobileScrollRef.current;
-    if (!container) return;
+// compute index inside the tripled list that corresponds to center of middle repetition
+const mobileInitialChildIndex = () => n + Math.floor(n / 2);
+
+// center scroller on the chosen child
+const centerMobileOnMiddle = () => {
+  const container = mobileScrollRef.current;
+  if (!container) return;
+  const children = Array.from(container.children);
+  const midIdx = mobileInitialChildIndex();
+  const midChild = children[midIdx];
+  if (!midChild) return;
+  const scrollLeft = midChild.offsetLeft - container.offsetWidth / 2 + midChild.offsetWidth / 2;
+  container.scrollLeft = scrollLeft;
+  setHighlightIndex(midIdx % n);
+};
+
+// smooth, standard scroll tracking
+const handleMobileScroll = (e) => {
+  const container = e.target;
+  if (!container) return;
+  if (tickingRef.current) return;
+  tickingRef.current = true;
+
+  rafRef.current = requestAnimationFrame(() => {
+    const scrollLeft = container.scrollLeft;
     const children = Array.from(container.children);
-    if (children.length === 0) return;
-    const midIdx = mobileInitialChildIndex();
-    const midChild = children[midIdx];
-    if (!midChild) return;
+    const visibleCenter = scrollLeft + container.offsetWidth / 2;
 
-    const scrollLeft = midChild.offsetLeft - container.offsetWidth / 2 + midChild.offsetWidth / 2;
-    container.scrollLeft = scrollLeft;
-
-    // set highlight to the real project in the middle
-    setHighlightIndex(midIdx % n);
-  };
-
-  // onScroll handler optimized with RAF; calculates which child is centered
-  const handleMobileScroll = (e) => {
-    const container = e.target;
-    if (!container) return;
-
-    // throttle via requestAnimationFrame
-    if (tickingRef.current) return;
-    tickingRef.current = true;
-
-    rafRef.current = requestAnimationFrame(() => {
-      const scrollLeft = container.scrollLeft;
-      const visibleCenter = scrollLeft + container.offsetWidth / 2;
-      const children = Array.from(container.children);
-      let closestIndex = 0;
-      let closestDistance = Infinity;
-
-      children.forEach((child, i) => {
-        const boxCenter = child.offsetLeft + child.offsetWidth / 2;
-        const d = Math.abs(visibleCenter - boxCenter);
-        if (d < closestDistance) {
-          closestDistance = d;
-          closestIndex = i;
-        }
-      });
-
-      // map to real project index (0..n-1) since we duplicated list 3x
-      const realIndex = ((closestIndex % n) + n) % n;
-      setHighlightIndex(realIndex);
-
-      // loop seam fix: if the user scrolls to the cloned edges, jump back to center block
-      // but keep visual continuity by mapping equivalent offset.
-      const totalWidth = container.scrollWidth;
-      // left boundary: near 0, right boundary: near totalWidth - visibleWidth
-      const visibleWidth = container.offsetWidth;
-      const leftThreshold = Math.floor(n * 0.5) * children[0]?.offsetWidth || 0;
-      const rightThreshold = totalWidth - visibleWidth - leftThreshold;
-
-      // If we reach near the left / right extremes, jump to middle repetition preserving center child
-      if (scrollLeft < 10 || scrollLeft > totalWidth - visibleWidth - 10) {
-        // Calculate equivalent center child in middle block:
-        const middleIdx = mobileInitialChildIndex();
-        const offsetFromBlockStart = closestIndex % n;
-        const targetChild = children[middleIdx + offsetFromBlockStart];
-        if (targetChild) {
-          const newScroll =
-            targetChild.offsetLeft - container.offsetWidth / 2 + targetChild.offsetWidth / 2;
-          container.scrollLeft = newScroll;
-        }
+    // find which project is centered
+    let closestIndex = 0;
+    let minDist = Infinity;
+    children.forEach((child, i) => {
+      const boxCenter = child.offsetLeft + child.offsetWidth / 2;
+      const d = Math.abs(visibleCenter - boxCenter);
+      if (d < minDist) {
+        minDist = d;
+        closestIndex = i;
       }
-      tickingRef.current = false;
     });
+    const realIndex = ((closestIndex % n) + n) % n;
+    setHighlightIndex(realIndex);
+    tickingRef.current = false;
+  });
+};
+
+// subtle infinite scroll — reposition only after user stops scrolling
+useEffect(() => {
+  const container = mobileScrollRef.current;
+  if (!container) return;
+
+  let scrollTimeout;
+
+  const handleScrollEnd = () => {
+    const totalWidth = container.scrollWidth;
+    const visibleWidth = container.offsetWidth;
+    const singleBlockWidth = totalWidth / 3;
+
+    // If scrolled too far to edges, reposition invisibly
+    if (container.scrollLeft < singleBlockWidth * 0.5) {
+      container.scrollLeft += singleBlockWidth;
+    } else if (container.scrollLeft > singleBlockWidth * 1.5) {
+      container.scrollLeft -= singleBlockWidth;
+    }
   };
 
-  // center at initial load on small screens
-  useEffect(() => {
-    if (windowSize.width < 1024) {
-      // wait a frame for layout to settle then center
-      requestAnimationFrame(() => {
-        // additional small delay to ensure images/fonts/layout measured
-        setTimeout(centerMobileOnMiddle, 50);
-      });
-    }
-    // cleanup any pending rAF
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
-  }, [windowSize.width, n]);
+  const onScroll = () => {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(handleScrollEnd, 100); // runs after scroll ends
+  };
+
+  container.addEventListener("scroll", onScroll, { passive: true });
+
+  return () => {
+    container.removeEventListener("scroll", onScroll);
+    clearTimeout(scrollTimeout);
+  };
+}, [n]);
+
+// center initially
+useEffect(() => {
+  if (windowSize.width < 1024) {
+    requestAnimationFrame(() => setTimeout(centerMobileOnMiddle, 80));
+  }
+  return () => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+  };
+}, [windowSize.width, n]);
 
   return (
     <div 
       ref={containerRef}
-      className="relative w-full lg:min-h-[300vh]"
+      className="md:fixed relative w-full md:min-h-[300vh]"
     >
-      {mounted && windowSize.width >= 1024 ?  (
+      {mounted && windowSize.width >= 765 ?  (
         <div className="sticky top-0 h-screen w-full pointer-events-none">
           {/* ✅ Arc path moved left */}
           <svg className="absolute inset-0 opacity-10 pointer-events-none">
@@ -293,7 +361,7 @@ useEffect(() => {
         </div>
         ) : (
         // ---------- MOBILE: looped horizontal scroller ----------
-        <div className="relative w-full overflow-hidden py-10">
+        <div className="w-full overflow-hidden py-10">
           <div
             ref={mobileScrollRef}
             className="flex items-center space-x-6 px-6 snap-x snap-mandatory overflow-x-scroll no-scrollbar"
@@ -335,8 +403,15 @@ useEffect(() => {
       
 
       {mounted && (
-        <div className="fixed bottom-8 right-8 text-white/50 text-sm pointer-events-none">
-          Scroll to navigate
+        <div className="fixed w-36 leading-none bottom-6 text-right right-4 text-white/50 lg:text-sm text-xs pointer-events-none">
+         <div className="flex items-center gap-1">
+          <span>scroll to navigate or use arrow keys</span>
+          <div>
+            <FiArrowUp className="text-white/50" />
+            <FiArrowDown className="text-white/50" />
+          </div>
+         
+      </div>
         </div>
       )}
     </div>

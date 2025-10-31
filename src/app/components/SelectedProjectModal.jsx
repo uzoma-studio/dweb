@@ -50,7 +50,7 @@ const videoId = project.videoLink ? getYouTubeId(project.videoLink) : null;
                 onClick={handleClose}
                 className="fixed cursor-pointer top-6 right-8 text-black text-xl group transition-all">
                 <MdOutlineCircle className="block group-hover:hidden" />
-                <MdCircle className="hidden group-hover:block textgreen" />
+                <MdCircle className="hidden group-hover:block text-red-500" />
                 </button>
                 <p className="text-sm text-gray-400 ">Student Project</p>
                 <h2 className="text-2xl lg:w-xl w-full IBMbold pt-2 ">{project.projectName}</h2>
@@ -62,7 +62,7 @@ const videoId = project.videoLink ? getYouTubeId(project.videoLink) : null;
                     <p className="text-base leading-relaxed IBMregular mb-6">{project.projectDescription}</p>
                     )}
                    {videoId && (
-                    <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-6">
+                    <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-">
                         <iframe
                         src={`https://www.youtube.com/embed/${videoId}?rel=0`}
                         title={project.projectName}
@@ -82,8 +82,29 @@ const videoId = project.videoLink ? getYouTubeId(project.videoLink) : null;
                         <h2 className="text-xl IBMmedium mb-4 pt-1">{project.artistName}</h2>
                         )}
                         {project.artistBio && (
-                        <p className="text-sm leading-relaxed IBMregular mb-4">{project.artistBio}</p>
+                          <p className="text-sm leading-relaxed IBMregular mb-2">
+                            {project.artistBio.split(/(https?:\/\/[^\s]+|www\.[^\s]+)/g).map((part, i) => {
+                              const isLink = part.match(/^(https?:\/\/[^\s]+|www\.[^\s]+)/);
+                              if (isLink) {
+                                const url = part.startsWith("http") ? part : `https://${part}`;
+                                return (
+                                  <a
+                                    key={i}
+                                    href={url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="Aunderline IBMmedium break-words hover:text-blue-800 transition-colors duration-150"
+                                  >
+                                    {part}
+                                  </a>
+                                );
+                              }
+                              return part;
+                            })}
+                          </p>
                         )}
+
+
                         {project.website && (
                         <Link className="Aunderline text-sm IBMmedium" href={project.website} target="_blank" rel="noopener noreferrer">
                             {project.website}

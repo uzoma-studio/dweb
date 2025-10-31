@@ -77,7 +77,6 @@ a {
 
 .content {
   flex: 1;
-  color: white;
   max-width: 500px;
   z-index: 10;
   margin-right: 50px;
@@ -102,6 +101,26 @@ a {
   height: 950px;
   position: relative;
   cursor: pointer;
+  overflow: hidden;
+}
+
+/* For screens 1024px and smaller */
+@media (max-width: 1270px) {
+  #canvas-container {
+    max-width: 650px;
+    height: 650px; 
+  }
+
+  .text50{
+    font-size: 50px !important;
+  }
+}
+
+@media (max-width: 860px) {
+  #canvas-container {
+    max-width: 580px;
+    height: 580px; 
+  }
 }
 
 canvas {
@@ -173,6 +192,12 @@ canvas {
   left: 30%;
 }
 
+@media (max-width: 1024px) {
+  .left30 {
+    left: 20%;
+  }
+}
+
 .textgreen{
  color: #BBFF00;
 }
@@ -192,3 +217,5 @@ canvas {
 .bg-offW{
   background-color: #f0f0fe;
 }
+
+
