@@ -82,8 +82,29 @@ const videoId = project.videoLink ? getYouTubeId(project.videoLink) : null;
                         <h2 className="text-xl IBMmedium mb-4 pt-1">{project.artistName}</h2>
                         )}
                         {project.artistBio && (
-                        <p className="text-sm leading-relaxed IBMregular mb-4">{project.artistBio}</p>
+                          <p className="text-sm leading-relaxed IBMregular mb-2">
+                            {project.artistBio.split(/(https?:\/\/[^\s]+|www\.[^\s]+)/g).map((part, i) => {
+                              const isLink = part.match(/^(https?:\/\/[^\s]+|www\.[^\s]+)/);
+                              if (isLink) {
+                                const url = part.startsWith("http") ? part : `https://${part}`;
+                                return (
+                                  <a
+                                    key={i}
+                                    href={url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="Aunderline IBMmedium break-words hover:text-blue-800 transition-colors duration-150"
+                                  >
+                                    {part}
+                                  </a>
+                                );
+                              }
+                              return part;
+                            })}
+                          </p>
                         )}
+
+
                         {project.website && (
                         <Link className="Aunderline text-sm IBMmedium" href={project.website} target="_blank" rel="noopener noreferrer">
                             {project.website}
