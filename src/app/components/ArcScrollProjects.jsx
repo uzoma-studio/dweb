@@ -307,7 +307,7 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
   return (
     <div 
       ref={containerRef}
-      className="lg:fixed ipad-force-relative relative w-full lg:min-h-[300vh]" >
+      className="lg:fixed medium-force-relative relative w-full lg:min-h-[300vh]" >
       {mounted && windowSize.width >= 1280 ? (
         <div 
           ref={arcContainerRef}
