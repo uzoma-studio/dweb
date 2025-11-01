@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center px-6 text-center  text-white">
+    <div className="min-h-screen pt-26 pb-16 flex flex-col justify-center items-center px-6 text-center  text-white">
      <Header />
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -32,8 +32,11 @@ export default function AboutPage() {
           >
             Decentralized Web (DWeb) for Creators is an 8-week online course that empowers artists, designers, archivists, gallerists, curators, and others with the knowledge and tools necessary for exploring the decentralized web. Through lecture, discussion, and hands-on practice with emerging technologies, participants in DWeb for Creators will use an intersectional lens to study the theoretical frameworks that shape the decentralized web. Participants will engage with technologies like blockchain and mesh networks; examine case studies in curation, publishing, data sovereignty, and community building; and apply decolonial approaches to world building as they envision the future of DWeb technologies. Culminating in an online salon where students will present their projects and ideas developed during the course, this course provides the necessary background, skills, and support to adopt decentralized technology into every creative practice.
             DWeb for Creators is led by a team of experienced instructors working at multiple intersections of the decentralized web. They represent the leading-edge of global organizing and studio art practices involving DWeb technologies. 
-            <br/><br/>
-              DWeb for Creators is made possible by the support of <a className="Aunderline" href="https://ffdweb.org/" target="_blank">Filecoin Foundation for the Decentralized Web</a>.
+            <br/>
+            <br/>
+            Learn more about the course  <Link  href="https://grayarea.org/course/dweb/" target="_blank" className="Aunderline IBMmedium">Dweb for Creators ↗</Link>
+           <br/>
+              DWeb for Creators is made possible by the support of <Link className="Aunderline IBMmedium" href="https://ffdweb.org/" target="_blank">Filecoin Foundation for the Decentralized Web ↗</Link>
         </motion.p>
         <motion.div
           whileHover={{ scale: 1.05 }}

@@ -29,7 +29,7 @@ export default function Home() {
      <main className="pt-30 lg:pt-0 flex flex-col md:flex-row justify-between items-center relative md:px-0 overflow-hidden">
       {/* Left Text */}
         <motion.div 
-          className="md:w-[70%] flex flex-col  z-10 text-left lg:pl-16 px-6 pr-0"
+          className="md:w-[70%] flex flex-col  z-10 text-left lg:pl-16 px-6 lg:pr-0"
           animate={{ opacity: isExpanding ? 0 : 1 }}
           transition={{ duration: 0.5 }}>
           <motion.h1
@@ -83,7 +83,7 @@ export default function Home() {
           >
           {/* Left side */}
           <div className="w-1/2 flex items-center justify-start md:px-10 px-6 py-4">
-            <h1 className="md:text-xl text-base text-white IBMbold">
+            <h1 className="md:text-xl text-base text-white IBMbold leading-none">
               2025 Student Project Gallery
             </h1>
           </div>
