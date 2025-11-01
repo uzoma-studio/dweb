@@ -75,6 +75,12 @@ a {
   padding: 0 0%;
 }
 
+@media (max-width: 600px) {
+  .container { 
+    height: 100%;
+  }
+}
+
 .content {
   flex: 1;
   max-width: 500px;
@@ -104,24 +110,48 @@ a {
   overflow: hidden;
 }
 
-/* For screens 1024px and smaller */
-@media (max-width: 1270px) {
-  #canvas-container {
-    max-width: 650px;
-    height: 650px; 
-  }
 
-  .text50{
-    font-size: 50px !important;
+
+/* ===== Center globe on iPad / medium screens ===== */
+/* Center globe on iPad screens, both orientations */
+@media (min-width: 800px) and (max-width: 1270px),
+       (orientation: landscape) and (min-height: 768px) and (max-height: 1024px) {
+  #canvas-container {
+    margin: 0 auto !important;
+    display: flex !important;
+    justify-content: center !important;
+    max-width: 800px;
+    height: 800px;
   }
 }
 
-@media (max-width: 860px) {
+
+@media (max-width: 500px) {
   #canvas-container {
     max-width: 580px;
     height: 580px; 
   }
 }
+
+/* ===== iPad / medium-screen fixes ===== */
+@media screen and (max-width: 1279px) {
+  .ipad-fix {
+    display: flex !important;
+  }
+  .ipad-hide {
+    display: none !important;
+  }
+}
+
+/* --- iPad / medium-screen override --- */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .ipad-force-relative {
+    position: relative !important;
+    min-height: auto !important;
+  }
+}
+
+
 
 canvas {
   display: block;
@@ -192,11 +222,6 @@ canvas {
   left: 30%;
 }
 
-@media (max-width: 1024px) {
-  .left30 {
-    left: 20%;
-  }
-}
 
 .textgreen{
  color: #BBFF00;
