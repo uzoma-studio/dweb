@@ -95,7 +95,7 @@ function ProjectsInner() {
         </motion.div>
 
         <motion.div
-          className="w-full absolute bottom-10"
+          className="w-full absolute bottom-12"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
