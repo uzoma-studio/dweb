@@ -76,7 +76,7 @@ export default function SelectedProjectModal({ project, onClose, projects = [] }
             {/* CLOSE BUTTON */}
             <button
               onClick={handleClose}
-              className="fixed top-6 right-8 cursor-pointer flex items-center justify-center w-8 h-8 rounded-full bg-red-500 hover:bg-red-700 transition-all"
+              className="fixed top-6 right-8 cursor-pointer flex items-center justify-center w-6 h-6 rounded-full bg-red-500 hover:bg-red-700 transition-all"
             >
               <MdClose className="text-white text-xl" />
             </button>
@@ -93,13 +93,13 @@ export default function SelectedProjectModal({ project, onClose, projects = [] }
               <div className="flex items-center gap-2 pt-6">
                   <button
                     onClick={handlePrev}
-                    className="cursor-pointer lg:fixed lg:top-18 lg:right-24 flex items-center justify-center lg:w-12 lg:h-12 w-10 h-10 rounded-full border-2 border-black text-black bg-transparent hover:border-transparent hover:bg-[#BBFF00] hover:text-white transition-all duration-300"
+                    className="cursor-pointer lg:fixed lg:top-18 lg:right-24 flex items-center justify-center lg:w-12 lg:h-12 w-10 h-10 rounded-full border-2 border-black text-black bg-transparent hover:border-transparent hover:bg-[#2ecc71] hover:text-white transition-all duration-300"
                   >
                     <MdArrowBackIos className="ml-[2px]" />
                   </button>
                   <button
                     onClick={handleNext}
-                    className="cursor-pointer lg:fixed lg:top-18 lg:right-8 flex items-center justify-center lg:w-12 lg:h-12 w-10 h-10 rounded-full border-2 border-black text-black bg-transparent hover:border-transparent hover:bg-[#BBFF00] hover:text-white transition-all duration-300"
+                    className="cursor-pointer lg:fixed lg:top-18 lg:right-8 flex items-center justify-center lg:w-12 lg:h-12 w-10 h-10 rounded-full border-2 border-black text-black bg-transparent hover:border-transparent hover:bg-[#2ecc71] hover:text-white transition-all duration-300"
                   >
                     <MdArrowForwardIos className="mr-[2px]" />
                   </button>
