@@ -37,6 +37,9 @@ export default function AboutPage() {
             Learn more about the course  <Link  href="https://grayarea.org/course/dweb/" target="_blank" className="Aunderline IBMmedium">Dweb for Creators ↗</Link>
            <br/>
               DWeb for Creators is made possible by the support of <Link className="Aunderline IBMmedium" href="https://ffdweb.org/" target="_blank">Filecoin Foundation for the Decentralized Web ↗</Link>
+              <br/>
+
+              This website was created by <Link className="Aunderline IBMmedium" href="https:uzoma.studio" target="_blank">uzoma.studio ↗</Link>
         </motion.p>
         <motion.div
           whileHover={{ scale: 1.05 }}
