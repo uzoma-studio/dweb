@@ -28,8 +28,7 @@ export default function Header() {
       {/* Logo section */}
       <motion.div transition={{ type: "spring", stiffness: 300 }}>
         <Link
-          href="https://grayarea.org/course/dweb/"
-          target="_blank"
+          href="/"
           rel="noopener noreferrer"
           className="flex items-center p-2 md:p-4 z-100"
         >
