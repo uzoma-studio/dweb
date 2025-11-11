@@ -54,17 +54,17 @@ function ProjectsInner() {
       <div className="hidden lg:flex  medium-hide h-screen relative">
         <motion.div
           className="w-1/2 h-screen fixed left-0 z-50"
-          initial={{ opacity: 0, x: -100 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ type: "spring", stiffness: 100, damping: 20 }}
+        initial={{ opacity: 0, x: -100 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{
+          type: "spring",
+          stiffness: 100,
+          damping: 20,
+          opacity: { duration: 0.8, delay: 0.2 },
+        }}
         >
-          <GlobeSection
-            openProject={openProject}
-            projects={formattedProjects}
-          />
+          <GlobeSection openProject={openProject} projects={formattedProjects} />
         </motion.div>
-
-    
 
         <motion.div
           className="w-1/2 absolute left30"
@@ -80,39 +80,56 @@ function ProjectsInner() {
       </div>
 
       {/* Mobile layout */}
-      <div className="lg:hidden h-screen medium-fix flex flex-col relative overflow-hidden">
-        <motion.div
-          className="w-full h-full flex justify-center items-center"
-          layoutId="globe-container"
+      <>
+        <div className="lg:hidden h-screen medium-fix flex flex-col relative overflow-hidden">
+      
+          <motion.div
+            className="w-full h-full flex justify-center items-center"
+            layoutId="globe-container"
           initial={{ opacity: 0, y: -100 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 100, damping: 20 }}
-        >
-          <GlobeSection
-            openProject={openProject}
-            projects={formattedProjects}
-          />
-        </motion.div>
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              type: "spring",
+              stiffness: 100,
+              damping: 20,
+              opacity: { duration: 0.8, delay: 0.2 },
+            }}
+            >
+            <GlobeSection openProject={openProject} projects={formattedProjects} />
+          </motion.div>
 
-        <motion.div
-          className="w-full absolute bottom-12"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-        >
-          <ArcScrollProjects
-            openProject={openProject}
-            selectedProject={selectedProject}
-          />
-        </motion.div>
-      </div>
+
+          <div className="absolute w-full bottom-0">
+            <motion.div
+              className="w-full"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}>
+              <ArcScrollProjects
+                openProject={openProject}
+                selectedProject={selectedProject}
+              />
+            </motion.div>
+              <motion.footer
+                className="lg:hidden bottom-0 left-0 w-full flex"
+                transition={{ duration: 0.5 }}>
+                <div className="w-1/2 flex items-center justify-start md:px-10 px-6 py-4">
+                  <h1 className="md:text-xl text-base text-white IBMbold leading-none">
+                    DWeb for Creators 2025
+                  </h1>
+                </div>
+              </motion.footer>
+          </div>
+
+        </div>
+        </>
 
       {selectedProject && (
         <SelectedProjectModal project={selectedProject} onClose={closeProject}   projects={formattedProjects}/>
       )}
 
       <motion.footer
-        className="fixed bottom-0 left-0 w-full flex"
+        className="hidden fixed bottom-0 left-0 w-full lg:flex"
         transition={{ duration: 0.5 }}>
         <div className="w-1/2 flex items-center justify-start md:px-10 px-6 py-4">
           <h1 className="md:text-xl text-base text-white IBMbold leading-none">
