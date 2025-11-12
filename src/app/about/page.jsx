@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen pt-26 pb-16 flex flex-col justify-center items-center px-6 text-center  text-white">
+    <div className="min-h-screen pt-20 pb-16 flex flex-col justify-center items-center px-6 text-center  text-white">
      <Header />
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -18,29 +18,51 @@ export default function AboutPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
             className="text-4xl md:text-6xl  z-10 text-left relative IBMbold 
-                      lg:pb-16 pb-8
-                      bg-[url('/wave1.svg')] bg-no-repeat bg-[length:70%] 
-                      bg-[position:50%_50%]">
+                      pb-0">
             DWeb for Creators
           </motion.h1>
+
+            <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 1 }}
+            className="text-sm Bodytext IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-0"
+          >
+           DWeb for Creators is an 8-week online course that empowers artists, designers, archivists, gallerists, curators, and others with the knowledge and tools necessary for exploring the decentralized web. Participants engage with technologies like blockchain and mesh networks; examine case studies in curation, publishing, data sovereignty, and community building; and apply decolonial approaches to world building as they envision the future of DWeb technologies. The 2025 edition of the course culminated in a public salon where students presented their research, sketches, and projects developed during the course.
+          </motion.p>
+          <motion.p
+           initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 1 }}
+            className="text-sm Bodytext IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-0"> 
+            The course’s <a className="Aunderline" target="_blank" href="https://github.com/GrayAreaorg/dweb-curriculum-2025">open-source curriculum</a> was created by Gray Area and a team of experienced instructors and advisors working at multiple intersections of the decentralized web: 
+             <a className="Aunderline" target="_blank" href="https://ayanazairecotton.com/"> Ayana Zaire Cotton</a>, <a className="Aunderline" target="_blank" href="https://kelaninichole.com/">  Kelani Nichole</a>, 
+             <a className="Aunderline" target="_blank" href="https://maisutton.net/"> mai ishikawa sutton</a>, <a className="Aunderline" target="_blank" href="https://grayarea.org/community-entry/ngoc-trieu/">ngọc triệu</a>, 
+             <a className="Aunderline" target="_blank" href="https://grayarea.org/community-entry/regina-harsanyi/"> Regina Harsanyi</a>, <a className="Aunderline" target="_blank" href="https://isthisa.com/">Sarah Friend</a>, 
+             <a className="Aunderline" target="_blank" href="https://chootka.com/"> Sarah Grant</a>, and  <a className="Aunderline" target="_blank" href="https://www.habritual.studio/">Roxi Shohadaee.</a> 
+          </motion.p>
+          <motion.p
+           initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 1 }}
+            className="text-sm Bodytext pt-2 IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-0"> 
+            DWeb for Creators is made possible by the support of
+            <a className="Aunderline" target="_blank" href="https://ffdweb.org/"> Filecoin Foundation for the Decentralized Web ↗</a>
+          </motion.p>
 
          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 1 }}
-            className="lg:text-sm text-xs IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-0"
+            className="text-sm Bodytext pt-2 IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-0"
           >
-            Decentralized Web (DWeb) for Creators is an 8-week online course that empowers artists, designers, archivists, gallerists, curators, and others with the knowledge and tools necessary for exploring the decentralized web. Through lecture, discussion, and hands-on practice with emerging technologies, participants in DWeb for Creators will use an intersectional lens to study the theoretical frameworks that shape the decentralized web. Participants will engage with technologies like blockchain and mesh networks; examine case studies in curation, publishing, data sovereignty, and community building; and apply decolonial approaches to world building as they envision the future of DWeb technologies. Culminating in an online salon where students will present their projects and ideas developed during the course, this course provides the necessary background, skills, and support to adopt decentralized technology into every creative practice.
-            DWeb for Creators is led by a team of experienced instructors working at multiple intersections of the decentralized web. They represent the leading-edge of global organizing and studio art practices involving DWeb technologies. 
-            <br/>
-            <br/>
+          
             Learn more about the course  <Link  href="https://grayarea.org/course/dweb/" target="_blank" className="Aunderline IBMmedium">Dweb for Creators ↗</Link>
            <br/>
-              DWeb for Creators is made possible by the support of <Link className="Aunderline IBMmedium" href="https://ffdweb.org/" target="_blank">Filecoin Foundation for the Decentralized Web ↗</Link>
-              <br/>
-
+           
               This website was created by <Link className="Aunderline IBMmedium" href="https:uzoma.studio" target="_blank">uzoma.studio ↗</Link>
         </motion.p>
+
         <motion.div
           whileHover={{ scale: 1.05 }}
           className="inline-block mt-10"

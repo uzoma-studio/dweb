@@ -215,7 +215,7 @@ canvas {
 }
 
 .left30 {
-  left: 30%;
+  left: 28%;
 }
 
 
@@ -233,10 +233,24 @@ canvas {
 
 .Aunderline {
   text-decoration: underline !important;
+  font-family: 'IBMmedium' !important;
+}
+.Aunderline:hover {
+  opacity: 0.8;
+  transform: translateY(-1px);
 }
 
 .bg-offW{
   background-color: #f0f0fe;
 }
 
+.Bodytext {
+  font-size: 14px !important;
+}
 
+
+@media (max-height: 750px) and (max-width: 500px) {
+  .Bodytext {
+    font-size: 12px !important;
+  }
+}
