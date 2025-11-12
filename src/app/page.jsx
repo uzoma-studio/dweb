@@ -12,13 +12,15 @@ export default function Home() {
   const { setIsTransitioning } = useTransition();
   const [isExpanding, setIsExpanding] = useState(false);
 
-  const handleExploreClick = async () => {
-    setIsExpanding(true);
-    setIsTransitioning(true);
-    setTimeout(() => {
-      router.push('/projects');
-    }, 1000);
-  };
+      const handleExploreClick = async () => {
+      setIsExpanding(true);
+      setIsTransitioning(true);
+
+        // Shorter delay to sync with the fade-out
+        setTimeout(() => {
+          router.push('/projects');
+        }, 800);
+      };
 
 
   return (
@@ -26,7 +28,7 @@ export default function Home() {
       <Header />
 
       {/* Main Content */}
-     <main className="pt-30 lg:pt-0 flex flex-col md:flex-row justify-between items-center relative md:px-0 overflow-hidden">
+     <main className="pt-26 lg:pt-10 md:pt-22 flex flex-col md:flex-row justify-between items-center relative md:px-0 overflow-hidden">
       {/* Left Text */}
         <motion.div 
           className="md:w-[70%] flex flex-col  z-10 text-left lg:pl-16 px-6 lg:pr-0"
@@ -36,10 +38,8 @@ export default function Home() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
-            className="text-4xl md:text-6xl text50 z-10 text-left relative IBMbold 
-                      lg:pb-16 pb-8
-                      bg-[url('/wave1.svg')] bg-no-repeat bg-[length:70%] 
-                      bg-[position:50%_50%]">
+            className="text-4xl lg:text-6xl text50 z-10 text-left relative IBMbold 
+                      lg:pb-6 pb-4 ">
             DWeb for Creators
           </motion.h1>
 
@@ -47,32 +47,68 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 1 }}
-            className="lg:text-sm text-xs IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-0"
+            className=" Bodytext leading-5 IBMregular text-white max-w-4xl z-10 text-left mb-0"
           >
-            Decentralized Web (DWeb) for Creators is an 8-week online course that empowers artists, designers, archivists, gallerists, curators, and others with the knowledge and tools necessary for exploring the decentralized web. Through lecture, discussion, and hands-on practice with emerging technologies, participants in DWeb for Creators will use an intersectional lens to study the theoretical frameworks that shape the decentralized web. Participants will engage with technologies like blockchain and mesh networks; examine case studies in curation, publishing, data sovereignty, and community building; and apply decolonial approaches to world building as they envision the future of DWeb technologies. Culminating in an online salon where students will present their projects and ideas developed during the course, this course provides the necessary background, skills, and support to adopt decentralized technology into every creative practice.
-             </motion.p>
+           DWeb for Creators is an 8-week online course that empowers artists, designers, archivists, gallerists, curators, and others with the knowledge and tools necessary for exploring the decentralized web. Participants engage with technologies like blockchain and mesh networks; examine case studies in curation, publishing, data sovereignty, and community building; and apply decolonial approaches to world building as they envision the future of DWeb technologies. The 2025 edition of the course culminated in a public salon where students presented their research, sketches, and projects developed during the course.
+          </motion.p>
+          <motion.p
+           initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 1 }}
+            className=" Bodytext IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-0"> 
+            The course’s <a className="Aunderline" target="_blank" href="https://github.com/GrayAreaorg/dweb-curriculum-2025">open-source curriculum</a> was created by Gray Area and a team of experienced instructors and advisors working at multiple intersections of the decentralized web: 
+             <a className="Aunderline" target="_blank" href="https://ayanazairecotton.com/"> Ayana Zaire Cotton</a>, <a className="Aunderline" target="_blank" href="https://kelaninichole.com/">  Kelani Nichole</a>, 
+             <a className="Aunderline" target="_blank" href="https://maisutton.net/"> mai ishikawa sutton</a>, <a className="Aunderline" target="_blank" href="https://grayarea.org/community-entry/ngoc-trieu/">ngọc triệu</a>, 
+             <a className="Aunderline" target="_blank" href="https://grayarea.org/community-entry/regina-harsanyi/"> Regina Harsanyi</a>, <a className="Aunderline" target="_blank" href="https://isthisa.com/">Sarah Friend</a>, 
+             <a className="Aunderline" target="_blank" href="https://chootka.com/"> Sarah Grant</a>, and  <a className="Aunderline" target="_blank" href="https://www.habritual.studio/">Roxi Shohadaee.</a> 
+          </motion.p>
+          <motion.p
+           initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 1 }}
+            className=" Bodytext IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-0"> 
+            DWeb for Creators is made possible by the support of
+            <a className="Aunderline" target="_blank" href="https://ffdweb.org/"> Filecoin Foundation for the Decentralized Web</a>
+          </motion.p>
+            
+             <div className="hidden lg:flex items-center justify-start py-6">
+                <motion.button
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 200, duration: 1 }}
+                  onClick={handleExploreClick}
+                  className="lg:px-8 px-4 py-3 md:text-base text-sm IBMmedium bg-white/5 backdrop-blur-sm border border-white text-white rounded-lg cursor-pointer hover:bg-white/10 transition"
+                >
+                  Explore Projects
+                </motion.button>
+              </div>
        </motion.div>
 
         {/* Right Globe */}
-        <motion.div 
-          className="w-full md:w-[50%] flex flex-auto justify-start items-center relative md:translate-x-[15%]"
-          layoutId="globe-container"
-          animate={{
-            x: isExpanding ? "0%" : "0%",
-            y: isExpanding ? "-10%" : "0%",
-            scale: isExpanding ? 3 : 1,
-           
-          }}
-          transition={{
-            type: "spring",
-            stiffness: 60,
-            damping: 80
-          }}
-        >
-          <div className="w-full h-full md:min-w-[800px]">
-            <GlobeSection />
-          </div>
-        </motion.div>
+      <motion.div 
+        className="w-full md:w-[50%] flex flex-auto justify-start items-center relative md:translate-x-[15%]"
+        layoutId="globe-container"
+      initial={{ opacity: 0, x: -100 }}
+      
+        animate={{
+          x: isExpanding ? "0%" : "0%",
+          y: isExpanding ? "-10%" : "0%",
+          scale: isExpanding ? 3 : 1,
+          opacity: isExpanding ? 0 : 1, // 👈 Fade out when expanding
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 60,
+          damping: 80,
+          opacity: { duration: 0.6 }, // smoother fade
+        }}>
+        <div className="w-full h-full md:min-w-[800px]">
+          <GlobeSection />
+        </div>
+      </motion.div>
+
       </main>
 
       {/* Footer with text left, button right */}
@@ -89,7 +125,7 @@ export default function Home() {
           </div>
 
           {/* Right side */}
-        <div className="w-1/2 flex items-center justify-end lg:px-8 px-6 py-4">
+        <div className="w-1/2 lg:hidden flex items-center justify-end lg:px-8 px-6 py-4">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

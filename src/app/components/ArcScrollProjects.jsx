@@ -141,29 +141,36 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
     };
   }, [windowSize.width]);
 
-  // Keyboard controls
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (isPausedRef.current) return;
-      
-      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-        e.preventDefault();
-        const direction = e.key === 'ArrowDown' ? -1 : 1;
-        const projectStep = 1 / projects.length;
-        velocityRef.current += direction * projectStep * 0.08;
-      }
-      
-      if (e.key === 'PageDown' || e.key === 'PageUp') {
-        e.preventDefault();
-        const direction = e.key === 'PageDown' ? -1 : 1;
-        const projectStep = 1 / projects.length;
-        velocityRef.current += direction * projectStep * 0.3;
-      }
-    };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [projects.length]);
+// Keyboard controls
+useEffect(() => {
+  const handleKeyDown = (e) => {
+    if (isPausedRef.current) return;
+
+    const projectStep = 1 / projects.length;
+
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      const direction = e.key === "ArrowDown" ? -1 : 1;
+
+      // move exactly one item, let your animation loop ease toward targetOffsetRef
+      targetOffsetRef.current += direction * projectStep;
+    }
+
+    if (e.key === "PageDown" || e.key === "PageUp") {
+      e.preventDefault();
+      const direction = e.key === "PageDown" ? -1 : 1;
+
+      // jump two projects
+      targetOffsetRef.current += direction * projectStep * 2;
+    }
+  };
+
+  window.addEventListener("keydown", handleKeyDown);
+  return () => window.removeEventListener("keydown", handleKeyDown);
+}, [projects.length]);
+
+
 
   // Scrollbar dragging
   useEffect(() => {
@@ -342,11 +349,10 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
                   top: `${y}px`,
                   transform: `translate(-50%, -50%) scale(${scale}) rotateZ(${rotation}deg)`,
                   opacity: opacity,
-                  transition: 'transform 0.1s ease-out, opacity 0.1s ease-out'
                 }}>
                 <div 
                   onClick={isCenter ? () => openProject(project) : undefined}
-                  className={`${isCenter ? 'bg-transparent' : 'bg-transparent py-20'} w-80 h-20 rounded-xl cursor-pointer transition-all flex items-center justify-start px-4 relative group`}>
+                  className={`${isCenter ? 'bg-transparent cursor-pointer py-4' : 'bg-transparent py-20'} w-75 h-20 rounded-xl transition-all flex items-center cursor-arrow select-none justify-start px-4  relative group`}>
                   <div>
                     <p className={`${isCenter ? 'text-white IBMbold text-lg' : 'text-gray-300'} text-base transition-colors leading-none`}>
                       {project.projectName}
@@ -357,11 +363,14 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
                   </div>
                   
                   {isCenter && (
-                    <div className="absolute left-full ml-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-                      <div className="bg-black/80 backdrop-blur-sm px-4 py-2 rounded-lg border border-white/20">
-                        <p className="text-white font-medium">{project.artistName}</p>
-                      </div>
-                    </div>
+               <div className="absolute left-full ml-0  top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                <div className="bg-black/80 backdrop-blur-sm px-5 py-3 rounded-xl border border-white/20 w-max max-w-[300px] break-words">
+                  <p className="text-white IBMregular leading-snug whitespace-normal break-words text-sm text-left">
+                    {project.artistName}
+                  </p>
+                </div>
+              </div>
+
                   )}
                 </div>
               </div>
@@ -369,7 +378,7 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
           })}
         </div>
       ) : (
-        <div className="w-full overflow-hidden py-10">
+        <div className="w-full overflow-hidden lg:py-10 py-4">
           <div
             ref={mobileScrollRef}
             className="flex items-center space-x-6 px-6 snap-x snap-mandatory overflow-x-scroll no-scrollbar"
