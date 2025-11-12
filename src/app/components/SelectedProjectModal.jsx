@@ -56,6 +56,8 @@ export default function SelectedProjectModal({ project, onClose, projects = [] }
 
   const videoId = activeProject.videoLink ? getYouTubeId(activeProject.videoLink) : null;
 
+  // Irrelevant comment to allow deploy pass
+
   return (
     <AnimatePresence mode="wait">
       {!isClosing && (
