@@ -76,13 +76,13 @@ export default function SelectedProjectModal({ project, onClose, projects = [] }
               <div className="lg:hidden  flex items-center gap-2 ">
                   <button
                     onClick={handlePrev}
-                    className="cursor-pointer lg:fixed lg:top-18 lg:right-24 flex items-center justify-center lg:w-12 lg:h-12 w-10 h-10 rounded-full border-2 border-black text-black bg-transparent hover:border-transparent hover:bg-black hover:text-white transition-all duration-300"
+                    className="cursor-pointer lg:fixed lg:top-18 lg:right-24 flex items-center justify-center w-12 h-12 rounded-full border-2 border-black text-black bg-transparent hover:border-transparent hover:bg-black hover:text-white transition-all duration-300"
                   >
                     <MdArrowBackIos className="ml-[2px]" />
                   </button>
                   <button
                     onClick={handleNext}
-                    className="cursor-pointer lg:fixed lg:top-18 lg:right-8 flex items-center justify-center lg:w-12 lg:h-12 w-10 h-10 rounded-full border-2 border-black text-black bg-transparent hover:border-transparent hover:bg-black hover:text-white transition-all duration-300"
+                    className="cursor-pointer lg:fixed lg:top-18 lg:right-8 flex items-center justify-center w-12 h-12 rounded-full border-2 border-black text-black bg-transparent hover:border-transparent hover:bg-black hover:text-white transition-all duration-300"
                   >
                     <MdArrowForwardIos className="mr-[2px]" />
                   </button>
@@ -164,7 +164,7 @@ export default function SelectedProjectModal({ project, onClose, projects = [] }
                       alt={activeProject.projectName}
                       width={200}
                       height={200}
-                      className="rounded-lg w-full mt-6 object-cover"
+                      className="rounded-lg w-full mt-6 mb-2  object-cover"
                     />
                   )}
                 {videoId && (
