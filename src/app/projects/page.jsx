@@ -99,7 +99,7 @@ function ProjectsInner() {
           </motion.div>
 
 
-          <div className="absolute w-full bottom-0">
+          <div className="fixed bottom-0 w-full bottom-0">
             <motion.div
               className="w-full"
               initial={{ opacity: 0 }}
