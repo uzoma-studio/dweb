@@ -15,6 +15,7 @@ export default function GlobeSection({ projects, openProject }) {
     let mouse = { x: 0, y: 0 }, targetRotation = { x: 0, y: 0 };
     let raycaster, mouseVector;
     let autoRotationY = 0;
+    
 
     // DRAG state refs (persistent across renders)
     const isDraggingRef = { current: false };

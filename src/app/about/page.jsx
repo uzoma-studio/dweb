@@ -60,7 +60,7 @@ export default function AboutPage() {
             Learn more about the course  <Link  href="https://grayarea.org/course/dweb/" target="_blank" className="Aunderline IBMmedium">Dweb for Creators ↗</Link>
            <br/>
            
-              This website was created by <Link className="Aunderline IBMmedium" href="https:uzoma.studio" target="_blank">uzoma.studio ↗</Link>
+              This website was created by <Link className="Aunderline IBMmedium" href="https://uzoma.studio/" target="_blank">uzoma.studio ↗</Link>
         </motion.p>
 
         <motion.div

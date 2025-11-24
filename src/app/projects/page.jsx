@@ -51,17 +51,16 @@ function ProjectsInner() {
       <Header />
 
       {/* Large screen */}
-      <div className="hidden lg:flex  medium-hide h-screen relative">
+    <div className="hidden lg:flex  medium-hide h-screen relative">
         <motion.div
           className="w-1/2 h-screen fixed left-0 z-50"
-        initial={{ opacity: 0, x: -100 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{
-          type: "spring",
-          stiffness: 100,
-          damping: 20,
-          opacity: { duration: 0.8, delay: 0.2 },
-        }}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{
+            duration: 1,
+            ease: "easeOut",
+            opacity: { duration: 0.8 }
+          }}
         >
           <GlobeSection openProject={openProject} projects={formattedProjects} />
         </motion.div>
