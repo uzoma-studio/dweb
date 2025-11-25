@@ -90,7 +90,7 @@ export default function Home() {
       <motion.div 
         className="w-full md:w-[50%] flex flex-auto justify-start items-center relative md:translate-x-[15%]"
         layoutId="globe-container"
-      initial={{ opacity: 0, x: -100 }}
+   initial={{ opacity: 0, scale: 0.8 }}
       
         animate={{
           x: isExpanding ? "0%" : "0%",
@@ -104,6 +104,8 @@ export default function Home() {
           damping: 80,
           opacity: { duration: 0.6 }, // smoother fade
         }}>
+
+        
         <div className="w-full h-full md:min-w-[800px]">
           <GlobeSection />
         </div>

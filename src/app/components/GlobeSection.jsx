@@ -16,6 +16,9 @@ export default function GlobeSection({ projects, openProject }) {
     let raycaster, mouseVector;
     let autoRotationY = 0;
 
+    // NEW: Track if hovering over a hotspot
+    let isHoveringHotspot = false;
+
     // DRAG state refs (persistent across renders)
     const isDraggingRef = { current: false };
     const lastPointer = { x: 0, y: 0 };
@@ -258,7 +261,12 @@ export default function GlobeSection({ projects, openProject }) {
         const u = Math.random();
         const v = Math.random();
         const theta = 2 * Math.PI * u;
-        const phi = Math.acos(2 * v - 1);
+        
+        // Restrict phi to avoid poles (top/bottom tips)
+        // phi ranges from ~30° to ~150° instead of 0° to 180°
+        const minPhi = Math.PI * 0.2; // ~10 degrees from top
+        const maxPhi = Math.PI * 0.8; // ~10 degrees from bottom
+        const phi = minPhi + v * (maxPhi - minPhi);
 
         const x = radius * Math.sin(phi) * Math.cos(theta);
         const y = radius * Math.sin(phi) * Math.sin(theta);
@@ -372,7 +380,9 @@ export default function GlobeSection({ projects, openProject }) {
       isDraggingRef.current = false;
       targetRotation.x = 0;
       targetRotation.y = 0;
+      isHoveringHotspot = false; // Reset hover state
       hideNotification();
+      hideTooltip(); // Hide tooltip when leaving canvas
     }
 
     function onWindowResize() {
@@ -405,9 +415,76 @@ export default function GlobeSection({ projects, openProject }) {
 
     function checkHotspotHover() {
       raycaster.setFromCamera(mouseVector, camera);
+      const intersects = raycaster.intersectObject(hotspots);
+      
+      // NEW: Update hover state
+      isHoveringHotspot = intersects.length > 0;
+      
       if (containerRef.current) {
-        containerRef.current.style.cursor = 
-          raycaster.intersectObject(hotspots).length > 0 ? 'pointer' : 'default';
+        containerRef.current.style.cursor = isHoveringHotspot ? 'pointer' : 'default';
+      }
+
+      // Show tooltip on hover
+      if (isHoveringHotspot && intersects.length > 0) {
+        const index = intersects[0].index;
+        const hoveredProject = hotspots.userData[index];
+        showTooltip(hoveredProject);
+      } else {
+        hideTooltip();
+      }
+    }
+
+    function showTooltip(projectInfo) {
+      let tooltip = document.getElementById('globe-tooltip');
+      if (!tooltip) {
+        tooltip = document.createElement('div');
+        tooltip.id = 'globe-tooltip';
+        tooltip.style.cssText = `
+          position: fixed;
+          background: rgba(0, 0, 0, 0.9);
+          color: #fff;
+          padding: 8px 12px;
+          border-radius: 6px;
+          font-size: 13px;
+          font-weight: 600;
+          pointer-events: none;
+          z-index: 1000;
+          white-space: nowrap;
+          border: 1px solid rgba(187, 255, 0, 0.3);
+          box-shadow: 0 4px 12px rgba(187, 255, 0, 0.2);
+          opacity: 0;
+          transition: opacity 0.2s ease;
+          white-space: normal;      
+          max-width: 250px;        
+          word-break: break-word;   
+        `;
+        document.body.appendChild(tooltip);
+      }
+
+      tooltip.textContent = projectInfo.title;
+      tooltip.style.opacity = '1';
+
+      // Position tooltip near cursor
+      const updateTooltipPosition = (e) => {
+        tooltip.style.left = (e.clientX + 15) + 'px';
+        tooltip.style.top = (e.clientY + 15) + 'px';
+      };
+
+      // Store the listener so we can update position
+      if (!tooltip.positionListener) {
+        tooltip.positionListener = updateTooltipPosition;
+        containerRef.current.addEventListener('pointermove', tooltip.positionListener);
+      }
+    }
+
+    function hideTooltip() {
+      const tooltip = document.getElementById('globe-tooltip');
+      if (tooltip) {
+        tooltip.style.opacity = '0';
+        if (tooltip.positionListener && containerRef.current) {
+          containerRef.current.removeEventListener('pointermove', tooltip.positionListener);
+          tooltip.positionListener = null;
+        }
       }
     }
 
@@ -442,7 +519,13 @@ export default function GlobeSection({ projects, openProject }) {
       requestAnimationFrame(animate);
       const time = Date.now() * 0.001;
 
-      const rotationSpeed = 0.003;
+      // NEW: Adjust rotation speed based on hover state
+      const baseRotationSpeed = 0.003;
+      const hoverSlowdownFactor = 0.25; // 25% of normal speed when hovering (adjust this value)
+      const rotationSpeed = isHoveringHotspot 
+        ? baseRotationSpeed * hoverSlowdownFactor 
+        : baseRotationSpeed;
+      
       autoRotationY += rotationSpeed;
       const desiredY = autoRotationY + targetRotation.y;
       
@@ -511,6 +594,15 @@ export default function GlobeSection({ projects, openProject }) {
     init();
 
     return () => {
+      // Clean up tooltip
+      const tooltip = document.getElementById('globe-tooltip');
+      if (tooltip) {
+        if (tooltip.positionListener && containerRef.current) {
+          containerRef.current.removeEventListener('pointermove', tooltip.positionListener);
+        }
+        tooltip.remove();
+      }
+
       if (containerRef.current) {
         containerRef.current.removeEventListener('pointerdown', onPointerDown);
         containerRef.current.removeEventListener('pointermove', onPointerMove);

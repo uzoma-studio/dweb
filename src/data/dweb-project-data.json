@@ -1,92 +1,164 @@
 [
- {
-   "projectName": "Mothership Media Collective- The Etherdrive",
-   "artistName": "Grace Adu-Boahen",
-   "projectDescription": "Mothership Media Collective (MMC) is a decentralized media and digital archiving platform that centers Black, queer, and diasporic stories in the fight of cultural preservation and technological sovereignty. MMC remimagines how we document, archive, preserve, and share our stories by creating a tool and service that puts the power of narrative back into the hands of people.\n I created MMC because 40 or 60 years from now, I don't want our descendants to only learn about who was \"famous,\" but what about your aunty who was a hairdresser who serviced her community for years? Or your neighbor who was a doll maker who had every doll she had made in her home? What about you and the song you had on repeat in May 2012, and why? What did we sound like? What did we care or dream about? What made us laugh and what made us fight? We're living in a world where we've witnessed our stories and history get stolen, retold, and then sold back to us. But what if we can protect all of that?\nOur flagship offering, The Etherdrive, is a customizable vault that allows users to archive everything about them, including but not limited to their art, family history, favorite music, style, recipes, videos, voice notes, and writings. As well as using the archive as a digital Will to have autonomy over their digital legacy in a world where our data is currency. It starts in Notion as a downloadable template, but will evolve into a decentralized tool that preserves our stories. Secure, searchable, and sovereign. \nMMC is about memory but also presence. Who we are right now matters, and if we do not document, it disappears. This is a living archive or the everyday and the extraordinary, because we all contribute to the collective experience.",
-   "coverImage": "mmcdweb.png",
-   "website": "",
-   "artistBio": "Grace Adu-Boahen is a multidisciplinary creative, researcher, and founder of Mothership Media Collective, a platform dedicated to preserving the history of the Black diaspora. The daughter of Ghanaian Immigrant parents, Grace was raised in PG County, MD, surrounded by Black elders and leadership. Committed to culture, family, legacy, and community. Her work explores how everyday people document their lives and family history, and how we can use innovative technology to make sure our stories aren't stolen, erased, or owned by anyone else or a corporation. With love for diasporic history and digital ownership, Grace is building tools like The Etherdrive to protect the voice of the past, present, and future.",
-   "videoLink": "https://www.youtube.com/watch?v=otZ0btMM2AY"
- },
- {
-   "projectName": "{B/qKC}: a Black queer archive",
-   "artistName": "Nasir Anthony Montalvo, Anevay Martz, Sunday Adesoye Adegbenro ",
-   "projectDescription": "{B/qKC} challenges outdated archival practices through accessible storytelling and intergenerational power building. This project documents the rich and often overlooked history of Kansas City’s Black queer community, including the underground ballroom tradition and the forced closure of Soakie’s — the city’s only Black gay bar. Through a unique licensing model, contributors retain ownership of their materials while benefiting from digitization and storytelling efforts.",
-   "coverImage": "bqkc_logo640x640.gif",
-   "website": "https://kansascitydefender.com/bqkc/",
-   "artistBio": "Nasir Anthony Montalvo (b. 1999) is an essayist and memory worker based in Kansas City, MO. Montalvo uses archival praxis, digital media, popular education and the written word to move Black diasporic audiences towards life and a true dream beyond social platitudes. Montalvo's art has been exhibited locally and nationally in coffee shops, book stores, community fairs and artist galleries. Their art and archival research has also been published in NPR, Syllabus, Sixty Inches From Center, The Advocate, Teen Vogue and KC Studio; along with being used in curricula at Johns Hopkins University, Columbia University and the North Kansas City School District. Montalvo is most recently founder of {B/qKC}: a community archive of Black queer midwestern history. \n\n1800nasi.net\n\nAnevay Martz is a junior at the University of Missouri-Kansas City. They major in Sociology with a double minor in Professional Communications and Race, Ethnic, and Gender Studies. They are {B/qKC}’s Digitization Intern, where their role has been developing a Digital Asset Register (DAR) and a new website for the organization. Their interests include music, various crafts, thrifting, cafes, concerts, and hiking.\n\nSunday Adesoye Adegbenro is a Rhetoric and Composition researcher in the Department of English at the University of Kansas, Lawrence. They hold degrees in Educational Management, Discourse Analysis, and Rhetoric from the University of Ibadan, Nigeria. For over seventeen years, they have dedicated themself to teaching English Language and Literature in various institutions across Oyo State, Nigeria, where their focus on critical thinking and analytical writing led to a noticeable improvement in students' academic performance. They are the Digitization Fellow for {B/qKC}, where their focus is helping transfer all of {B/qKC}'s materials to IPFS and developing a static site.\n",
-   "videoLink": "https://www.youtube.com/watch?v=otZ0btMM2AY"
- },
- {
-   "projectName": "Right to Belong",
-   "artistName": "Joni Chan",
-   "projectDescription": "Right to Belong is a resource built by and for immigrants and refugees. It offers local guides and shared knowledge created by volunteers, grassroots groups, and self-organized communities. Each city or neighborhood page includes practical tips and resources from where to find cultural foods, recipes to where to find legal resources. Right to Belong is a tool for collective care so you don't have to start over alone in a new country.",
-   "coverImage": "compass-direction-magnetic-compass-travel-vacation-6de9fe-1024.webp",
-   "website": "",
-   "artistBio": "Joni Chan (she/her) is a Manila-born experience designer and writer who likes to reimagine a better future through storytelling and technology. Her practice is centered in environmental, food and migrant justice through storymaking/sharing, rituals and gatherings. You can learn more about her at www.jonichan.co and www.sampaguitastudio.com",
-   "videoLink": "https://www.youtube.com/watch?v=otZ0btMM2AY"
- },
- {
-   "projectName": "In the Name of the Moon: A Soft Network for Storytelling, Refusal, and Repair",
-   "artistName": "Ahreum Lee",
-   "projectDescription": "In the Name of the Moon is a GPS-based AR application and workshop series that invites users to share stories of microaggressions tied to public locations. Inspired by Sailor Moon and magical-girl transformation, the project reimagines everyday technology as a tool for collective defence and shared visibility. Through workshops, participants create personal storytelling tools and contribute location-based narratives to the platform.\nA central question driving the project is how data, especially emotionally charged, user-contributed content, can be tied to place without being owned, controlled, or erased by any central entity. I am currently exploring decentralized storage through IPFS as a possible approach, where each story remains accessible but cannot be modified. The presentation will share my current research and prototyping process, including the challenges of connecting AR, geolocation, and decentralized infrastructure in ways that are technically viable, ethically grounded, and accessible to participants.",
-   "coverImage": "PromotionalImage.png",
-   "website": "https://www.ahreumlee.com/works/in-the-name-of-the-moon-i-wont-forgive-it",
-   "artistBio": "Ahreum Lee is a media artist, musician, game maker, educator, and learner originally from Seoul, South Korea, now based in Tiohtià:ke/Mooniyang/Montréal, Canada. Her interdisciplinary practice spans web art, sound, AR, 3D animation, video installation, experimental games, and participatory workshops, engaging themes of collective memory, care, and techno-social critique. She teaches media arts at Dawson College and is a member of Coop Madaam, a feminist artist-run studio cooperative, and Quite Ourselves, an artist collective focused on public intervention. Ahreum’s recent works explore emotional infrastructure, street harassment, and digital rituals through participatory design.\nhttps://www.ahreumlee.com",
-   "videoLink": "https://www.youtube.com/watch?v=otZ0btMM2AY"
- },
- {
-   "projectName": "underground scheme",
-   "artistName": "Ki",
-   "projectDescription": "The underground scheme is a smol cozy network of artist and makers interested in media archeology and oriented towards radical interdependence through liberatory forms of media computation drawing from the Black radical tradition.",
-   "coverImage": "logo_solid.png",
-   "website": "undergroundsche.me",
-   "artistBio": "Ki is a media artist interested in new forms of media computation for the pluriverse, radical imaginings and liberatory technologies.",
-   "videoLink": "https://www.youtube.com/watch?v=otZ0btMM2AY"
- },
- {
-   "projectName": "Data Caring & Networked Narratives",
-   "artistName": "Virginia Zangs",
-   "projectDescription": "Data Caring & Networked Narratives: Collaborative Storytelling on Distributed Networks\nControl over knowledge distribution and accessibility in times of digital hyper-centralization and fragility is increasingly critical. Commonly online publishing is built within centralized, corporate frameworks that can censor, monetize, or simply disappear. Meanwhile, narratives tend to be platform moderated or algorithmically controlled, shaping what stories can be told.\nThis project proposes a collaborative platform that facilitates community-driven storytelling and preservation on IPFS. The tool will enable multiple contributors to write about shared events and experiences, creating networked narratives that connect different perspectives into collaborative viewpoints. Beginning with a digital space as an invitation to learn about distributed networks, the platform guides contributors through sharing, preserving, and storing their stories on IPFS.\nThe platform will facilitate the writing, connecting and storing of multiperspective narratives and memories, making these interconnected stories accessible and secured through decentralized technologies. The project functions as both practical tool and conceptual prototype—a distributed web approach to data caring—collaborative, consensual knowledge preservation, sharing and sovereignty. Through IPFS peer-to-peer networks, contributors maintain control over their data while participating in a resilient, growing community-maintained narrative framework.",
-   "coverImage": "VZangs_image_20250610_01.png",
-   "website": "",
-   "artistBio": "Virginia Zangs,  M.S. Computational Design Practices Columbia GSAPP24, M.A. Architecture TUM, combines critical computational design with her background in architecture and critical theory. She explores the convergence of technology, culture, and place. Virginia’s experience spans cultural institutions, research labs, and design studios. She is founding partner of interMediations.xyz, of ZM ZangsMicha.love and liaison of Mutua.nyc.\n\nhttp://virginiazangs.com/",
-   "videoLink": ""
- },
- {
-   "projectName": "c0de switch",
-   "artistName": "miliaku",
-   "projectDescription": "c0de switch is a participatory action research project with a vision to seed collectively stewarded, surveillance resistant digital infrastructure within communities rendered subaltern, alternative, or divergent—by way of their identity or ideology. This project is vetting and edifying existing solutions offered by the distributed, decentralized, free and open source web as potential exit points from the hegemonic web. \nIn the wake of mass censorship and social engineering online, c0de switch pulls from historical analysis of 'exits' from and refusals of compulsory participation in hegemonic systems to reveal a path towards digital marronage by attempting to build one.",
-   "coverImage": "c0de switch Update & Feedbak.jpg",
-   "website": "https://just-tech.ssrc.org/our-network/miliaku-nwabueze/",
-   "artistBio": "miliaku nwabueze is an anti-disciplinarian constellation architect, chaos orchestrator, and glitch enthusiast who splits her time between New York and Atlanta. She is a queer, Igbo-Black American originally born and raised in Detroit who writes, designs, and wonders toward the endings of this world.",
-   "videoLink": "https://www.youtube.com/watch?v=otZ0btMM2AY"
- },
- {
-   "projectName": "Mobility Independence Foundation Web Portal",
-   "artistName": "Chase Kahn, Matt Lacey",
-   "projectDescription": "We will be showcasing our web portal project, which provides a place where various organizations and individuals can share knowledge, information, and files regarding mobility technology. The web portal will have a repository of open-source files for building and modifying mobility technology, a forum for discussing, and a directory of organizations, businesses, and individuals who do work and have resources for building and modifying the technology.",
-   "coverImage": "MIF Poster.png",
-   "website": "https://themif.org/",
-   "artistBio": "Matt: As a maintenance technician, he’s worked on both electrical and mechanical machinery. Matt grew up in a family that always did their own work to repair anything at their homes. From house repair to automotive and lawn equipment they would just get things done. Even neighbors in need of repair assistance can always count on him to do what they can not. He believes a community should come together and utilize each person’s skills to help each other and those who can not help themselves. His journey with The MIF began before its inception while helping our founder, Tom, to repair and upgrade his chair. From those early beginnings he’s helping shape what we can do for generations to come. https://www.linkedin.com/in/matt-lacey-2a8021237/\n\nChase: I am a manual wheelchair user and industrial designer who believes in designing with the needs of the user in the forefront. I have been involved in the disability community since before their condition began affecting their mobility, and their resolve has only strengthened since. I’m also the cofounder of Chase Mobility, a company that is developing mobility technology that prioritizes user autonomy, reparability, and affordability. My strongest belief is that “we absolutely must take care of each other.” We are stronger in numbers, and community care is the way of the future. https://www.linkedin.com/in/chase-kahn/",
-   "videoLink": "https://www.youtube.com/watch?v=otZ0btMM2AY"
- },
- {
-   "projectName": "Ancestral AI Mesh: Rethinking Memory Through Decentralized Networks",
-   "artistName": "Mario Guzman",
-   "projectDescription": "This project explores how decentralized technologies can carry ancestral knowledge through poetic and ecological infrastructures. It proposes a lightweight mesh network of biodegradable devices that collect and transmit environmental data while integrating symbolic and cultural values. These nodes are imagined not just as sensors, but as ritualistic tools to reweave our connection with land, time, and memory through artificial intelligence.\n",
-   "coverImage": "Ancestral AI Mesh - Mario Guzman.png",
-   "website": "",
-   "artistBio": "Mario Guzman is a Mexican new media artist, AI researcher, and professor working at the intersection of robotics, code, and Latin American cultural narratives. With a background in experimental literature and technology, his work blends storytelling with computer controlled systems to explore new forms of ecological and ancestral memory. 🔗 www.mario-guzman.com",
-   "videoLink": "https://www.youtube.com/watch?v=otZ0btMM2AY"
- },
- {
-   "projectName": "guacamaya net.work",
-   "artistName": "jorge courtade",
-   "projectDescription": "the guacamaya net.work is a decentralized archive of honduran art, culture and music built using IPFS.. along with the archive, there is a small-scale federated social network component, used to connect hondurans in diaspora for skillsharing, cultural preservation and mutual aid.",
-   "coverImage": "guacamaya2.png",
-   "website": "",
-   "artistBio": "Jorge Courtade is a honduran-salvadoran-american producer, DJ and graphic designer based in San Francisco with releases on labels in Mexico, Poland, Colombia and the U.S. He runs an event series called Amor Digital which focuses on club music from the Américas while running a studio and storefront in the Excelsior District. He views music as a vessel to explore complex histories of migration, cultural exchange and social commentary. \n\nhttps://amor-digital.com/",
-   "videoLink": "https://www.youtube.com/watch?v=otZ0btMM2AY"
- }
+  {
+    "projectName": "Mothership Media Collective- The Etherdrive",
+    "artistName": "Grace Adu-Boahen",
+    "projectDescription": "Mothership Media Collective (MMC) is a decentralized media and digital archiving platform that centers Black, queer, and diasporic stories in the fight of cultural preservation and technological sovereignty. MMC remimagines how we document, archive, preserve, and share our stories by creating a tool and service that puts the power of narrative back into the hands of people.\n I created MMC because 40 or 60 years from now, I don't want our descendants to only learn about who was \"famous,\" but what about your aunty who was a hairdresser who serviced her community for years? Or your neighbor who was a doll maker who had every doll she had made in her home? What about you and the song you had on repeat in May 2012, and why? What did we sound like? What did we care or dream about? What made us laugh and what made us fight? We're living in a world where we've witnessed our stories and history get stolen, retold, and then sold back to us. But what if we can protect all of that?\nOur flagship offering, The Etherdrive, is a customizable vault that allows users to archive everything about them, including but not limited to their art, family history, favorite music, style, recipes, videos, voice notes, and writings. As well as using the archive as a digital Will to have autonomy over their digital legacy in a world where our data is currency. It starts in Notion as a downloadable template, but will evolve into a decentralized tool that preserves our stories. Secure, searchable, and sovereign. \nMMC is about memory but also presence. Who we are right now matters, and if we do not document, it disappears. This is a living archive or the everyday and the extraordinary, because we all contribute to the collective experience.",
+    "coverImage": "mmcdweb.png",
+    "website": "",
+    "artists": [
+      {
+        "name": "Grace Adu-Boahen",
+        "bio": "Grace Adu-Boahen is a multidisciplinary creative, researcher, and founder of Mothership Media Collective, a platform dedicated to preserving the history of the Black diaspora. The daughter of Ghanaian Immigrant parents, Grace was raised in PG County, MD, surrounded by Black elders and leadership. Committed to culture, family, legacy, and community. Her work explores how everyday people document their lives and family history, and how we can use innovative technology to make sure our stories aren't stolen, erased, or owned by anyone else or a corporation. With love for diasporic history and digital ownership, Grace is building tools like The Etherdrive to protect the voice of the past, present, and future."
+      }
+    ],
+    "videoLink": "https://www.youtube.com/watch?v=LYD6PrC1ggs"
+  },
+  {
+    "projectName": "{B/qKC}: a Black queer archive",
+    "artistName": "Nasir Anthony Montalvo, Anevay Martz, Sunday Adesoye Adegbenro ",
+    "projectDescription": "{B/qKC} challenges outdated archival practices through accessible storytelling and intergenerational power building. This project documents the rich and often overlooked history of Kansas City’s Black queer community, including the underground ballroom tradition and the forced closure of Soakie’s — the city’s only Black gay bar. Through a unique licensing model, contributors retain ownership of their materials while benefiting from digitization and storytelling efforts.",
+    "coverImage": "bqkc_logo640x640.gif",
+    "website": "https://kansascitydefender.com/bqkc/",
+    "artists": [
+      {
+        "name": "Nasir Anthony Montalvo",
+        "bio": "Nasir Anthony Montalvo (b. 1999) is an essayist and memory worker based in Kansas City, MO. Montalvo uses archival praxis, digital media, popular education and the written word to move Black diasporic audiences towards life and a true dream beyond social platitudes. Montalvo's art has been exhibited locally and nationally in coffee shops, book stores, community fairs and artist galleries. Their art and archival research has also been published in NPR, Syllabus, Sixty Inches From Center, The Advocate, Teen Vogue and KC Studio; along with being used in curricula at Johns Hopkins University, Columbia University and the North Kansas City School District. Montalvo is most recently founder of {B/qKC}: a community archive of Black queer midwestern history.",
+        "link": "1800nasi.net"
+      },
+      {
+        "name": "Anevay Martz",
+        "bio": "Anevay Martz is a junior at the University of Missouri-Kansas City. They major in Sociology with a double minor in Professional Communications and Race, Ethnic, and Gender Studies. They are {B/qKC}'s Digitization Intern, where their role has been developing a Digital Asset Register (DAR) and a new website for the organization. Their interests include music, various crafts, thrifting, cafes, concerts, and hiking."
+      },
+      {
+        "name": "Sunday Adesoye Adegbenro",
+        "bio": "Sunday Adesoye Adegbenro is a Rhetoric and Composition researcher in the Department of English at the University of Kansas, Lawrence. They hold degrees in Educational Management, Discourse Analysis, and Rhetoric from the University of Ibadan, Nigeria. For over seventeen years, they have dedicated themself to teaching English Language and Literature in various institutions across Oyo State, Nigeria, where their focus on critical thinking and analytical writing led to a noticeable improvement in students' academic performance. They are the Digitization Fellow for {B/qKC}, where their focus is helping transfer all of {B/qKC}'s materials to IPFS and developing a static site."
+      }
+    ],
+    "videoLink": "https://www.youtube.com/watch?v=l-f2LmmuTTI"
+  },
+  {
+    "projectName": "Right to Belong",
+    "artistName": "Joni Chan",
+    "projectDescription": "Right to Belong is a resource built by and for immigrants and refugees. It offers local guides and shared knowledge created by volunteers, grassroots groups, and self-organized communities. Each city or neighborhood page includes practical tips and resources from where to find cultural foods, recipes to where to find legal resources. Right to Belong is a tool for collective care so you don't have to start over alone in a new country.",
+    "coverImage": "compass-direction-magnetic-compass-travel-vacation-6de9fe-1024.webp",
+    "website": "",
+    "artists": [
+      {
+        "name": "Joni Chan",
+        "bio": "Joni Chan (she/her) is a Manila-born experience designer and writer who likes to reimagine a better future through storytelling and technology. Her practice is centered in environmental, food and migrant justice through storymaking/sharing, rituals and gatherings. You can learn more about her at www.jonichan.co and www.sampaguitastudio.com.",
+        "link": "www.jonichan.co"
+      }
+    ],
+    "videoLink": "https://www.youtube.com/watch?v=L7p5LCbXtBo"
+  },
+  {
+    "projectName": "In the Name of the Moon: A Soft Network for Storytelling, Refusal, and Repair",
+    "artistName": "Ahreum Lee",
+    "projectDescription": "In the Name of the Moon is a GPS-based AR application and workshop series that invites users to share stories of microaggressions tied to public locations. Inspired by Sailor Moon and magical-girl transformation, the project reimagines everyday technology as a tool for collective defence and shared visibility. Through workshops, participants create personal storytelling tools and contribute location-based narratives to the platform.\nA central question driving the project is how data, especially emotionally charged, user-contributed content, can be tied to place without being owned, controlled, or erased by any central entity. I am currently exploring decentralized storage through IPFS as a possible approach, where each story remains accessible but cannot be modified. The presentation will share my current research and prototyping process, including the challenges of connecting AR, geolocation, and decentralized infrastructure in ways that are technically viable, ethically grounded, and accessible to participants.",
+    "coverImage": "PromotionalImage.png",
+    "website": "https://www.ahreumlee.com/works/in-the-name-of-the-moon-i-wont-forgive-it",
+    "artists": [
+      {
+        "name": "Ahreum Lee",
+        "bio": "Ahreum Lee is a media artist, musician, game maker, educator, and learner originally from Seoul, South Korea, now based in Tiohtià:ke/Mooniyang/Montréal, Canada. Her interdisciplinary practice spans web art, sound, AR, 3D animation, video installation, experimental games, and participatory workshops, engaging themes of collective memory, care, and techno-social critique. She teaches media arts at Dawson College and is a member of Coop Madaam, a feminist artist-run studio cooperative, and Quite Ourselves, an artist collective focused on public intervention. Ahreum’s recent works explore emotional infrastructure, street harassment, and digital rituals through participatory design.",
+        "link": "https://www.ahreumlee.com"
+      }
+    ],
+    "artistBio": "https://www.ahreumlee.com",
+    "videoLink": "https://www.youtube.com/watch?v=yAk8d2K6wzU"
+  },
+  {
+    "projectName": "underground scheme",
+    "artistName": "Ki",
+    "projectDescription": "The underground scheme is a smol cozy network of artist and makers interested in media archeology and oriented towards radical interdependence through liberatory forms of media computation drawing from the Black radical tradition.",
+    "coverImage": "logo_solid.png",
+    "website": "undergroundsche.me",
+    "artists": [
+      {
+        "name": "Ki",
+        "bio": "Ki is a media artist interested in new forms of media computation for the pluriverse, radical imaginings and liberatory technologies."
+      }
+    ],
+    "videoLink": "https://www.youtube.com/watch?v=ix5YIz8oJm0"
+  },
+  {
+    "projectName": "Data Caring & Networked Narratives",
+    "artistName": "Virginia Zangs",
+    "projectDescription": "Data Caring & Networked Narratives: Collaborative Storytelling on Distributed Networks\nControl over knowledge distribution and accessibility in times of digital hyper-centralization and fragility is increasingly critical. Commonly online publishing is built within centralized, corporate frameworks that can censor, monetize, or simply disappear. Meanwhile, narratives tend to be platform moderated or algorithmically controlled, shaping what stories can be told.\nThis project proposes a collaborative platform that facilitates community-driven storytelling and preservation on IPFS. The tool will enable multiple contributors to write about shared events and experiences, creating networked narratives that connect different perspectives into collaborative viewpoints. Beginning with a digital space as an invitation to learn about distributed networks, the platform guides contributors through sharing, preserving, and storing their stories on IPFS.\nThe platform will facilitate the writing, connecting and storing of multiperspective narratives and memories, making these interconnected stories accessible and secured through decentralized technologies. The project functions as both practical tool and conceptual prototype—a distributed web approach to data caring—collaborative, consensual knowledge preservation, sharing and sovereignty. Through IPFS peer-to-peer networks, contributors maintain control over their data while participating in a resilient, growing community-maintained narrative framework.",
+    "coverImage": "VZangs_image_20250610_01.png",
+    "website": "",
+    "artists": [
+      {
+        "name": "Virginia Zangs",
+        "bio": "Virginia Zangs,  M.S. Computational Design Practices Columbia GSAPP24, M.A. Architecture TUM, combines critical computational design with her background in architecture and critical theory. She explores the convergence of technology, culture, and place. Virginia’s experience spans cultural institutions, research labs, and design studios. She is founding partner of interMediations.xyz, of ZM ZangsMicha.love and liaison of Mutua.nyc.",
+        "link": "http://virginiazangs.com/"
+      }
+    ],
+    "videoLink": ""
+  },
+  {
+    "projectName": "c0de switch",
+    "artistName": "miliaku nwabueze",
+    "projectDescription": "c0de switch is a participatory action research project with a vision to seed collectively stewarded, surveillance resistant digital infrastructure within communities rendered subaltern, alternative, or divergent—by way of their identity or ideology. This project is vetting and edifying existing solutions offered by the distributed, decentralized, free and open source web as potential exit points from the hegemonic web. \nIn the wake of mass censorship and social engineering online, c0de switch pulls from historical analysis of 'exits' from and refusals of compulsory participation in hegemonic systems to reveal a path towards digital marronage by attempting to build one.",
+    "coverImage": "c0de switch Update & Feedbak.jpg",
+    "website": "https://just-tech.ssrc.org/our-network/miliaku-nwabueze/",
+    "artists": [
+      {
+        "name": "miliaku nwabueze",
+        "bio": "miliaku nwabueze is an anti-disciplinarian constellation architect, chaos orchestrator, and glitch enthusiast who splits her time between New York and Atlanta. She is a queer, Igbo-Black American originally born and raised in Detroit who writes, designs, and wonders toward the endings of this world."
+      }
+    ],
+    "artistBio": "miliaku nwabueze is an anti-disciplinarian constellation architect, chaos orchestrator, and glitch enthusiast who splits her time between New York and Atlanta. She is a queer, Igbo-Black American originally born and raised in Detroit who writes, designs, and wonders toward the endings of this world.",
+    "videoLink": "https://www.youtube.com/watch?v=LO5I_h71OZA"
+  },
+  {
+    "projectName": "Mobility Independence Foundation Web Portal",
+    "artistName": "Chase Kahn, Matt Lacey",
+    "projectDescription": "We will be showcasing our web portal project, which provides a place where various organizations and individuals can share knowledge, information, and files regarding mobility technology. The web portal will have a repository of open-source files for building and modifying mobility technology, a forum for discussing, and a directory of organizations, businesses, and individuals who do work and have resources for building and modifying the technology.",
+    "coverImage": "MIF Poster.png",
+    "website": "https://themif.org/",
+    "artists": [
+      {
+        "name": "Matt Lacey",
+        "bio": "As a maintenance technician, Matt Lacey has worked on both electrical and mechanical machinery. Matt grew up in a family that always did their own work to repair anything at their homes. From house repair to automotive and lawn equipment they would just get things done. Even neighbors in need of repair assistance can always count on him to do what they can not. He believes a community should come together and utilize each person’s skills to help each other and those who can not help themselves. His journey with The MIF began before its inception while helping our founder, Tom, to repair and upgrade his chair. From those early beginnings he’s helping shape what we can do for generations to come.",
+        "link": "https://www.linkedin.com/in/matt-lacey-2a8021237/"
+      },
+      {
+        "name": "Chase Kahn",
+        "bio": "Chase Kahn is a manual wheelchair user and industrial designer who believes in designing with the needs of the user in the forefront. They have been involved in the disability community since before their condition began affecting their mobility, and their resolve has only strengthened since. They are also the cofounder of Chase Mobility, a company that is developing mobility technology that prioritizes user autonomy, reparability, and affordability. Their strongest belief is that “we absolutely must take care of each other.” We are stronger in numbers, and community care is the way of the future.",
+        "link": "https://www.linkedin.com/in/chase-kahn/"
+      }
+    ],
+    "videoLink": "https://www.youtube.com/watch?v=btBNccdNlSk"
+  },
+  {
+    "projectName": "Ancestral AI Mesh: Rethinking Memory Through Decentralized Networks",
+    "artistName": "Mario Guzman",
+    "projectDescription": "This project explores how decentralized technologies can carry ancestral knowledge through poetic and ecological infrastructures. It proposes a lightweight mesh network of biodegradable devices that collect and transmit environmental data while integrating symbolic and cultural values. These nodes are imagined not just as sensors, but as ritualistic tools to reweave our connection with land, time, and memory through artificial intelligence.\n",
+    "coverImage": "Ancestral AI Mesh - Mario Guzman.png",
+    "website": "",
+    "artists": [
+      {
+        "name": "Mario Guzman",
+        "bio": "Mario Guzman is a Mexican new media artist, AI researcher, and professor working at the intersection of robotics, code, and Latin American cultural narratives. With a background in experimental literature and technology, his work blends storytelling with computer controlled systems to explore new forms of ecological and ancestral memory.",
+        "link": "www.mario-guzman.com"
+      }
+    ],
+    "videoLink": "https://www.youtube.com/watch?v=u2nGKWRykCI"
+  },
+  {
+    "projectName": "guacamaya net.work",
+    "artistName": "jorge courtade",
+    "projectDescription": "the guacamaya net.work is a decentralized archive of honduran art, culture and music built using IPFS.. along with the archive, there is a small-scale federated social network component, used to connect hondurans in diaspora for skillsharing, cultural preservation and mutual aid.",
+    "coverImage": "guacamaya2.png",
+    "website": "",
+    "artists": [
+      {
+        "name": "jorge courtade",
+        "bio": "Jorge Courtade is a honduran-salvadoran-american producer, DJ and graphic designer based in San Francisco with releases on labels in Mexico, Poland, Colombia and the U.S. He runs an event series called Amor Digital which focuses on club music from the Américas while running a studio and storefront in the Excelsior District. He views music as a vessel to explore complex histories of migration, cultural exchange and social commentary.",
+        "link": "https://amor-digital.com/"
+      }
+    ],
+    "videoLink": "https://www.youtube.com/watch?v=ktwAefX7eT0"
+  }
 ]

@@ -157,7 +157,7 @@ export default function SelectedProjectModal({ project, onClose, projects = [] }
                       rel="noopener noreferrer"
                       className="Aunderline text-sm IBMbold"
                     >
-                      Project Site ↗
+                      Project site ↗
                     </Link>
                   )}
                   {activeProject.coverImage && (
@@ -182,42 +182,49 @@ export default function SelectedProjectModal({ project, onClose, projects = [] }
                 )}
               </div>
 
-              <div className="lg:w-1/2 lg:pl-20">
+         <div className="lg:w-1/2 lg:pl-20">
                 <div className="border border-white rounded-4xl p-6 lg:p-8 bg-offW">
-                  <p className="text-sm text-gray-400 pt-2">Artist</p>
-                  {activeProject.artistName && (
-                    <h2 className="text-xl IBMmedium mb-4 pt-1">
-                      {activeProject.artistName}
-                    </h2>
-                  )}
-                  {activeProject.artistBio && (
-                    <p className="text-sm leading-relaxed IBMregular mb-2">
-                      {activeProject.artistBio.split(
-                        /(https?:\/\/[^\s]+|www\.[^\s]+)/g
-                      ).map((part, i) => {
-                        const isLink = part.match(
-                          /^(https?:\/\/[^\s]+|www\.[^\s]+)/
-                        );
-                        if (isLink) {
-                          const url = part.startsWith("http")
-                            ? part
-                            : `https://${part}`;
-                          return (
-                            <a
-                              key={i}
-                              href={url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="Aunderline IBMmedium break-words hover:text-blue-800 transition-colors duration-150"
-                            >
-                              {part}
-                            </a>
-                          );
-                        }
-                        return part;
-                      })}
-                    </p>
-                  )}
+                  <p className="text-sm text-gray-400 pt-2 pb-2">
+                    {activeProject.artists && activeProject.artists.length > 1 ? "Artists" : "Artist"}
+                  </p>
+                  
+                  {activeProject.artists && activeProject.artists.map((artist, index) => (
+                    <div key={index} className={index > 0 ? "mt-6 pt-6 border-t border-gray-200" : ""}>
+                      {artist.name && artist.link && (
+                        <a
+                          href={artist.link.startsWith('http') ? artist.link : `https://${artist.link}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xl IBMmedium mb-2 py-2  hover:text-blue-800 transition-colors duration-150"
+                        >
+                          {artist.name}
+                        </a>
+                      )}
+
+                      {/* fallback if name exists but no link */}
+                      {artist.name && !artist.link && (
+                        <h2 className="text-xl IBMmedium mb-2 pt-1">
+                          {artist.name}
+                        </h2>
+                      )}
+
+                      {artist.bio && (
+                        <p className="text-sm leading-relaxed IBMregular mb-2">
+                          {artist.bio}
+                        </p>
+                      )}
+                      {artist.link && (
+                        <a
+                          href={artist.link.startsWith('http') ? artist.link : `https://${artist.link}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="Aunderline text-sm IBMmedium hover:text-blue-800 transition-colors duration-150"
+                        >
+                          Artist site ↗
+                        </a>
+                      )}
+                    </div>
+                  ))}
 
                 </div>
               </div>
