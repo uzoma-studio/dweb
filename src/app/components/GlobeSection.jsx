@@ -1,11 +1,26 @@
 "use client";
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import * as THREE from 'three';
 import projectData from "@/data/dweb-project-data.json";
 
-export default function GlobeSection({ projects, openProject }) {
+export default function GlobeSection({ onHotspotClick }) {
   const containerRef = useRef(null);
+  
+  // Memoize projects to prevent re-shuffling on every render
+  const projects = useMemo(() => {
+    const projectsList = projectData.projects || projectData;
+    return projectsList.map((p, index) => ({
+      ...p,
+      id: index, // Add stable ID
+      slug: p.projectName
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+$/, ""),
+    }));
+  }, []);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -61,7 +76,6 @@ export default function GlobeSection({ projects, openProject }) {
     }
 
     function createBlob() {
-      // Create organic blob shape - invisible but still used for distortion structure
       const geometry = new THREE.SphereGeometry(BLOB_RADIUS, 64, 64);
       
       const positionAttribute = geometry.attributes.position;
@@ -73,7 +87,6 @@ export default function GlobeSection({ projects, openProject }) {
       }
       geometry.userData.originalPositions = originalPositions;
       
-      // Make it invisible
       const material = new THREE.MeshBasicMaterial({ 
         color: 0x000000, 
         wireframe: false, 
@@ -85,107 +98,96 @@ export default function GlobeSection({ projects, openProject }) {
       blobMesh = new THREE.Mesh(geometry, material);
       scene.add(blobMesh);
     }
-// Replace these two functions in your GlobeSection component:
 
-function createNetworkNodes() {
-  // Create nodes distributed throughout the volume, not just on surface
-  const particleCount = 400;
-  const positions = new Float32Array(particleCount * 3);
-  const colors = new Float32Array(particleCount * 3);
-  
-  for (let i = 0; i < particleCount; i++) {
-    // Distribute nodes in 3D space with varying distances from center
-    const radius = (Math.random() * 0.7 + 0.3) * NETWORK_RADIUS;
-    const theta = Math.random() * Math.PI * 2;
-    const phi = Math.acos((Math.random() * 2) - 1);
-    
-    positions[i*3] = radius * Math.sin(phi) * Math.cos(theta);
-    positions[i*3+1] = radius * Math.sin(phi) * Math.sin(theta);
-    positions[i*3+2] = radius * Math.cos(phi);
-    
-    // Randomly assign either blue or red color
-    if (Math.random() > 0.5) {
-      // Blue nodes (existing blue)
-      colors[i*3] = 0.3; 
-      colors[i*3+1] = 0.7; 
-      colors[i*3+2] = 1;
-    } else {
-      // Red nodes (0xff6b9d)
-   // Red nodes (sharp modern red)
-colors[i*3]   = 1.0;   // R: 255
-colors[i*3+1] = 0.18;  // G: 46
-colors[i*3+2] = 0.25;  // B: 64
-
-    }
-  }
-  
-  const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-  const material = new THREE.PointsMaterial({ 
-    size: 0.08, 
-    vertexColors: true, 
-    transparent: true, 
-    opacity: 0.85 
-  });
-  particles = new THREE.Points(geometry, material);
-  scene.add(particles);
-}
-
-function createConnections() {
-  const geometry = new THREE.BufferGeometry();
-  const positions = [], colors = [];
-  const particlePositions = particles.geometry.attributes.position.array;
-  const particleColors = particles.geometry.attributes.color.array;
-  const particleCount = particlePositions.length / 3;
-  const distanceThreshold = 2.5;
-  let addedConnections = 0, maxConnections = 1800;
-  
-  for (let i = 0; i < particleCount; i++) {
-    const xi = particlePositions[i*3];
-    const yi = particlePositions[i*3+1];
-    const zi = particlePositions[i*3+2];
-    
-    // Get color of particle i
-    const ri = particleColors[i*3];
-    const gi = particleColors[i*3+1];
-    const bi = particleColors[i*3+2];
-    
-    for (let j = i + 1; j < particleCount; j++) {
-      const xj = particlePositions[j*3];
-      const yj = particlePositions[j*3+1];
-      const zj = particlePositions[j*3+2];
+    function createNetworkNodes() {
+      const particleCount = 400;
+      const positions = new Float32Array(particleCount * 3);
+      const colors = new Float32Array(particleCount * 3);
       
-      const d = Math.sqrt((xi-xj)**2 + (yi-yj)**2 + (zi-zj)**2);
-      if (d < distanceThreshold && Math.random() < 0.5) {
-        positions.push(xi, yi, zi, xj, yj, zj);
+      for (let i = 0; i < particleCount; i++) {
+        const radius = (Math.random() * 0.7 + 0.3) * NETWORK_RADIUS;
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.acos((Math.random() * 2) - 1);
         
-        // Get color of particle j
-        const rj = particleColors[j*3];
-        const gj = particleColors[j*3+1];
-        const bj = particleColors[j*3+2];
+        positions[i*3] = radius * Math.sin(phi) * Math.cos(theta);
+        positions[i*3+1] = radius * Math.sin(phi) * Math.sin(theta);
+        positions[i*3+2] = radius * Math.cos(phi);
         
-        // Use colors from the connected particles
-        colors.push(ri, gi, bi, rj, gj, bj);
-        
-        if (++addedConnections >= maxConnections) break;
+        if (Math.random() > 0.5) {
+          colors[i*3] = 0.3; 
+          colors[i*3+1] = 0.7; 
+          colors[i*3+2] = 1;
+        } else {
+          colors[i*3] = 1.0;
+          colors[i*3+1] = 0.18;
+          colors[i*3+2] = 0.25;
+        }
       }
+      
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+      const material = new THREE.PointsMaterial({ 
+        size: 0.08, 
+        vertexColors: true, 
+        transparent: true, 
+        opacity: 0.85 
+      });
+      particles = new THREE.Points(geometry, material);
+      scene.add(particles);
     }
-    if (addedConnections >= maxConnections) break;
-  }
-  
-  geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-  geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-  const material = new THREE.LineBasicMaterial({ 
-    vertexColors: true, 
-    transparent: true, 
-    opacity: 0.7, 
-    blending: THREE.AdditiveBlending, 
-    depthWrite: false 
-  });
-  connections = new THREE.LineSegments(geometry, material);
-  scene.add(connections);
-}
+
+    function createConnections() {
+      const geometry = new THREE.BufferGeometry();
+      const positions = [], colors = [];
+      const particlePositions = particles.geometry.attributes.position.array;
+      const particleColors = particles.geometry.attributes.color.array;
+      const particleCount = particlePositions.length / 3;
+      const distanceThreshold = 2.5;
+      let addedConnections = 0, maxConnections = 1800;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const xi = particlePositions[i*3];
+        const yi = particlePositions[i*3+1];
+        const zi = particlePositions[i*3+2];
+        
+        const ri = particleColors[i*3];
+        const gi = particleColors[i*3+1];
+        const bi = particleColors[i*3+2];
+        
+        for (let j = i + 1; j < particleCount; j++) {
+          const xj = particlePositions[j*3];
+          const yj = particlePositions[j*3+1];
+          const zj = particlePositions[j*3+2];
+          
+          const d = Math.sqrt((xi-xj)**2 + (yi-yj)**2 + (zi-zj)**2);
+          if (d < distanceThreshold && Math.random() < 0.5) {
+            positions.push(xi, yi, zi, xj, yj, zj);
+            
+            const rj = particleColors[j*3];
+            const gj = particleColors[j*3+1];
+            const bj = particleColors[j*3+2];
+            
+            colors.push(ri, gi, bi, rj, gj, bj);
+            
+            if (++addedConnections >= maxConnections) break;
+          }
+        }
+        if (addedConnections >= maxConnections) break;
+      }
+      
+      geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+      geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+      const material = new THREE.LineBasicMaterial({ 
+        vertexColors: true, 
+        transparent: true, 
+        opacity: 0.7, 
+        blending: THREE.AdditiveBlending, 
+        depthWrite: false 
+      });
+      connections = new THREE.LineSegments(geometry, material);
+      scene.add(connections);
+    }
 
     function createInnerParticles() {
       const particleCount = 600;
@@ -265,13 +267,8 @@ function createConnections() {
     }
 
     function createHotspots() {
-      // Use projects prop first, fallback to projectData
-      const projectsList = projects || projectData.projects || projectData;
-      
-      // Safety check - ensure we have valid data
-      if (!projectsList || !Array.isArray(projectsList) || projectsList.length === 0) {
+      if (!projects || projects.length === 0) {
         console.warn('No project data available for hotspots');
-        // Create empty hotspot object so code doesn't break
         hotspots = new THREE.Points(
           new THREE.BufferGeometry(),
           new THREE.PointsMaterial()
@@ -288,7 +285,6 @@ function createConnections() {
       const greenColor = new THREE.Color("#BBFF00");
 
       function randomPointInVolume(radius) {
-        // Distribute hotspots throughout the network volume
         const r = (Math.random() * 0.6 + 0.4) * radius;
         const theta = Math.random() * 2 * Math.PI;
         const phi = Math.acos(2 * Math.random() - 1);
@@ -300,19 +296,19 @@ function createConnections() {
         return new THREE.Vector3(x, y, z);
       }
 
-      for (let i = 0; i < projectsList.length; i++) {
-        const project = projectsList[i];
+      for (let i = 0; i < projects.length; i++) {
+        const project = projects[i];
         const pos = randomPointInVolume(NETWORK_RADIUS);
 
         hotspotPositions.push(pos.x, pos.y, pos.z);
         hotspotColors.push(greenColor.r, greenColor.g, greenColor.b);
 
         hotspotDataList.push({
-          id: i,
+          index: i,
           position: pos,
           title: project.projectName || "Untitled Project",
           description: project.artistName || "No artist available",
-          project,
+          project: project,
         });
       }
 
@@ -396,9 +392,7 @@ function createConnections() {
     }
 
     function onMouseClick(event) {
-      if (!hotspots || !hotspots.userData || hotspots.userData.length === 0) {
-        return; // No hotspots to click
-      }
+      if (!hotspots || !hotspots.userData || hotspots.userData.length === 0) return;
       
       const rect = renderer.domElement.getBoundingClientRect();
       mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
@@ -407,20 +401,17 @@ function createConnections() {
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObject(hotspots);
       
-      if (intersects.length > 0) {
+      if (intersects.length > 0 && onHotspotClick) {
         const index = intersects[0].index;
-        const clickedProject = hotspots.userData[index];
-        
-        if (clickedProject && clickedProject.project && openProject) {
-          openProject(clickedProject.project);
+        const hotspotData = hotspots.userData[index];
+        if (hotspotData && hotspotData.project) {
+          onHotspotClick(hotspotData.project);
         }
       }
     }
 
     function checkHotspotHover() {
-      if (!hotspots || !hotspots.userData || hotspots.userData.length === 0) {
-        return; // No hotspots to check
-      }
+      if (!hotspots || !hotspots.userData || hotspots.userData.length === 0) return;
       
       raycaster.setFromCamera(mouseVector, camera);
       const intersects = raycaster.intersectObject(hotspots);
@@ -433,9 +424,7 @@ function createConnections() {
       if (isHoveringHotspot && intersects.length > 0) {
         const index = intersects[0].index;
         const hoveredProject = hotspots.userData[index];
-        if (hoveredProject) {
-          showTooltip(hoveredProject);
-        }
+        if (hoveredProject) showTooltip(hoveredProject);
       } else {
         hideTooltip();
       }
@@ -446,24 +435,7 @@ function createConnections() {
       if (!tooltip) {
         tooltip = document.createElement('div');
         tooltip.id = 'globe-tooltip';
-        tooltip.style.cssText = `
-          position: fixed;
-          background: rgba(0, 0, 0, 0.9);
-          color: #fff;
-          padding: 8px 12px;
-          border-radius: 6px;
-          font-size: 13px;
-          font-weight: 600;
-          pointer-events: none;
-          z-index: 1000;
-          border: 1px solid rgba(187, 255, 0, 0.3);
-          box-shadow: 0 4px 12px rgba(187, 255, 0, 0.2);
-          opacity: 0;
-          transition: opacity 0.2s ease;
-          white-space: normal;      
-          max-width: 250px;        
-          word-break: break-word;   
-        `;
+        tooltip.style.cssText = `position:fixed;background:rgba(0,0,0,.9);color:#fff;padding:8px 12px;border-radius:6px;font-size:13px;font-weight:600;pointer-events:none;z-index:1000;border:1px solid rgba(187,255,0,.3);box-shadow:0 4px 12px rgba(187,255,0,.2);opacity:0;transition:opacity .2s ease;white-space:normal;max-width:250px;word-break:break-word`;
         document.body.appendChild(tooltip);
       }
 
@@ -506,7 +478,6 @@ function createConnections() {
       blobMesh.rotation.y += (desiredY - blobMesh.rotation.y) * 0.1;
       blobMesh.rotation.x += (targetRotation.x - blobMesh.rotation.x) * 0.1;
 
-      // Animate blob distortion
       if (blobMesh && blobMesh.geometry.userData.originalPositions) {
         const posAttr = blobMesh.geometry.attributes.position;
         const origPos = blobMesh.geometry.userData.originalPositions;
@@ -611,7 +582,7 @@ function createConnections() {
         renderer.dispose();
       } catch (err) {}
     };
-  }, []);
+  }, [projects, onHotspotClick]);
 
   return (
     <div className="container">
