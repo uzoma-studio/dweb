@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import projectsData from '../../data/dweb-project-data.json';
 import { useRouter, useSearchParams } from "next/navigation";
 import { FiArrowUp, FiArrowDown } from "react-icons/fi";
@@ -11,17 +11,22 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
   const [mounted, setMounted] = useState(false);
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
   const containerRef = useRef(null);
-  const arcContainerRef = useRef(null); // NEW: ref for arc touch area
+  const arcContainerRef = useRef(null);
   const [highlightIndex, setHighlightIndex] = useState(0); 
   const mobileScrollRef = useRef(null);
   const rafRef = useRef(null);
   const tickingRef = useRef(false);
+  const [isHoveringCenter, setIsHoveringCenter] = useState(false);
+  const [isHoveringNonCenter, setIsHoveringNonCenter] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const scrollTimeoutRef = useRef(null);
 
   const targetOffsetRef = useRef(0);
   const currentOffsetRef = useRef(0);
   const velocityRef = useRef(0);
   const animationFrameRef = useRef(null);
   const isPausedRef = useRef(false);
+  const lastTargetOffsetRef = useRef(0);
 
   // Touch handling refs
   const touchStartYRef = useRef(0);
@@ -74,6 +79,13 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
     const handleWheel = (e) => {
       if (isPausedRef.current) return;
       velocityRef.current += e.deltaY * 0.0002;
+      
+      // Set scrolling state
+      setIsScrolling(true);
+      clearTimeout(scrollTimeoutRef.current);
+      scrollTimeoutRef.current = setTimeout(() => {
+        setIsScrolling(false);
+      }, 500);
     };
 
     const animate = () => {
@@ -84,6 +96,15 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
           (targetOffsetRef.current - currentOffsetRef.current) * 0.08;
 
         setScrollOffset((currentOffsetRef.current % 1 + 1) % 1);
+        
+        // Keep scrolling state active if there's significant velocity
+        if (Math.abs(velocityRef.current) > 0.001) {
+          setIsScrolling(true);
+          clearTimeout(scrollTimeoutRef.current);
+          scrollTimeoutRef.current = setTimeout(() => {
+            setIsScrolling(false);
+          }, 300);
+        }
       }
       animationFrameRef.current = requestAnimationFrame(animate);
     };
@@ -94,10 +115,11 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
     return () => {
       cancelAnimationFrame(animationFrameRef.current);
       window.removeEventListener("wheel", handleWheel);
+      clearTimeout(scrollTimeoutRef.current);
     };
   }, []);
 
-  // 🔥 FIXED: Touch handling specifically for arc container on iPad Pro
+  // Touch handling specifically for arc container on iPad Pro
   useEffect(() => {
     const arcContainer = arcContainerRef.current;
     if (!arcContainer || windowSize.width < 1280) return;
@@ -112,14 +134,19 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
     const handleTouchMove = (e) => {
       if (isPausedRef.current) return;
       
-      // Prevent pull-to-refresh and default scrolling
       e.preventDefault();
       
       const currentY = e.touches[0].clientY;
       const deltaY = lastTouchYRef.current - currentY;
       
-      // Apply velocity similar to wheel
       velocityRef.current += deltaY * 0.0008;
+      
+      // Set scrolling state
+      setIsScrolling(true);
+      clearTimeout(scrollTimeoutRef.current);
+      scrollTimeoutRef.current = setTimeout(() => {
+        setIsScrolling(false);
+      }, 500);
       
       lastTouchYRef.current = currentY;
     };
@@ -129,7 +156,6 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
       touchVelocityRef.current = 0;
     };
 
-    // Attach to the arc container specifically
     arcContainer.addEventListener("touchstart", handleTouchStart, { passive: true });
     arcContainer.addEventListener("touchmove", handleTouchMove, { passive: false });
     arcContainer.addEventListener("touchend", handleTouchEnd, { passive: true });
@@ -141,36 +167,43 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
     };
   }, [windowSize.width]);
 
+  // Keyboard controls
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (isPausedRef.current) return;
 
-// Keyboard controls
-useEffect(() => {
-  const handleKeyDown = (e) => {
-    if (isPausedRef.current) return;
+      const projectStep = 1 / projects.length;
 
-    const projectStep = 1 / projects.length;
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        const direction = e.key === "ArrowDown" ? -1 : 1;
+        targetOffsetRef.current += direction * projectStep;
+        
+        // Set scrolling state with longer timeout for keyboard
+        setIsScrolling(true);
+        clearTimeout(scrollTimeoutRef.current);
+        scrollTimeoutRef.current = setTimeout(() => {
+          setIsScrolling(false);
+        }, 800);
+      }
 
-    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-      e.preventDefault();
-      const direction = e.key === "ArrowDown" ? -1 : 1;
+      if (e.key === "PageDown" || e.key === "PageUp") {
+        e.preventDefault();
+        const direction = e.key === "PageDown" ? -1 : 1;
+        targetOffsetRef.current += direction * projectStep * 2;
+        
+        // Set scrolling state with longer timeout for keyboard
+        setIsScrolling(true);
+        clearTimeout(scrollTimeoutRef.current);
+        scrollTimeoutRef.current = setTimeout(() => {
+          setIsScrolling(false);
+        }, 800);
+      }
+    };
 
-      // move exactly one item, let your animation loop ease toward targetOffsetRef
-      targetOffsetRef.current += direction * projectStep;
-    }
-
-    if (e.key === "PageDown" || e.key === "PageUp") {
-      e.preventDefault();
-      const direction = e.key === "PageDown" ? -1 : 1;
-
-      // jump two projects
-      targetOffsetRef.current += direction * projectStep * 2;
-    }
-  };
-
-  window.addEventListener("keydown", handleKeyDown);
-  return () => window.removeEventListener("keydown", handleKeyDown);
-}, [projects.length]);
-
-
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [projects.length]);
 
   // Scrollbar dragging
   useEffect(() => {
@@ -188,6 +221,13 @@ useEffect(() => {
       if (Math.abs(deltaY) > 0 && deltaTime > 0) {
         const scrollVelocity = deltaY / deltaTime;
         velocityRef.current += scrollVelocity * 0.002;
+        
+        // Set scrolling state
+        setIsScrolling(true);
+        clearTimeout(scrollTimeoutRef.current);
+        scrollTimeoutRef.current = setTimeout(() => {
+          setIsScrolling(false);
+        }, 500);
       }
       
       lastScrollY = currentScrollY;
@@ -209,12 +249,12 @@ useEffect(() => {
     const projectOffset = (scrollOffset + (index / total)) % 1;
     const normalizedOffset = projectOffset < 0 ? projectOffset + 1 : projectOffset;
     
-    const arcRadius = 390;
-    const arcStartAngle = -Math.PI * 0.4;
-    const arcEndAngle = Math.PI * 0.4;
+    const arcRadius = 400;
+    const arcStartAngle = -Math.PI * 0.5;
+    const arcEndAngle = Math.PI * 0.5;
     const angle = arcStartAngle + (arcEndAngle - arcStartAngle) * normalizedOffset;
 
-    const centerX = windowSize.width * 0.08;
+    const centerX = windowSize.width * 0.09;
     const centerY = windowSize.height / 2;
 
     const x = centerX + Math.cos(angle) * arcRadius;
@@ -224,8 +264,9 @@ useEffect(() => {
     const opacity = Math.max(0.2, 1 - (distanceFromCenter * 1.5));
     const scale = Math.max(0.5, 1 - (distanceFromCenter * 0.8));
     
-    const isCenter = distanceFromCenter < 0.05;
-    const rotation = isCenter ? 0 : (normalizedOffset - 0.5) * 90;
+    const centerThreshold = Math.min(0.05, 0.5 / total);
+    const isCenter = distanceFromCenter < centerThreshold;
+    const rotation = isCenter ? 0 : (normalizedOffset - 0.5) * 95;
     
     return { x, y, opacity, scale, normalizedOffset, isCenter, rotation };
   };
@@ -349,12 +390,26 @@ useEffect(() => {
                   top: `${y}px`,
                   transform: `translate(-50%, -50%) scale(${scale}) rotateZ(${rotation}deg)`,
                   opacity: opacity,
-                }}>
+                }}
+                onMouseEnter={() => {
+                  if (isCenter) {
+                    setIsHoveringCenter(true);
+                    setIsHoveringNonCenter(false);
+                  } else {
+                    setIsHoveringNonCenter(true);
+                    setIsHoveringCenter(false);
+                  }
+                }}
+                onMouseLeave={() => {
+                  setIsHoveringCenter(false);
+                  setIsHoveringNonCenter(false);
+                }}
+              >
                 <div 
                   onClick={isCenter ? () => openProject(project) : undefined}
                   className={`${isCenter ? 'bg-transparent cursor-pointer py-4' : 'bg-transparent py-20'} w-75 h-20 rounded-xl transition-all flex items-center cursor-arrow select-none justify-start px-4  relative group`}>
                   <div>
-                    <p className={`${isCenter ? 'text-white IBMbold text-lg' : 'text-gray-300'} text-base transition-colors leading-none`}>
+                    <p className={`${isCenter ? 'text-white IBMbold text-lg' : 'text-gray-300 text-sm'}  IBMregular transition-colors leading-none`}>
                       {project.projectName}
                     </p>
                     {isCenter && (
@@ -363,19 +418,33 @@ useEffect(() => {
                   </div>
                   
                   {isCenter && (
-               <div className="absolute left-full ml-0  top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                <div className="bg-black/80 backdrop-blur-sm px-5 py-3 rounded-xl border border-white/20 w-max max-w-[300px] break-words">
-                  <p className="text-white IBMregular leading-snug whitespace-normal break-words text-sm text-left">
-                    {project.artistName}
-                  </p>
-                </div>
-              </div>
-
+                    <div className="absolute left-full ml-0 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                      <div className="bg-black/80 backdrop-blur-sm px-5 py-3 rounded-xl border border-white/20 w-max max-w-[300px] break-words">
+                        <p className="text-white IBMregular leading-snug whitespace-normal break-words text-sm text-left">
+                          {project.artistName}
+                        </p>
+                      </div>
+                    </div>
                   )}
                 </div>
               </div>
             );
           })}
+
+          {/* Centered scroll instructions - show only when hovering non-center projects AND not scrolling */}
+          <div 
+            className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none transition-opacity duration-300 ${
+              isHoveringNonCenter && !isScrolling ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <div className="flex items-center gap-2 border border-white p-4 rounded-lg text-white/50 ml-26">
+              <span className="text-sm IBMregular whitespace-nowrap">scroll to navigate <br /> or use arrow keys</span>
+              <div className="flex flex-col">
+                <FiArrowUp className="text-white/50" />
+                <FiArrowDown className="text-white/50" />
+              </div>
+            </div>
+          </div>
         </div>
       ) : (
         <div className="w-full overflow-hidden lg:py-10 py-4">
@@ -416,21 +485,11 @@ useEffect(() => {
         </div>
       )}
 
+      {/* Scroll instructions - mobile only */}
       {mounted && (
-        <>
-        <div className="hidden lg:inline fixed w-36 leading-none bottom-6 text-right right-4 text-white/50 lg:text-sm text-xs pointer-events-none">
-          <div className="flex items-center gap-1">
-            <span>scroll to navigate or use arrow keys</span>
-            <div>
-              <FiArrowUp className="text-white/50" />
-              <FiArrowDown className="text-white/50" />
-            </div>
-          </div>
-        </div>
-        <div className="fixed w-36 leading-none bottom-6 text-right right-4 text-white/50 text-xs pointer-events-none  lg:hidden">
+        <div className="fixed w-36 leading-none bottom-6 text-right right-4 text-white/50 text-xs pointer-events-none lg:hidden">
           <span>scroll to navigate</span>
         </div>
-        </>
       )}
     </div>
   );
