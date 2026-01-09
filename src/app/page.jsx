@@ -112,7 +112,7 @@ export default function Home() {
 
         
         <div className="w-full h-full md:min-w-[800px]">
-          <GlobeSection />
+          <GlobeSection key="home-globe"/>
         </div>
       </motion.div>
 
