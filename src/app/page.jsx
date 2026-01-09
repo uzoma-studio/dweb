@@ -28,7 +28,7 @@ export default function Home() {
       <Header />
 
       {/* Main Content */}
-     <main className="pt-26 lg:pt-10 md:pt-22 flex flex-col md:flex-row justify-between items-center relative md:px-0 overflow-hidden">
+     <main className="pt-22 lg:pt-10 md:pt-22 flex flex-col md:flex-row justify-between items-center relative md:px-0 overflow-hidden">
       {/* Left Text */}
         <motion.div 
           className="md:w-[70%] flex flex-col  z-10 text-left lg:pl-16 px-6 lg:pr-0"
@@ -47,7 +47,7 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 1 }}
-            className=" Bodytext leading-5 IBMregular text-white max-w-4xl z-10 text-left mb-0"
+            className=" Bodytext leading-5 IBMregular text-white max-w-4xl z-10 text-left  mb-2"
           >
            DWeb for Creators is an 8-week online course that empowers artists, designers, archivists, gallerists, curators, and others with the knowledge and tools necessary for exploring the decentralized web. Participants engage with technologies like blockchain and mesh networks; examine case studies in curation, publishing, data sovereignty, and community building; and apply decolonial approaches to world building as they envision the future of DWeb technologies. The 2025 edition of the course culminated in a public salon where students presented their research, sketches, and projects developed during the course.
           </motion.p>
@@ -55,12 +55,17 @@ export default function Home() {
            initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 1 }}
-            className=" Bodytext IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-0"> 
-            The course’s <a className="Aunderline" target="_blank" href="https://github.com/GrayAreaorg/dweb-curriculum-2025">open-source curriculum</a> was created by Gray Area and a team of experienced instructors and advisors working at multiple intersections of the decentralized web: 
-             <a className="Aunderline" target="_blank" href="https://ayanazairecotton.com/"> Ayana Zaire Cotton</a>, <a className="Aunderline" target="_blank" href="https://kelaninichole.com/">  Kelani Nichole</a>, 
-             <a className="Aunderline" target="_blank" href="https://maisutton.net/"> mai ishikawa sutton</a>, <a className="Aunderline" target="_blank" href="https://grayarea.org/community-entry/ngoc-trieu/">ngọc triệu</a>, 
-             <a className="Aunderline" target="_blank" href="https://grayarea.org/community-entry/regina-harsanyi/"> Regina Harsanyi</a>, <a className="Aunderline" target="_blank" href="https://isthisa.com/">Sarah Friend</a>, 
-             <a className="Aunderline" target="_blank" href="https://chootka.com/"> Sarah Grant</a>, and  <a className="Aunderline" target="_blank" href="https://www.habritual.studio/">Roxi Shohadaee.</a> 
+            className=" Bodytext IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-2"> 
+            The course’s <a 
+            className="Aunderline" target="_blank" href="https://github.com/GrayAreaorg/dweb-curriculum-2025">open-source curriculum</a> was created by Gray Area and a team of experienced instructors and advisors working at multiple intersections of the decentralized web: <a 
+            className="Aunderline" target="_blank" href="https://ayanazairecotton.com/">Ayana Zaire Cotton</a>, <a 
+            className="Aunderline" target="_blank" href="https://kelaninichole.com/">Kelani Nichole</a>, <a 
+            className="Aunderline" target="_blank" href="https://maisutton.net/">mai ishikawa sutton</a>, <a 
+            className="Aunderline" target="_blank" href="https://grayarea.org/community-entry/ngoc-trieu/">ngọc triệu</a>, <a 
+            className="Aunderline" target="_blank" href="https://grayarea.org/community-entry/regina-harsanyi/">Regina Harsanyi</a>, <a 
+            className="Aunderline" target="_blank" href="https://isthisa.com/">Sarah Friend</a>, <a 
+            className="Aunderline" target="_blank" href="https://chootka.com/">Sarah Grant</a>, and  <a 
+            className="Aunderline" target="_blank" href="https://www.habritual.studio/">Roxi Shohadaee.</a> 
           </motion.p>
           <motion.p
            initial={{ opacity: 0 }}
@@ -107,7 +112,7 @@ export default function Home() {
 
         
         <div className="w-full h-full md:min-w-[800px]">
-          <GlobeSection />
+          <GlobeSection key="home-globe"/>
         </div>
       </motion.div>
 
@@ -122,7 +127,7 @@ export default function Home() {
           {/* Left side */}
           <div className="w-1/2 flex items-center justify-start md:px-10 px-6 py-4">
             <h1 className="md:text-xl text-base text-white IBMbold leading-none">
-              2025 Student Project Gallery
+             Student Project Gallery
             </h1>
           </div>
 

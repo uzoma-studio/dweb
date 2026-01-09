@@ -24,6 +24,12 @@ export default function SelectedProjectModal({ project, onClose, projects = [] }
     [projects, activeProject.slug]
   );
 
+  const coverSrc = activeProject.coverImage
+  ? activeProject.coverImage.includes(".")
+    ? `/projectimages/${activeProject.coverImage}`
+    : `/projectimages/${activeProject.coverImage}.webp`
+  : null;
+
   // Close modal
   const handleClose = () => {
     setIsClosing(true);
@@ -160,6 +166,8 @@ export default function SelectedProjectModal({ project, onClose, projects = [] }
                       Project site ↗
                     </Link>
                   )}
+
+                  
                   {activeProject.coverImage && (
                     <Image
                       src={`/projectimages/${activeProject.coverImage}`}

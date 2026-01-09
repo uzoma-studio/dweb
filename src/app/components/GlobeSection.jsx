@@ -10,24 +10,39 @@ export default function GlobeSection({ projects, openProject }) {
   useEffect(() => {
     if (!containerRef.current) return;
 
-    let scene, camera, renderer, globe, particles, connections, innerParticles, hotspots;
+    let scene, camera, renderer, blobMesh, particles, connections, innerParticles, hotspots;
     let outwardParticles, outwardVelocities = [];
     let mouse = { x: 0, y: 0 }, targetRotation = { x: 0, y: 0 };
     let raycaster, mouseVector;
     let autoRotationY = 0;
-
-    // NEW: Track if hovering over a hotspot
     let isHoveringHotspot = false;
 
-    // DRAG state refs (persistent across renders)
     const isDraggingRef = { current: false };
     const lastPointer = { x: 0, y: 0 };
-    const dragSensitivity = 0.005; // tweak this to taste
+    const dragSensitivity = 0.005;
 
-    const OLD_PARTICLE_RADIUS = 3.1;
-    const NEW_GLOBE_RADIUS = 5.5;
-    const PARTICLE_RADIUS = NEW_GLOBE_RADIUS + 0.1;
-    const INNER_PARTICLE_MAX = 1.5 * (NEW_GLOBE_RADIUS / 3);
+    const BLOB_RADIUS = 5.5;
+    const NETWORK_RADIUS = BLOB_RADIUS + 0.8;
+    const INNER_PARTICLE_MAX = 1.5 * (BLOB_RADIUS / 3);
+
+
+    function seededRandom(seed) {
+      let x = Math.sin(seed) * 10000;
+      return x - Math.floor(x);
+      }
+
+      function seededPointInVolume(seed, radius) {
+        const r = (seededRandom(seed + 1) * 0.6 + 0.4) * radius;
+        const theta = seededRandom(seed + 2) * Math.PI * 2;
+        const phi = Math.acos(seededRandom(seed + 3) * 2 - 1);
+
+        return new THREE.Vector3(
+          r * Math.sin(phi) * Math.cos(theta),
+          r * Math.sin(phi) * Math.sin(theta),
+          r * Math.cos(phi)
+        );
+      }
+
 
     function init() {
       scene = new THREE.Scene();
@@ -46,128 +61,158 @@ export default function GlobeSection({ projects, openProject }) {
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
 
-      createGlobe();
-      createParticles();
+      createBlob();
+      createNetworkNodes();
       createConnections();
       createInnerParticles();
       createOutwardParticles();
       createHotspots();
 
-      // pointer events for unified mouse + touch dragging
       containerRef.current.addEventListener('pointerdown', onPointerDown, { passive: false });
       containerRef.current.addEventListener('pointermove', onPointerMove, { passive: false });
       containerRef.current.addEventListener('pointerup', onPointerUp, { passive: false });
       containerRef.current.addEventListener('pointercancel', onPointerUp, { passive: false });
       containerRef.current.addEventListener('mouseleave', onPointerLeave, { passive: true });
-
-      // click for hotspots
       containerRef.current.addEventListener('click', onMouseClick);
       window.addEventListener('resize', onWindowResize);
 
       animate();
     }
 
-    function createGlobe() {
-      const geometry = new THREE.SphereGeometry(NEW_GLOBE_RADIUS, 32, 16);
+    function createBlob() {
+      // Create organic blob shape - invisible but still used for distortion structure
+      const geometry = new THREE.SphereGeometry(BLOB_RADIUS, 64, 64);
+      
+      const positionAttribute = geometry.attributes.position;
+      const originalPositions = new Float32Array(positionAttribute.count * 3);
+      for (let i = 0; i < positionAttribute.count; i++) {
+        originalPositions[i * 3] = positionAttribute.getX(i);
+        originalPositions[i * 3 + 1] = positionAttribute.getY(i);
+        originalPositions[i * 3 + 2] = positionAttribute.getZ(i);
+      }
+      geometry.userData.originalPositions = originalPositions;
+      
+      // Make it invisible
       const material = new THREE.MeshBasicMaterial({ 
-        color: 0xff6b9d, 
-        wireframe: true, 
+        color: 0x000000, 
+        wireframe: false, 
         transparent: true, 
-        opacity: 0.3 
+        opacity: 0,
+        visible: false
       });
-      globe = new THREE.Mesh(geometry, material);
-      scene.add(globe);
-
-      const glowGeometry = new THREE.SphereGeometry(NEW_GLOBE_RADIUS - 0.2, 32, 16);
-      const glowMaterial = new THREE.MeshBasicMaterial({ 
-        color: 0x4facfe, 
-        transparent: true, 
-        opacity: 0.08, 
-        side: THREE.BackSide 
-      });
-      const innerGlow = new THREE.Mesh(glowGeometry, glowMaterial);
-      globe.add(innerGlow);
-    }
-
-    function createParticles() {
-      const particleCount = 300;
-      const positions = new Float32Array(particleCount * 3);
-      const colors = new Float32Array(particleCount * 3);
-      for (let i = 0; i < particleCount; i++) {
-        const phi = Math.acos(-1 + (2 * i) / particleCount);
-        const theta = Math.sqrt(particleCount * Math.PI) * phi;
-        const radius = PARTICLE_RADIUS;
-        positions[i*3] = radius * Math.cos(theta) * Math.sin(phi);
-        positions[i*3+1] = radius * Math.cos(phi);
-        positions[i*3+2] = radius * Math.sin(theta) * Math.sin(phi);
-        const colorValue = Math.random();
-        if (colorValue > 0.7) { 
-          colors[i*3] = 1; 
-          colors[i*3+1] = 0.4; 
-          colors[i*3+2] = 0.6; 
-        } else { 
-          colors[i*3] = 0.3; 
-          colors[i*3+1] = 0.7; 
-          colors[i*3+2] = 1; 
-        }
-      }
-      const geometry = new THREE.BufferGeometry();
-      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-      geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-      const material = new THREE.PointsMaterial({ 
-        size: 0.06, 
-        vertexColors: true, 
-        transparent: true, 
-        opacity: 0.85 
-      });
-      particles = new THREE.Points(geometry, material);
-      scene.add(particles);
-    }
-
-    function createConnections() {
-      const geometry = new THREE.BufferGeometry();
-      const positions = [], colors = [];
-      const particlePositions = particles.geometry.attributes.position.array;
-      const particleCount = particlePositions.length / 3;
-      const scaleFactor = PARTICLE_RADIUS / OLD_PARTICLE_RADIUS;
-      const distanceThreshold = 1.25 * scaleFactor;
-      let addedConnections = 0, maxConnections = 1400;
       
-      for (let i = 0; i < particleCount; i++) {
-        const xi = particlePositions[i*3];
-        const yi = particlePositions[i*3+1];
-        const zi = particlePositions[i*3+2];
+      blobMesh = new THREE.Mesh(geometry, material);
+      scene.add(blobMesh);
+    }
+  // Replace these two functions in your GlobeSection component:
+
+  function createNetworkNodes() {
+    const particleCount = 400;
+    const positions = new Float32Array(particleCount * 3);
+    const colors = new Float32Array(particleCount * 3);
+
+    for (let i = 0; i < particleCount; i++) {
+      const seed = i + 10; // offset so it doesn't overlap hotspot seeds
+
+      const radius =
+        (seededRandom(seed + 1) * 0.7 + 0.3) * NETWORK_RADIUS;
+      const theta =
+        seededRandom(seed + 2) * Math.PI * 2;
+      const phi =
+        Math.acos(seededRandom(seed + 3) * 2 - 1);
+
+      positions[i * 3]     = radius * Math.sin(phi) * Math.cos(theta);
+      positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+      positions[i * 3 + 2] = radius * Math.cos(phi);
+
+      // Stable color assignment
+      const isBlue = seededRandom(seed + 4) > 0.5;
+
+      if (isBlue) {
+        colors[i * 3]     = 0.3;
+        colors[i * 3 + 1] = 0.7;
+        colors[i * 3 + 2] = 1.0;
+      } else {
+        colors[i * 3]     = 1.0;
+        colors[i * 3 + 1] = 0.18;
+        colors[i * 3 + 2] = 0.25;
+      }
+    }
+
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+    const material = new THREE.PointsMaterial({
+      size: 0.08,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.85,
+    });
+
+    particles = new THREE.Points(geometry, material);
+    scene.add(particles);
+  }
+
+
+function createConnections() {
+  const geometry = new THREE.BufferGeometry();
+  const positions = [], colors = [];
+  const particlePositions = particles.geometry.attributes.position.array;
+  const particleColors = particles.geometry.attributes.color.array;
+  const particleCount = particlePositions.length / 3;
+  const distanceThreshold = 2.5;
+  let addedConnections = 0, maxConnections = 1800;
+  
+  for (let i = 0; i < particleCount; i++) {
+    const xi = particlePositions[i*3];
+    const yi = particlePositions[i*3+1];
+    const zi = particlePositions[i*3+2];
+    
+    // Get color of particle i
+    const ri = particleColors[i*3];
+    const gi = particleColors[i*3+1];
+    const bi = particleColors[i*3+2];
+    
+    for (let j = i + 1; j < particleCount; j++) {
+      const xj = particlePositions[j*3];
+      const yj = particlePositions[j*3+1];
+      const zj = particlePositions[j*3+2];
+      
+      const d = Math.sqrt((xi-xj)**2 + (yi-yj)**2 + (zi-zj)**2);
+      const linkSeed = seededRandom(i * 1000 + j);
+      if (d < distanceThreshold && linkSeed < 0.5) {
+        positions.push(xi, yi, zi, xj, yj, zj);
         
-        for (let j = i + 1; j < particleCount; j++) {
-          const xj = particlePositions[j*3];
-          const yj = particlePositions[j*3+1];
-          const zj = particlePositions[j*3+2];
-          
-          const d = Math.sqrt((xi-xj)**2 + (yi-yj)**2 + (zi-zj)**2);
-          if (d < distanceThreshold && Math.random() < 0.65) {
-            positions.push(xi, yi, zi, xj, yj, zj);
-            colors.push(0.45, 0.85, 1, 0.25, 0.65, 1);
-            if (++addedConnections >= maxConnections) break;
-          }
-        }
-        if (addedConnections >= maxConnections) break;
+        // Get color of particle j
+        const rj = particleColors[j*3];
+        const gj = particleColors[j*3+1];
+        const bj = particleColors[j*3+2];
+        
+        // Use colors from the connected particles
+        colors.push(ri, gi, bi, rj, gj, bj);
+        
+        if (++addedConnections >= maxConnections) break;
       }
-      
-      geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-      geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-      const material = new THREE.LineBasicMaterial({ 
-        vertexColors: true, 
-        transparent: true, 
-        opacity: 0.85, 
-        blending: THREE.AdditiveBlending, 
-        depthWrite: false 
-      });
-      connections = new THREE.LineSegments(geometry, material);
-      scene.add(connections);
     }
+    if (addedConnections >= maxConnections) break;
+  }
+  
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+  geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+  const material = new THREE.LineBasicMaterial({ 
+    vertexColors: true, 
+    transparent: true, 
+    opacity: 0.7, 
+    blending: THREE.AdditiveBlending, 
+    depthWrite: false 
+  });
+  connections = new THREE.LineSegments(geometry, material);
+  scene.add(connections);
+}
 
     function createInnerParticles() {
-      const particleCount = 500;
+      const particleCount = 600;
       const positions = new Float32Array(particleCount * 3);
       const colors = new Float32Array(particleCount * 3);
       
@@ -189,17 +234,17 @@ export default function GlobeSection({ projects, openProject }) {
       geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
       geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
       const material = new THREE.PointsMaterial({ 
-        size: 0.08, 
+        size: 0.06, 
         vertexColors: true, 
         transparent: true, 
-        opacity: 0.2 
+        opacity: 0.3 
       });
       innerParticles = new THREE.Points(geometry, material);
       scene.add(innerParticles);
     }
 
     function createOutwardParticles() {
-      const particleCount = 800;
+      const particleCount = 900;
       const positions = new Float32Array(particleCount * 3);
       const colors = new Float32Array(particleCount * 3);
       
@@ -210,13 +255,9 @@ export default function GlobeSection({ projects, openProject }) {
         const theta = Math.random() * 2 * Math.PI;
         const phi = Math.acos(2 * Math.random() - 1);
         
-        const x = radius * Math.sin(phi) * Math.cos(theta);
-        const y = radius * Math.sin(phi) * Math.sin(theta);
-        const z = radius * Math.cos(phi);
-        
-        positions[i*3] = x;
-        positions[i*3+1] = y;
-        positions[i*3+2] = z;
+        positions[i*3] = radius * Math.sin(phi) * Math.cos(theta);
+        positions[i*3+1] = radius * Math.sin(phi) * Math.sin(theta);
+        positions[i*3+2] = radius * Math.cos(phi);
         
         colors[i*3] = 0.9 + Math.random() * 0.1;
         colors[i*3+1] = 0.7 + Math.random() * 0.2;
@@ -236,10 +277,10 @@ export default function GlobeSection({ projects, openProject }) {
       geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
       geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
       const material = new THREE.PointsMaterial({
-        size: 0.05,
+        size: 0.04,
         vertexColors: true,
         transparent: true,
-        opacity: 0.45,
+        opacity: 0.4,
         blending: THREE.AdditiveBlending,
         depthWrite: false
       });
@@ -248,36 +289,44 @@ export default function GlobeSection({ projects, openProject }) {
     }
 
     function createHotspots() {
-      const projectsList = projectData.projects || projectData;
+      // Use projects prop first, fallback to projectData
+      const projectsList = projects || projectData.projects || projectData;
+      
+      // Safety check - ensure we have valid data
+      if (!projectsList || !Array.isArray(projectsList) || projectsList.length === 0) {
+        console.warn('No project data available for hotspots');
+        // Create empty hotspot object so code doesn't break
+        hotspots = new THREE.Points(
+          new THREE.BufferGeometry(),
+          new THREE.PointsMaterial()
+        );
+        hotspots.userData = [];
+        scene.add(hotspots);
+        return;
+      }
 
       const hotspotGeometry = new THREE.BufferGeometry();
       const hotspotPositions = [];
       const hotspotColors = [];
       const hotspotDataList = [];
-
       const greenColor = new THREE.Color("#BBFF00");
 
-      function randomPointOnSphere(radius) {
-        const u = Math.random();
-        const v = Math.random();
-        const theta = 2 * Math.PI * u;
-        
-        // Restrict phi to avoid poles (top/bottom tips)
-        // phi ranges from ~30° to ~150° instead of 0° to 180°
-        const minPhi = Math.PI * 0.2; // ~10 degrees from top
-        const maxPhi = Math.PI * 0.8; // ~10 degrees from bottom
-        const phi = minPhi + v * (maxPhi - minPhi);
+      function randomPointInVolume(radius) {
+        // Distribute hotspots throughout the network volume
+        const r = (Math.random() * 0.6 + 0.4) * radius;
+        const theta = Math.random() * 2 * Math.PI;
+        const phi = Math.acos(2 * Math.random() - 1);
 
-        const x = radius * Math.sin(phi) * Math.cos(theta);
-        const y = radius * Math.sin(phi) * Math.sin(theta);
-        const z = radius * Math.cos(phi);
+        const x = r * Math.sin(phi) * Math.cos(theta);
+        const y = r * Math.sin(phi) * Math.sin(theta);
+        const z = r * Math.cos(phi);
 
         return new THREE.Vector3(x, y, z);
       }
 
       for (let i = 0; i < projectsList.length; i++) {
         const project = projectsList[i];
-        const pos = randomPointOnSphere(NEW_GLOBE_RADIUS + 0.05);
+        const pos = seededPointInVolume(i + 1, NETWORK_RADIUS);
 
         hotspotPositions.push(pos.x, pos.y, pos.z);
         hotspotColors.push(greenColor.r, greenColor.g, greenColor.b);
@@ -291,17 +340,11 @@ export default function GlobeSection({ projects, openProject }) {
         });
       }
 
-      hotspotGeometry.setAttribute(
-        "position",
-        new THREE.Float32BufferAttribute(hotspotPositions, 3)
-      );
-      hotspotGeometry.setAttribute(
-        "color",
-        new THREE.Float32BufferAttribute(hotspotColors, 3)
-      );
+      hotspotGeometry.setAttribute("position", new THREE.Float32BufferAttribute(hotspotPositions, 3));
+      hotspotGeometry.setAttribute("color", new THREE.Float32BufferAttribute(hotspotColors, 3));
 
       const hotspotMaterial = new THREE.PointsMaterial({
-        size: 0.22,
+        size: 0.25,
         vertexColors: true,
         transparent: true,
         opacity: 1.0,
@@ -315,35 +358,24 @@ export default function GlobeSection({ projects, openProject }) {
       scene.add(hotspots);
     }
 
-    // Unified pointermove handler:
     function onPointerMove(event) {
-      // Use client coords relative to element
       const rect = containerRef.current.getBoundingClientRect();
       const clientX = event.clientX;
       const clientY = event.clientY;
 
       if (isDraggingRef.current) {
-        // DRAG: rotate by delta movement
         const dx = clientX - lastPointer.x;
         const dy = clientY - lastPointer.y;
-
-        // update rotation targets directly so animate() picks them up
         targetRotation.y += dx * dragSensitivity;
         targetRotation.x += dy * dragSensitivity;
-
-        // store last pointer for next delta
         lastPointer.x = clientX;
         lastPointer.y = clientY;
-
-        // update mouseVector too (for hover/hotspot detection alignment)
         mouseVector.x = ((clientX - rect.left) / rect.width) * 2 - 1;
         mouseVector.y = -((clientY - rect.top) / rect.height) * 2 + 1;
-
         checkHotspotHover();
         return;
       }
 
-      // Not dragging → hover behavior (preserve earlier logic)
       const mouseX = ((clientX - rect.left) / rect.width) * 2 - 1;
       const mouseY = -((clientY - rect.top) / rect.height) * 2 + 1;
       targetRotation.y = mouseX * 0.3;
@@ -354,16 +386,12 @@ export default function GlobeSection({ projects, openProject }) {
     }
 
     function onPointerDown(event) {
-      // start dragging
       isDraggingRef.current = true;
       lastPointer.x = event.clientX;
       lastPointer.y = event.clientY;
-
       try {
         containerRef.current.setPointerCapture(event.pointerId);
-      } catch (err) {
-        // some browsers may throw if pointer capture not supported
-      }
+      } catch (err) {}
     }
 
     function onPointerUp(event) {
@@ -372,17 +400,14 @@ export default function GlobeSection({ projects, openProject }) {
       try {
         containerRef.current.releasePointerCapture(event.pointerId);
       } catch (err) {}
-      // optional: add subtle auto-rotation kick from last release (not implemented here)
     }
 
     function onPointerLeave() {
-      // When pointer leaves element—stop dragging and reset hover targets
       isDraggingRef.current = false;
       targetRotation.x = 0;
       targetRotation.y = 0;
-      isHoveringHotspot = false; // Reset hover state
-      hideNotification();
-      hideTooltip(); // Hide tooltip when leaving canvas
+      isHoveringHotspot = false;
+      hideTooltip();
     }
 
     function onWindowResize() {
@@ -395,40 +420,46 @@ export default function GlobeSection({ projects, openProject }) {
     }
 
     function onMouseClick(event) {
+      if (!hotspots || !hotspots.userData || hotspots.userData.length === 0) {
+        return; // No hotspots to click
+      }
+      
       const rect = renderer.domElement.getBoundingClientRect();
       mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
       mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObject(hotspots);
+      
       if (intersects.length > 0) {
         const index = intersects[0].index;
         const clickedProject = hotspots.userData[index];
-        if (clickedProject && openProject) {
-          const projectName = clickedProject.project?.projectName || clickedProject.projectName;
-          if (!projectName) return;
-          const formatted = (projectData.projects || projectData).find((p) => p.projectName === projectName);
-          if (formatted) openProject(formatted);
+        
+        if (clickedProject && clickedProject.project && openProject) {
+          openProject(clickedProject.project);
         }
       }
     }
 
     function checkHotspotHover() {
+      if (!hotspots || !hotspots.userData || hotspots.userData.length === 0) {
+        return; // No hotspots to check
+      }
+      
       raycaster.setFromCamera(mouseVector, camera);
       const intersects = raycaster.intersectObject(hotspots);
-      
-      // NEW: Update hover state
       isHoveringHotspot = intersects.length > 0;
       
       if (containerRef.current) {
         containerRef.current.style.cursor = isHoveringHotspot ? 'pointer' : 'default';
       }
 
-      // Show tooltip on hover
       if (isHoveringHotspot && intersects.length > 0) {
         const index = intersects[0].index;
         const hoveredProject = hotspots.userData[index];
-        showTooltip(hoveredProject);
+        if (hoveredProject) {
+          showTooltip(hoveredProject);
+        }
       } else {
         hideTooltip();
       }
@@ -449,7 +480,6 @@ export default function GlobeSection({ projects, openProject }) {
           font-weight: 600;
           pointer-events: none;
           z-index: 1000;
-          white-space: nowrap;
           border: 1px solid rgba(187, 255, 0, 0.3);
           box-shadow: 0 4px 12px rgba(187, 255, 0, 0.2);
           opacity: 0;
@@ -464,13 +494,11 @@ export default function GlobeSection({ projects, openProject }) {
       tooltip.textContent = projectInfo.title;
       tooltip.style.opacity = '1';
 
-      // Position tooltip near cursor
       const updateTooltipPosition = (e) => {
         tooltip.style.left = (e.clientX + 15) + 'px';
         tooltip.style.top = (e.clientY + 15) + 'px';
       };
 
-      // Store the listener so we can update position
       if (!tooltip.positionListener) {
         tooltip.positionListener = updateTooltipPosition;
         containerRef.current.addEventListener('pointermove', tooltip.positionListener);
@@ -488,53 +516,51 @@ export default function GlobeSection({ projects, openProject }) {
       }
     }
 
-    function showNotification(info) {
-      const n = document.getElementById('hotspot-notification');
-      if (n) {
-        n.innerHTML = `<strong>${info.title}</strong><br>${info.description}`;
-        n.classList.add('show');
-        setTimeout(hideNotification, 4000);
-      }
-    }
-
-    function hideNotification() {
-      const n = document.getElementById('hotspot-notification');
-      if (n) n.classList.remove('show');
-    }
-
-    function pulseHotspot() {
-      const orig = hotspots.material.size;
-      let t = 0;
-      const interval = setInterval(() => {
-        hotspots.material.size = orig * (1 + 0.6 * Math.abs(Math.sin(t)));
-        t += 0.4;
-        if (t > 6) {
-          clearInterval(interval);
-          hotspots.material.size = orig;
-        }
-      }, 30);
-    }
-
     function animate() {
       requestAnimationFrame(animate);
       const time = Date.now() * 0.001;
 
-      // NEW: Adjust rotation speed based on hover state
       const baseRotationSpeed = 0.003;
-      const hoverSlowdownFactor = 0.25; // 25% of normal speed when hovering (adjust this value)
-      const rotationSpeed = isHoveringHotspot 
-        ? baseRotationSpeed * hoverSlowdownFactor 
-        : baseRotationSpeed;
+      const hoverSlowdownFactor = 0.25;
+      const rotationSpeed = isHoveringHotspot ? baseRotationSpeed * hoverSlowdownFactor : baseRotationSpeed;
       
       autoRotationY += rotationSpeed;
       const desiredY = autoRotationY + targetRotation.y;
       
-      // smooth interpolation
-      globe.rotation.y += (desiredY - globe.rotation.y) * 0.1;
-      globe.rotation.x += (targetRotation.x - globe.rotation.x) * 0.1;
+      blobMesh.rotation.y += (desiredY - blobMesh.rotation.y) * 0.1;
+      blobMesh.rotation.x += (targetRotation.x - blobMesh.rotation.x) * 0.1;
+
+      // Animate blob distortion
+      if (blobMesh && blobMesh.geometry.userData.originalPositions) {
+        const posAttr = blobMesh.geometry.attributes.position;
+        const origPos = blobMesh.geometry.userData.originalPositions;
+        
+        for (let i = 0; i < posAttr.count; i++) {
+          const ox = origPos[i * 3];
+          const oy = origPos[i * 3 + 1];
+          const oz = origPos[i * 3 + 2];
+          
+          const n1 = Math.sin(ox * 2.5 + time * 0.8) * Math.cos(oy * 2.3 + time * 0.6);
+          const n2 = Math.sin(oz * 2.8 + time * 0.5) * Math.cos(ox * 2.6 + time * 0.7);
+          const n3 = Math.sin(oy * 2.7 + time * 0.4) * Math.cos(oz * 2.4 + time * 0.9);
+          const n4 = Math.sin(ox * 1.9 + oy * 2.1 + time * 0.6) * Math.cos(oz * 2.2 + time * 0.8);
+          const n5 = Math.sin(ox * 3.1 + oz * 1.8 + time * 0.7) * Math.cos(oy * 2.9 + time * 0.5);
+          const n6 = Math.sin(oy * 3.5 + time * 0.9) * Math.cos(ox * 3.2 + oz * 2.8 + time * 0.4);
+          
+          const dist = (n1 * 5.0 + n2 * 4.5 + n3 * 5.5 + n4 * 4.0 + n5 * 4.8 + n6 * 5.2) * 0.55;
+          
+          const len = Math.sqrt(ox * ox + oy * oy + oz * oz);
+          const nx = ox / len, ny = oy / len, nz = oz / len;
+          
+          posAttr.setXYZ(i, ox + nx * dist, oy + ny * dist, oz + nz * dist);
+        }
+        
+        posAttr.needsUpdate = true;
+        blobMesh.geometry.computeVertexNormals();
+      }
 
       [particles, connections, hotspots].forEach(o => {
-        if(o) o.rotation.copy(globe.rotation);
+        if(o) o.rotation.copy(blobMesh.rotation);
       });
 
       if (innerParticles) {
@@ -545,13 +571,13 @@ export default function GlobeSection({ projects, openProject }) {
           pos[i + 2] += Math.sin(time * 0.8 + i) * 0.0015;
         }
         innerParticles.geometry.attributes.position.needsUpdate = true;
-        innerParticles.material.opacity = 0.6 + Math.sin(time * 2) * 0.1;
+        innerParticles.material.opacity = 0.5 + Math.sin(time * 2) * 0.15;
       }
 
       if (hotspots) hotspots.material.opacity = 0.85 + Math.sin(time * 3) * 0.15;
-      if (particles) particles.material.opacity = 0.8 + Math.sin(time * 1.5) * 0.3;
+      if (particles) particles.material.opacity = 0.75 + Math.sin(time * 1.5) * 0.25;
       if (connections && connections.material) {
-        connections.material.opacity = 0.45 + Math.sin(time * 1.2) * 0.15;
+        connections.material.opacity = 0.5 + Math.sin(time * 1.2) * 0.2;
       }
 
       if (outwardParticles) {
@@ -561,13 +587,9 @@ export default function GlobeSection({ projects, openProject }) {
           pos[i * 3 + 1] += outwardVelocities[i].y;
           pos[i * 3 + 2] += outwardVelocities[i].z;
 
-          const dist = Math.sqrt(
-            pos[i * 3] ** 2 + 
-            pos[i * 3 + 1] ** 2 + 
-            pos[i * 3 + 2] ** 2
-          );
+          const dist = Math.sqrt(pos[i * 3] ** 2 + pos[i * 3 + 1] ** 2 + pos[i * 3 + 2] ** 2);
 
-          if (dist >= NEW_GLOBE_RADIUS - 0.5) {
+          if (dist >= BLOB_RADIUS - 0.5) {
             const minR = INNER_PARTICLE_MAX * 0.5;
             const maxR = INNER_PARTICLE_MAX * 0.9;
             const radius = minR + Math.random() * (maxR - minR);
@@ -579,9 +601,7 @@ export default function GlobeSection({ projects, openProject }) {
             pos[i * 3 + 2] = radius * Math.cos(phi);
             
             outwardVelocities[i] = new THREE.Vector3(
-              pos[i * 3],
-              pos[i * 3 + 1],
-              pos[i * 3 + 2]
+              pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2]
             ).normalize().multiplyScalar(0.01 + Math.random() * 0.02);
           }
         }
@@ -594,7 +614,6 @@ export default function GlobeSection({ projects, openProject }) {
     init();
 
     return () => {
-      // Clean up tooltip
       const tooltip = document.getElementById('globe-tooltip');
       if (tooltip) {
         if (tooltip.positionListener && containerRef.current) {
@@ -612,7 +631,6 @@ export default function GlobeSection({ projects, openProject }) {
         containerRef.current.removeEventListener('click', onMouseClick);
       }
       window.removeEventListener('resize', onWindowResize);
-      // Dispose renderer & three objects
       try {
         renderer.dispose();
       } catch (err) {}
