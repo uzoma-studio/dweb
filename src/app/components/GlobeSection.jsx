@@ -10,6 +10,9 @@ export default function GlobeSection({ projects, openProject }) {
   useEffect(() => {
     if (!containerRef.current) return;
 
+    //Prevent duplicate canvas
+  if (containerRef.current.children.length > 0) return;
+
     let scene, camera, renderer, blobMesh, particles, connections, innerParticles, hotspots;
     let outwardParticles, outwardVelocities = [];
     let mouse = { x: 0, y: 0 }, targetRotation = { x: 0, y: 0 };
