@@ -114,7 +114,7 @@ function ProjectsInner() {
                 transition={{ duration: 0.5 }}>
                 <div className="w-1/2 flex items-center justify-start md:px-10 px-6 py-4">
                   <h1 className="md:text-xl text-base text-white IBMbold leading-none">
-                    DWeb for Creators 2025
+                    DWeb for Creators
                   </h1>
                 </div>
               </motion.footer>
@@ -132,7 +132,7 @@ function ProjectsInner() {
         transition={{ duration: 0.5 }}>
         <div className="w-1/2 flex items-center justify-start md:px-10 px-6 py-4">
           <h1 className="md:text-xl text-base text-white IBMbold leading-none">
-            DWeb for Creators 2025
+            DWeb for Creators
           </h1>
         </div>
       </motion.footer>
