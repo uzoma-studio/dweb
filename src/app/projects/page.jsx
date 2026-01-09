@@ -62,7 +62,7 @@ function ProjectsInner() {
             opacity: { duration: 0.8 }
           }}
         >
-          <GlobeSection openProject={openProject} projects={formattedProjects} />
+          <GlobeSection key="projects-globe" openProject={openProject} projects={formattedProjects} />
         </motion.div>
 
         <motion.div
@@ -94,7 +94,7 @@ function ProjectsInner() {
               opacity: { duration: 0.8, delay: 0.2 },
             }}
             >
-            <GlobeSection openProject={openProject} projects={formattedProjects} />
+            <GlobeSection key="projects-globe" openProject={openProject} projects={formattedProjects} />
           </motion.div>
 
 
