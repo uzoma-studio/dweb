@@ -432,9 +432,9 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
           })}
 
           {/* Centered scroll instructions - show only when hovering non-center projects AND not scrolling */}
-          <div 
+           <div 
             className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none transition-opacity duration-300 ${
-              isHoveringNonCenter && !isScrolling ? 'opacity-100' : 'opacity-0'
+              isHoveringNonCenter && !isScrolling && !isHoveringCenter ? 'opacity-100' : 'opacity-0'
             }`}
           >
             <div className="flex items-center gap-2 border border-white p-4 rounded-lg text-white/50 ml-26">
