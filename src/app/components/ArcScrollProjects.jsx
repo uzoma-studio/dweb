@@ -28,6 +28,8 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
   const isPausedRef = useRef(false);
   const lastTargetOffsetRef = useRef(0);
 
+  const instructionsRef = useRef(null);
+
   // Touch handling refs
   const touchStartYRef = useRef(0);
   const lastTouchYRef = useRef(0);
