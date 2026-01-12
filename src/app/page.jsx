@@ -38,7 +38,7 @@ export default function Home() {
           text-left
           lg:pl-16 px-6 lg:pr-0
           h-[45vh]
-          min-h-[260px]
+          min-h-[250px]
           overflow-y-auto
           md:h-auto
           md:min-h-0
