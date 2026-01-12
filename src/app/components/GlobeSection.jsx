@@ -24,8 +24,8 @@ export default function GlobeSection({ projects, openProject }) {
     const lastPointer = { x: 0, y: 0 };
     const dragSensitivity = 0.005;
 
-    const BLOB_RADIUS = 5.5;
-    const NETWORK_RADIUS = BLOB_RADIUS + 0.8;
+    const BLOB_RADIUS = 5.8;
+    const NETWORK_RADIUS = BLOB_RADIUS + 0.9;
     const INNER_PARTICLE_MAX = 1.5 * (BLOB_RADIUS / 3);
 
 
@@ -58,6 +58,8 @@ export default function GlobeSection({ projects, openProject }) {
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       const w = containerRef.current.clientWidth;
       const h = containerRef.current.clientHeight;
+      renderer.setPixelRatio(window.devicePixelRatio || 1);
+
       renderer.setSize(w, h, false);
       renderer.setClearColor(0x000000, 0);
       containerRef.current.appendChild(renderer.domElement);
@@ -417,6 +419,10 @@ function createConnections() {
       if (!containerRef.current) return;
       const w = containerRef.current.clientWidth;
       const h = containerRef.current.clientHeight;
+      
+      renderer.setPixelRatio(window.devicePixelRatio || 1);
+      renderer.setSize(w, h, false);
+
       renderer.setSize(w, h, false);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
@@ -474,22 +480,24 @@ function createConnections() {
         tooltip = document.createElement('div');
         tooltip.id = 'globe-tooltip';
         tooltip.style.cssText = `
-          position: fixed;
-          background: rgba(0, 0, 0, 0.9);
-          color: #fff;
-          padding: 8px 12px;
-          border-radius: 6px;
-          font-size: 13px;
-          font-weight: 600;
-          pointer-events: none;
-          z-index: 1000;
-          border: 1px solid rgba(187, 255, 0, 0.3);
-          box-shadow: 0 4px 12px rgba(187, 255, 0, 0.2);
-          opacity: 0;
-          transition: opacity 0.2s ease;
-          white-space: normal;      
-          max-width: 250px;        
-          word-break: break-word;   
+         position: fixed;
+        background: rgba(0, 0, 0, 0.9);
+        color: #fff;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        pointer-events: none;
+        z-index: 1000;
+        border: 1px solid rgba(187, 255, 0, 0.3);
+        box-shadow: 0 4px 12px rgba(187, 255, 0, 0.2);
+        opacity: 0;
+        transition: opacity 0.2s ease, transform 0.1s ease;
+        white-space: nowrap;        /* Force horizontal text */
+        max-width: 250px;
+        word-break: normal;         /* Prevent vertical breaks */
+        overflow: hidden;
+        text-overflow: ellipsis;
         `;
         document.body.appendChild(tooltip);
       }
@@ -497,10 +505,25 @@ function createConnections() {
       tooltip.textContent = projectInfo.title;
       tooltip.style.opacity = '1';
 
-      const updateTooltipPosition = (e) => {
-        tooltip.style.left = (e.clientX + 15) + 'px';
-        tooltip.style.top = (e.clientY + 15) + 'px';
-      };
+   const updateTooltipPosition = (e) => {
+  const tooltipRect = tooltip.getBoundingClientRect();
+  let left = e.clientX + 15;
+  let top = e.clientY + 15;
+
+  // Keep tooltip inside viewport horizontally
+  if (left + tooltipRect.width > window.innerWidth) {
+    left = e.clientX - tooltipRect.width - 15;
+  }
+
+  // Keep tooltip inside viewport vertically
+  if (top + tooltipRect.height > window.innerHeight) {
+    top = e.clientY - tooltipRect.height - 15;
+  }
+
+  tooltip.style.left = left + 'px';
+  tooltip.style.top = top + 'px';
+};
+
 
       if (!tooltip.positionListener) {
         tooltip.positionListener = updateTooltipPosition;

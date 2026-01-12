@@ -31,9 +31,24 @@ export default function Home() {
      <main className="pt-22 lg:pt-10 md:pt-22 flex flex-col md:flex-row justify-between items-center relative md:px-0 overflow-hidden">
       {/* Left Text */}
         <motion.div 
-          className="md:w-[70%] flex flex-col  z-10 text-left lg:pl-16 px-6 lg:pr-0"
-          animate={{ opacity: isExpanding ? 0 : 1 }}
-          transition={{ duration: 0.5 }}>
+        className="
+          md:w-[70%]
+          flex flex-col
+          z-10
+          text-left
+          lg:pl-16 px-6 lg:pr-0
+          h-[45vh]
+          min-h-[250px]
+          overflow-y-auto
+          md:h-auto
+          md:min-h-0
+          md:overflow-visible
+
+          scrollbar-thin scrollbar-thumb-white/20
+        "
+        animate={{ opacity: isExpanding ? 0 : 1 }}
+        transition={{ duration: 0.5 }}>
+
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -93,7 +108,7 @@ export default function Home() {
 
         {/* Right Globe */}
       <motion.div 
-        className="w-full md:w-[50%] flex flex-auto justify-start items-center relative md:translate-x-[15%]"
+        className="w-full md:w-[50%] flex flex-auto justify-start items-center relative"
         layoutId="globe-container"
    initial={{ opacity: 0, scale: 0.8 }}
       

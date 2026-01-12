@@ -126,8 +126,9 @@ a {
 
 @media (max-width: 500px) {
   #canvas-container {
-    max-width: 580px;
-    height: 580px; 
+    max-width: 680px;
+    height: 680px; 
+    margin-bottom: 90px;
   }
 }
 
