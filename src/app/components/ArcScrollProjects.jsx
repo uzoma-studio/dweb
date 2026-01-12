@@ -437,7 +437,7 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
               isHoveringNonCenter && !isScrolling && !isHoveringCenter ? 'opacity-100' : 'opacity-0'
             }`}
           >
-            <div className="flex items-center gap-2 border border-white p-4 rounded-lg text-white/50 ml-26">
+            <div className="flex items-center gap-2 ml-12 border border-white p-4 rounded-lg text-white/50 ml-26">
               <span className="text-sm IBMregular whitespace-nowrap">scroll to navigate <br /> or use arrow keys</span>
               <div className="flex flex-col">
                 <FiArrowUp className="text-white/50" />
@@ -487,7 +487,7 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
 
       {/* Scroll instructions - mobile only */}
       {mounted && (
-        <div className="fixed w-36 leading-none bottom-6 text-right right-4 text-white/50 text-xs pointer-events-none lg:hidden">
+        <div className="fixed w-36 leading-none bottom-4 text-right right-4 text-white/50 text-xs pointer-events-none lg:hidden">
           <span>scroll to navigate</span>
         </div>
       )}
