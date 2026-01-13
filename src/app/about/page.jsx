@@ -26,7 +26,7 @@ export default function AboutPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 1 }}
-            className="text-sm Bodytext IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-0"
+            className="text-sm Bodytext IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-2"
           >
            DWeb for Creators is an 8-week online course that empowers artists, designers, archivists, gallerists, curators, and others with the knowledge and tools necessary for exploring the decentralized web. Participants engage with technologies like blockchain and mesh networks; examine case studies in curation, publishing, data sovereignty, and community building; and apply decolonial approaches to world building as they envision the future of DWeb technologies. The 2025 edition of the course culminated in a public salon where students presented their research, sketches, and projects developed during the course.
           </motion.p>
@@ -34,7 +34,7 @@ export default function AboutPage() {
            initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 1 }}
-            className="text-sm Bodytext IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-0"> 
+            className="text-sm Bodytext IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-2"> 
             The course’s <a className="Aunderline" target="_blank" href="https://github.com/GrayAreaorg/dweb-curriculum-2025">open-source curriculum</a> was created by Gray Area and a team of experienced instructors and advisors working at multiple intersections of the decentralized web: 
              <a className="Aunderline" target="_blank" href="https://ayanazairecotton.com/"> Ayana Zaire Cotton</a>, <a className="Aunderline" target="_blank" href="https://kelaninichole.com/">  Kelani Nichole</a>, 
              <a className="Aunderline" target="_blank" href="https://maisutton.net/"> mai ishikawa sutton</a>, <a className="Aunderline" target="_blank" href="https://grayarea.org/community-entry/ngoc-trieu/">ngọc triệu</a>, 
