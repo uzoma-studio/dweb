@@ -70,7 +70,7 @@ export default function Home() {
            initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 1 }}
-            className=" Bodytext IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-2"> 
+            className="hidden Bodytext IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-2"> 
             The course’s <a 
             className="Aunderline" target="_blank" href="https://github.com/GrayAreaorg/dweb-curriculum-2025">open-source curriculum</a> was created by Gray Area and a team of experienced instructors and advisors working at multiple intersections of the decentralized web: <a 
             className="Aunderline" target="_blank" href="https://ayanazairecotton.com/">Ayana Zaire Cotton</a>, <a 
@@ -86,7 +86,7 @@ export default function Home() {
            initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 1 }}
-            className=" Bodytext IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-0"> 
+            className="hidden Bodytext IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-0"> 
             DWeb for Creators is made possible by the support of
             <a className="Aunderline" target="_blank" href="https://ffdweb.org/"> Filecoin Foundation for the Decentralized Web</a>
           </motion.p>
