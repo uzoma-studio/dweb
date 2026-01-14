@@ -19,21 +19,20 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
   const [isHoveringCenter, setIsHoveringCenter] = useState(false);
   const [isHoveringNonCenter, setIsHoveringNonCenter] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
+  const [hasMouseMoved, setHasMouseMoved] = useState(false);
   const scrollTimeoutRef = useRef(null);
 
   const targetOffsetRef = useRef(0);
   const currentOffsetRef = useRef(0);
-  const velocityRef = useRef(0);
   const animationFrameRef = useRef(null);
   const isPausedRef = useRef(false);
-  const lastTargetOffsetRef = useRef(0);
-
-  const instructionsRef = useRef(null);
+  const currentProjectIndexRef = useRef(0);
+  const isSnappingRef = useRef(false);
+  const lastScrollTimeRef = useRef(0);
 
   // Touch handling refs
   const touchStartYRef = useRef(0);
   const lastTouchYRef = useRef(0);
-  const touchVelocityRef = useRef(0);
 
   const formattedProjects = useMemo(
     () =>
@@ -76,37 +75,76 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
 
   const n = projects.length;
 
-  // Original wheel scroll effect
+  // Snap to nearest project
+  const snapToNearestProject = () => {
+    const projectStep = 1 / projects.length;
+    const currentIndex = Math.round(targetOffsetRef.current / projectStep);
+    const targetIndex = currentIndex;
+    targetOffsetRef.current = targetIndex * projectStep;
+    currentProjectIndexRef.current = targetIndex;
+    isSnappingRef.current = true;
+  };
+
+  // Improved wheel scroll with snap-to-project
   useEffect(() => {
+    let scrollAccumulator = 0;
+    let scrollTimeout;
+
     const handleWheel = (e) => {
       if (isPausedRef.current) return;
-      velocityRef.current += e.deltaY * 0.0002;
       
-      // Set scrolling state
+      const now = Date.now();
+      const timeSinceLastScroll = now - lastScrollTimeRef.current;
+      lastScrollTimeRef.current = now;
+
+      // Reset accumulator if too much time has passed
+      if (timeSinceLastScroll > 200) {
+        scrollAccumulator = 0;
+      }
+
+      scrollAccumulator += e.deltaY;
+      
+      // Threshold for moving to next project (lower = more sensitive)
+      const threshold = 40;
+      
+      if (Math.abs(scrollAccumulator) > threshold) {
+        const direction = scrollAccumulator > 0 ? 1 : -1;
+        const projectStep = 1 / projects.length;
+        
+        // Move to next/prev project
+        currentProjectIndexRef.current += direction;
+        targetOffsetRef.current = currentProjectIndexRef.current * projectStep;
+        
+        scrollAccumulator = 0;
+        isSnappingRef.current = false;
+      }
+      
       setIsScrolling(true);
-      clearTimeout(scrollTimeoutRef.current);
-      scrollTimeoutRef.current = setTimeout(() => {
-        setIsScrolling(false);
-      }, 500);
+      setHasMouseMoved(false); // Reset mouse movement on scroll
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        if (!isSnappingRef.current) {
+          snapToNearestProject();
+        }
+        // Delay the isScrolling state change slightly to prevent flicker
+        setTimeout(() => setIsScrolling(false), 50);
+      }, 150);
     };
 
     const animate = () => {
       if (!isPausedRef.current) {
-        velocityRef.current *= 0.92;
-        targetOffsetRef.current += velocityRef.current;
-        currentOffsetRef.current +=
-          (targetOffsetRef.current - currentOffsetRef.current) * 0.08;
+        // Smooth interpolation to target
+        const diff = targetOffsetRef.current - currentOffsetRef.current;
+        const speed = isSnappingRef.current ? 0.15 : 0.12;
+        currentOffsetRef.current += diff * speed;
+
+        // Stop snapping when close enough
+        if (isSnappingRef.current && Math.abs(diff) < 0.001) {
+          currentOffsetRef.current = targetOffsetRef.current;
+          isSnappingRef.current = false;
+        }
 
         setScrollOffset((currentOffsetRef.current % 1 + 1) % 1);
-        
-        // Keep scrolling state active if there's significant velocity
-        if (Math.abs(velocityRef.current) > 0.001) {
-          setIsScrolling(true);
-          clearTimeout(scrollTimeoutRef.current);
-          scrollTimeoutRef.current = setTimeout(() => {
-            setIsScrolling(false);
-          }, 300);
-        }
       }
       animationFrameRef.current = requestAnimationFrame(animate);
     };
@@ -117,45 +155,68 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
     return () => {
       cancelAnimationFrame(animationFrameRef.current);
       window.removeEventListener("wheel", handleWheel);
-      clearTimeout(scrollTimeoutRef.current);
+      clearTimeout(scrollTimeout);
     };
-  }, []);
+  }, [projects.length]);
 
-  // Touch handling specifically for arc container on iPad Pro
+  // Touch handling for iPad Pro with snap
   useEffect(() => {
     const arcContainer = arcContainerRef.current;
     if (!arcContainer || windowSize.width < 1280) return;
+
+    let touchScrollAccumulator = 0;
+    let touchTimeout;
 
     const handleTouchStart = (e) => {
       if (isPausedRef.current) return;
       touchStartYRef.current = e.touches[0].clientY;
       lastTouchYRef.current = e.touches[0].clientY;
-      touchVelocityRef.current = 0;
+      touchScrollAccumulator = 0;
     };
 
     const handleTouchMove = (e) => {
       if (isPausedRef.current) return;
-      
       e.preventDefault();
       
       const currentY = e.touches[0].clientY;
       const deltaY = lastTouchYRef.current - currentY;
       
-      velocityRef.current += deltaY * 0.0008;
+      touchScrollAccumulator += deltaY;
       
-      // Set scrolling state
+      // Threshold for moving to next project
+      const threshold = 50;
+      
+      if (Math.abs(touchScrollAccumulator) > threshold) {
+        const direction = touchScrollAccumulator > 0 ? 1 : -1;
+        const projectStep = 1 / projects.length;
+        
+        currentProjectIndexRef.current += direction;
+        targetOffsetRef.current = currentProjectIndexRef.current * projectStep;
+        
+        touchScrollAccumulator = 0;
+        isSnappingRef.current = false;
+      }
+      
       setIsScrolling(true);
-      clearTimeout(scrollTimeoutRef.current);
-      scrollTimeoutRef.current = setTimeout(() => {
-        setIsScrolling(false);
-      }, 500);
+      setHasMouseMoved(false); // Reset mouse movement on touch
+      clearTimeout(touchTimeout);
+      touchTimeout = setTimeout(() => {
+        if (!isSnappingRef.current) {
+          snapToNearestProject();
+        }
+        setTimeout(() => setIsScrolling(false), 50);
+      }, 150);
       
       lastTouchYRef.current = currentY;
     };
 
-    const handleTouchEnd = (e) => {
+    const handleTouchEnd = () => {
       if (isPausedRef.current) return;
-      touchVelocityRef.current = 0;
+      clearTimeout(touchTimeout);
+      touchTimeout = setTimeout(() => {
+        snapToNearestProject();
+        setTimeout(() => setIsScrolling(false), 50);
+      }, 100);
     };
 
     arcContainer.addEventListener("touchstart", handleTouchStart, { passive: true });
@@ -166,40 +227,47 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
       arcContainer.removeEventListener("touchstart", handleTouchStart);
       arcContainer.removeEventListener("touchmove", handleTouchMove);
       arcContainer.removeEventListener("touchend", handleTouchEnd);
+      clearTimeout(touchTimeout);
     };
-  }, [windowSize.width]);
+  }, [windowSize.width, projects.length]);
 
-  // Keyboard controls
+  // Keyboard controls with snap
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (isPausedRef.current) return;
 
-      const projectStep = 1 / projects.length;
-
       if (e.key === "ArrowDown" || e.key === "ArrowUp") {
         e.preventDefault();
         const direction = e.key === "ArrowDown" ? -1 : 1;
-        targetOffsetRef.current += direction * projectStep;
+        const projectStep = 1 / projects.length;
         
-        // Set scrolling state with longer timeout for keyboard
+        currentProjectIndexRef.current += direction;
+        targetOffsetRef.current = currentProjectIndexRef.current * projectStep;
+        isSnappingRef.current = false;
+        
         setIsScrolling(true);
+        setHasMouseMoved(false); // Reset mouse movement on keyboard
         clearTimeout(scrollTimeoutRef.current);
         scrollTimeoutRef.current = setTimeout(() => {
           setIsScrolling(false);
-        }, 800);
+        }, 400);
       }
 
       if (e.key === "PageDown" || e.key === "PageUp") {
         e.preventDefault();
         const direction = e.key === "PageDown" ? -1 : 1;
-        targetOffsetRef.current += direction * projectStep * 2;
+        const projectStep = 1 / projects.length;
         
-        // Set scrolling state with longer timeout for keyboard
+        currentProjectIndexRef.current += direction * 3;
+        targetOffsetRef.current = currentProjectIndexRef.current * projectStep;
+        isSnappingRef.current = false;
+        
         setIsScrolling(true);
+        setHasMouseMoved(false); // Reset mouse movement on keyboard
         clearTimeout(scrollTimeoutRef.current);
         scrollTimeoutRef.current = setTimeout(() => {
           setIsScrolling(false);
-        }, 800);
+        }, 600);
       }
     };
 
@@ -207,39 +275,52 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [projects.length]);
 
-  // Scrollbar dragging
+  // Scrollbar dragging with snap
   useEffect(() => {
-    let lastScrollY = window.scrollY;
-    let lastTime = Date.now();
+    let scrollAccumulator = 0;
+    let scrollbarTimeout;
 
     const handleScroll = () => {
       if (isPausedRef.current) return;
       
       const currentScrollY = window.scrollY;
-      const currentTime = Date.now();
-      const deltaY = currentScrollY - lastScrollY;
-      const deltaTime = currentTime - lastTime;
+      const deltaY = currentScrollY - (window.lastScrollY || 0);
+      window.lastScrollY = currentScrollY;
       
-      if (Math.abs(deltaY) > 0 && deltaTime > 0) {
-        const scrollVelocity = deltaY / deltaTime;
-        velocityRef.current += scrollVelocity * 0.002;
+      scrollAccumulator += deltaY;
+      
+      const threshold = 30;
+      
+      if (Math.abs(scrollAccumulator) > threshold) {
+        const direction = scrollAccumulator > 0 ? 1 : -1;
+        const projectStep = 1 / projects.length;
         
-        // Set scrolling state
-        setIsScrolling(true);
-        clearTimeout(scrollTimeoutRef.current);
-        scrollTimeoutRef.current = setTimeout(() => {
-          setIsScrolling(false);
-        }, 500);
+        currentProjectIndexRef.current += direction;
+        targetOffsetRef.current = currentProjectIndexRef.current * projectStep;
+        
+        scrollAccumulator = 0;
+        isSnappingRef.current = false;
       }
       
-      lastScrollY = currentScrollY;
-      lastTime = currentTime;
+      setIsScrolling(true);
+      setHasMouseMoved(false); // Reset mouse movement on scrollbar
+      clearTimeout(scrollbarTimeout);
+      scrollbarTimeout = setTimeout(() => {
+        if (!isSnappingRef.current) {
+          snapToNearestProject();
+        }
+        setTimeout(() => setIsScrolling(false), 50);
+      }, 150);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearTimeout(scrollbarTimeout);
+    };
+  }, [projects.length]);
 
+  // Track mouse movement - removed global listener
   useEffect(() => {
     isPausedRef.current = !!selectedProject;
   }, [selectedProject]);
@@ -397,14 +478,17 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
                   if (isCenter) {
                     setIsHoveringCenter(true);
                     setIsHoveringNonCenter(false);
+                    setHasMouseMoved(false); // Reset when entering center
                   } else {
                     setIsHoveringNonCenter(true);
                     setIsHoveringCenter(false);
+                    setHasMouseMoved(true); // Set true when entering non-center
                   }
                 }}
                 onMouseLeave={() => {
                   setIsHoveringCenter(false);
                   setIsHoveringNonCenter(false);
+                  setHasMouseMoved(false); // Reset when leaving any project
                 }}
               >
                 <div 
@@ -433,10 +517,10 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
             );
           })}
 
-          {/* Centered scroll instructions - show only when hovering non-center projects AND not scrolling */}
+          {/* Centered scroll instructions - only show when mouse has moved, hovering non-center, not scrolling, and not hovering center */}
            <div 
             className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none transition-opacity duration-300 ${
-              isHoveringNonCenter && !isScrolling && !isHoveringCenter ? 'opacity-100' : 'opacity-0'
+              hasMouseMoved && isHoveringNonCenter && !isScrolling && !isHoveringCenter ? 'opacity-100' : 'opacity-0'
             }`}
           >
             <div className="flex items-center gap-2 border border-white p-4 rounded-lg text-white/50 ml-26">
