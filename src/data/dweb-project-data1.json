@@ -8,7 +8,7 @@
     "artists": [
       {
         "name": "Grace Adu-Boahen",
-        "bio": "Grace Adu-Boahen is a multidisciplinary creative, researcher, and founder of Mothership Media Collective, a platform dedicated to preserving the history of the Black diaspora. The daughter of Ghanaian Immigrant parents, Grace was raised in PG County, MD, surrounded by Black elders and leadership. Committed to culture, family, legacy, and community. Her work explores how everyday people document their lives and family history, and how we can use innovative technology to make sure our stories aren't stolen, erased, or owned by anyone else or a corporation. With love for diasporic history and digital ownership, Grace is building tools like The Etherdrive to protect the voice of the past, present, and future."
+        "bio:": "Grace Adu-Boahen is a multidisciplinary creative, researcher, and founder of Mothership Media Collective, a platform dedicated to preserving the history of the Black diaspora. The daughter of Ghanaian Immigrant parents, Grace was raised in PG County, MD, surrounded by Black elders and leadership. Committed to culture, family, legacy, and community. Her work explores how everyday people document their lives and family history, and how we can use innovative technology to make sure our stories aren't stolen, erased, or owned by anyone else or a corporation. With love for diasporic history and digital ownership, Grace is building tools like The Etherdrive to protect the voice of the past, present, and future."
       }
     ],
     "videoLink": "https://www.youtube.com/watch?v=LYD6PrC1ggs"
@@ -64,7 +64,7 @@
         "link": "https://www.ahreumlee.com"
       }
     ],
-    "artistBio": "https://www.ahreumlee.com",
+    "artistBio": "\nhttps://www.ahreumlee.com",
     "videoLink": "https://www.youtube.com/watch?v=yAk8d2K6wzU"
   },
   {
@@ -160,5 +160,63 @@
       }
     ],
     "videoLink": "https://www.youtube.com/watch?v=ktwAefX7eT0"
+  },
+  {
+    "projectName": "Archiving Myanmar's Digital Landscape",
+    "artistName": "Myanmar Internet Project Contributors",
+    "projectDescription": "Myanmar Internet Project documents the history of the Myanmar Internet—past, present and future—by archiving and amplifying existing research, with a particular emphasis on the evolution of Myanmar Digital Landscape.",
+    "coverImage": "Myanmar-Internet-Project-01.png",
+    "website": "https://www.myanmarinternet.info/",
+    "artists": [
+      {
+        "name": "Myanmar Internet Project Contributors",
+        "bio:": "The Myanmar Internet Project was established in 2022 by a collective of researchers, practitioners and advocates with years of experience tracking developments in the Myanmar digital space."
+      }
+    ],
+    "videoLink": "https://www.youtube.com/watch?v=wjG3oSw9eAI&t=2396s"
+  },
+  {
+    "projectName": "Digital Memory Keepers: Decentralized Archiving of Zapotec Biocultural Knowledge",
+    "artistName": "SURCO",
+    "projectDescription": "Servicios Universitarios y Redes de Conocimientos en Oaxaca’s project collaborates with Zapotec communities in Oaxaca to document and preserve traditional agricultural practices, environmental vocabulary, and oral histories. With a focus on indigenous data sovereignty, the project will deploy decentralized storage solutions to safeguard biocultural knowledge while maintaining community control over digital heritage. By integrating decentralized technologies, Digital Memory Keepers will create a bilingual archival system accessible to Zapotec speakers and the broader public.",
+    "coverImage": "digital-memory-keepers.webp",
+    "website": "https://surcooaxaca.org/",
+    "artists": [
+      {
+        "name": "SURCO",
+        "bio:": "Servicios Universitarios y Redes de Conocimientos en Oaxaca"
+      }
+    ],
+    "videoLink": "https://www.youtube.com/watch?v=wjG3oSw9eAI&t=1732s"
+  },
+  {
+    "projectName": "Vanuatu",
+    "artistName": "Claire Jervert",
+    "projectDescription": "Vanuatu is a three-part, multidisciplinary project consisting of experimental watercolor paintings loosely based on early British Admiralty maps; a large-scale spatial video installation, Ocean, which ingests live weather data to generate real-time visual states; and a suite of DWeb components. At its core, the project examines place, environmental change, and shifting ocean conditions. The DWeb components function as a distributed field notebook rather than a centralized website. Process images, short video excerpts from Ocean, and working notes are published as content-addressed files using decentralized storage systems such as IPFS. This structure allows materials to exist as versioned snapshots that can be accessed, referenced, and updated over time without relying on a single hosting platform. By dispersing documentation across a decentralized network, the work remains accessible beyond the lifespan of any one institution or website, supporting non-commercial, long-term access and emphasizing process, change, and persistence as integral parts of the artwork itself.",
+    "coverImage": "Vanuatu1.png",
+    "website": "",
+    "artists": [
+      {
+        "name": "Claire Jervert",
+        "bio:": "Claire Jervert is an multidisciplinary artist--investigating the evolving boundaries between humanity, technology, and identity using immersive technologies such as AI, VR, and AR, and traditional materials. Her work has been exhibited in museums and galleries throughout the United States and internationally, including: The Museum of the Moving Image, Lincoln Center, New York; Annka Kultys Gallery, London, UK; Streaming Museum and World Council of Peoples for the United Nations, New York; International Symposium of Electronic Art, Hong Kong; Art Basel/Miami Design, Miami, FL; MTV Momentum Technology Videos Film Festival, Institute of Women and Art, Rutgers University, NJ; AR (Augmented Reality) Intervention, Thin Air Gallery, Bushwick, NY; and Sirve Verse, La Paternal Project Space, Buenos Aires, AR. She is a former member of the Stevens Institute of Technology Advisory Committee on Art and Technology who has received awards from the MidAtlantic Arts Foundation, Atlantic Center for the Arts, and Bronx Museum.",
+        "link": "https://www.clairejervert.com/"
+      }
+    ],
+    "videoLink": ""
+  },
+  {
+    "projectName": "Asli",
+    "artistName": "Fady Bello",
+    "projectDescription": "Asli is an African-rooted digital ecosystem exploring how decentralized technologies can support cultural sovereignty, education, and economic resilience. The project has evolved into a broader vision spanning infrastructure, education, and storytelling. Asli focuses on demystifying Web3, AI, and digital ownership for African communities through culturally grounded narratives, learning initiatives, and community-led experimentation. The long-term ambition is to build accessible tools and knowledge layers, including Asli School and Asli Chain, that empower creators, builders, and local ecosystems to engage with emerging technologies on their own terms. At its core, Asli bridges ancestral knowledge, contemporary African realities, and decentralized futures.",
+    "coverImage": "fadd.jpeg",
+    "website": "https://digital-elevate.github.io/fadd/fadd.html",
+    "artists": [
+      {
+        "name": "Fady Bello",
+        "bio:": "Brand & communication strategist working across African markets, focusing on storytelling, decentralized technologies, and tech-for-good initiatives. Fady designs content, education, and brand systems that make complex technologies accessible, culturally relevant, and impact-driven, with a strong emphasis on African ecosystems and futures.",
+        "link": "https://bento.me/hellofady"
+      }
+    ],
+    "videoLink": ""
   }
 ]
