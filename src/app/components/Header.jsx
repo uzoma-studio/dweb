@@ -53,17 +53,7 @@ export default function Header() {
         {/* Show only on non-landing pages */}
         {!isLanding && (
               <>
-                <Link
-                  href="/"
-                  className="flex items-center IBMregular justify-center px-4 sm:px-6 py-2 lg:text-sm text-xs text-white hover:bg-white/10 transition"
-                >
-                  {pathname === "/projects" ? (
-                    <MdCircle className="pr-1" />
-                  ) : (
-                    <MdOutlineCircle className="pr-1"/>
-                  )}
-                  <span>Home</span>
-                </Link>
+                
 
                 <Link
                   href="/about"

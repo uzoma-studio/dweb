@@ -28,26 +28,22 @@ export default function AboutPage() {
             transition={{ delay: 0.3, duration: 1 }}
             className="text-sm Bodytext IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-2"
           >
-           DWeb for Creators is an 8-week online course that empowers artists, designers, archivists, gallerists, curators, and others with the knowledge and tools necessary for exploring the decentralized web. Participants engage with technologies like blockchain and mesh networks; examine case studies in curation, publishing, data sovereignty, and community building; and apply decolonial approaches to world building as they envision the future of DWeb technologies. The 2025 edition of the course culminated in a public salon where students presented their research, sketches, and projects developed during the course.
+           <Link  href="https://dweb.grayarea.org/" target="_blank" className="Aunderline IBMmedium">Dweb for Creators </Link> is an 8-week online course that empowers artists, designers, archivists, gallerists, curators, and others with the knowledge and tools necessary for exploring the decentralized web. Participants engage with technologies like blockchain and mesh networks; examine case studies in curation, publishing, data sovereignty, and community building; and apply decolonial approaches to world building as they envision the future of DWeb technologies. The 2025 edition of the course culminated in a public salon where students presented their research, sketches, and projects developed during the course.
           </motion.p>
           <motion.p
            initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 1 }}
             className="text-sm Bodytext IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-2"> 
-            The course’s <a className="Aunderline" target="_blank" href="https://github.com/GrayAreaorg/dweb-curriculum-2025">open-source curriculum</a> was created by Gray Area and a team of experienced instructors and advisors working at multiple intersections of the decentralized web: 
-             <a className="Aunderline" target="_blank" href="https://ayanazairecotton.com/"> Ayana Zaire Cotton</a>, <a className="Aunderline" target="_blank" href="https://kelaninichole.com/">  Kelani Nichole</a>, 
-             <a className="Aunderline" target="_blank" href="https://maisutton.net/"> mai ishikawa sutton</a>, <a className="Aunderline" target="_blank" href="https://grayarea.org/community-entry/ngoc-trieu/">ngọc triệu</a>, 
-             <a className="Aunderline" target="_blank" href="https://grayarea.org/community-entry/regina-harsanyi/"> Regina Harsanyi</a>, <a className="Aunderline" target="_blank" href="https://isthisa.com/">Sarah Friend</a>, 
-             <a className="Aunderline" target="_blank" href="https://chootka.com/"> Sarah Grant</a>, and  <a className="Aunderline" target="_blank" href="https://www.habritual.studio/">Roxi Shohadaee.</a> 
+            The course’s <a className="Aunderline" target="_blank" href="https://github.com/GrayAreaorg/dweb-curriculum-2025">open-source curriculum</a> was created by Gray Area and a team of experienced instructors and advisors working at multiple intersections of the decentralized web: <a className="Aunderline" target="_blank" href="https://ayanazairecotton.com/">Ayana Zaire Cotton</a>, <a className="Aunderline" target="_blank" href="https://kelaninichole.com/">  Kelani Nichole</a>, 
+             <a className="Aunderline" target="_blank" href="https://maisutton.net/"> mai ishikawa sutton</a>, <a className="Aunderline" target="_blank" href="https://grayarea.org/community-entry/ngoc-trieu/">ngọc triệu</a>, <a className="Aunderline" target="_blank" href="https://grayarea.org/community-entry/regina-harsanyi/">Regina Harsanyi</a>, <a className="Aunderline" target="_blank" href="https://isthisa.com/">Sarah Friend</a>, <a className="Aunderline" target="_blank" href="https://chootka.com/">Sarah Grant</a>, and  <a className="Aunderline" target="_blank" href="https://www.habritual.studio/">Roxi Shohadaee.</a> 
           </motion.p>
           <motion.p
            initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 1 }}
             className="text-sm Bodytext pt-2 IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-0"> 
-            DWeb for Creators is made possible by the support of
-            <a className="Aunderline" target="_blank" href="https://ffdweb.org/"> Filecoin Foundation for the Decentralized Web ↗</a>
+            DWeb for Creators is made possible by the support of <a className="Aunderline" target="_blank" href="https://ffdweb.org/">Filecoin Foundation for the Decentralized Web ↗</a>
           </motion.p>
 
          <motion.p
@@ -57,9 +53,6 @@ export default function AboutPage() {
             className="text-sm Bodytext pt-2 IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-0"
           >
           
-            Learn more about the course  <Link  href="https://grayarea.org/course/dweb/" target="_blank" className="Aunderline IBMmedium">Dweb for Creators ↗</Link>
-           <br/>
-           
               This website was created by <Link className="Aunderline IBMmedium" href="https://uzoma.studio/" target="_blank">uzoma.studio ↗</Link>
         </motion.p>
 

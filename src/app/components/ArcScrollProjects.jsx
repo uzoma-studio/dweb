@@ -320,10 +320,21 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
     };
   }, [projects.length]);
 
-  // Track mouse movement - removed global listener
   useEffect(() => {
     isPausedRef.current = !!selectedProject;
   }, [selectedProject]);
+
+  // Track mouse movement
+  useEffect(() => {
+    if (windowSize.width < 1280) return;
+
+    const handleMouseMove = () => {
+      setHasMouseMoved(true);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [windowSize.width]);
 
   const getProjectPosition = (index) => {
     if (!mounted) return { x: 0, y: 0, opacity: 0, scale: 0, normalizedOffset: 0, isCenter: false, rotation: 0 };
@@ -478,17 +489,14 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
                   if (isCenter) {
                     setIsHoveringCenter(true);
                     setIsHoveringNonCenter(false);
-                    setHasMouseMoved(false); // Reset when entering center
                   } else {
                     setIsHoveringNonCenter(true);
                     setIsHoveringCenter(false);
-                    setHasMouseMoved(true); // Set true when entering non-center
                   }
                 }}
                 onMouseLeave={() => {
                   setIsHoveringCenter(false);
                   setIsHoveringNonCenter(false);
-                  setHasMouseMoved(false); // Reset when leaving any project
                 }}
               >
                 <div 
