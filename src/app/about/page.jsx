@@ -28,7 +28,7 @@ export default function AboutPage() {
             transition={{ delay: 0.3, duration: 1 }}
             className="text-sm Bodytext IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-2"
           >
-           <Link  href="https://dweb.grayarea.org/" target="_blank" className="Aunderline IBMmedium">Dweb for Creators </Link> is an 8-week online course that empowers artists, designers, archivists, gallerists, curators, and others with the knowledge and tools necessary for exploring the decentralized web. Participants engage with technologies like blockchain and mesh networks; examine case studies in curation, publishing, data sovereignty, and community building; and apply decolonial approaches to world building as they envision the future of DWeb technologies. The 2025 edition of the course culminated in a public salon where students presented their research, sketches, and projects developed during the course.
+           <Link  href="https://dweb.grayarea.org/" target="_blank" className="Aunderline IBMmedium">Dweb for Creators</Link> is an 8-week online course that empowers artists, designers, archivists, gallerists, curators, and others with the knowledge and tools necessary for exploring the decentralized web. Participants engage with technologies like blockchain and mesh networks; examine case studies in curation, publishing, data sovereignty, and community building; and apply decolonial approaches to world building as they envision the future of DWeb technologies. The 2025 edition of the course culminated in a public salon where students presented their research, sketches, and projects developed during the course.
           </motion.p>
           <motion.p
            initial={{ opacity: 0 }}
