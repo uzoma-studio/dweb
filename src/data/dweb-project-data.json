@@ -188,7 +188,7 @@
       },
       {
         "name": "SURCO",
-         "bio": "Servicios Universitarios y Redes de Conocimientos en Oaxaca (SURCO) is a non-profit organization that seeks to connect diverse community, collective and academic processes in the fields of education, communication, climate change, sustainability and ICT's and linguistic justice with the objective of building networks of action and knowledge in the face of the realities that interact / intersect between Oaxaca and the rest of the world."
+        "bio": "Servicios Universitarios y Redes de Conocimientos en Oaxaca (SURCO) is a non-profit organization that seeks to connect diverse community, collective and academic processes in the fields of education, communication, climate change, sustainability and ICT's and linguistic justice with the objective of building networks of action and knowledge in the face of the realities that interact / intersect between Oaxaca and the rest of the world."
       }
     ],
     "videoLink": "https://www.youtube.com/watch?v=wjG3oSw9eAI&t=1732s"
@@ -222,5 +222,19 @@
       }
     ],
     "videoLink": ""
+  },
+  {
+    "projectName": "Threads",
+    "artistName": "Sadaf Sadri",
+    "projectDescription": "Threads is an electronic textile installation developed in the visual language of Shia devotional banners, drawing on materials, ornamental styles, and compositional conventions traditionally used to honor kings and the Imams within Shia Islam. These textiles historically function as carriers of declared belief, loyalty, and collective identification. Instead of devotional or triumphal text, the tapestry incorporates the words of a widely known love poem that has gained political force through its circulation in Iran’s on-going revolution. At the center of the work, embroidered map-like forms connect multiple embedded electronic systems. These systems communicate wirelessly through decentralized, peer-to-peer protocols. Rather than transmitting readable language, the tapestries exchange encrypted signals that are translated into physical responses. A second tapestry responds indirectly to touch on the first. When contact is sustained, heat generated behind the surface slowly reveals light beneath a blackened layer. Through encryption, touch, and material transformation, Threads approaches communication as embodied and resistant to legibility, circulating through sensation rather than text, operating outside regimes of visibility and surveillance.",
+    "coverImage": "threads.jpg",
+    "website": "https://sdfsdr.com/threads",
+    "artists": [
+      {
+        "name": "Sadaf Sadri",
+        "bio": "Sadaf Sadri makes work that explores worldbuilding that prompts reflection on gender, ideology, power, and relationality using digital technologies. In this exploration, they are inspired by Islamic institutions of patterns, Shia iconography, and occult sciences. Sadaf is particularly interested in how art can imagine new modes of collectivity within virtual spaces and the decentralized web. They are currently a Ph.D. student at the Center for Digital Arts and Experimental Media at the University of Washington. In 2022, they founded the SPAM New Media Festival, a platform for experimental practices in art and technology in Seattle, where they currently reside.",
+        "link": "https://sdfsdr.com/"
+      }
+    ]
   }
 ]

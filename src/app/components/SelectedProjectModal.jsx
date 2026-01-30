@@ -95,13 +95,25 @@ export default function SelectedProjectModal({ project, onClose, projects = [] }
                     <MdArrowForwardIos className="mr-[2px]" />
                   </button>
                 </div>
-            {/* CLOSE BUTTON */}
+  
+           {/* CLOSE BUTTON */}
             <button
               onClick={handleClose}
-              className="fixed top-6 right-8 cursor-pointer flex items-center justify-center w-6 h-6 rounded-full bg-black transition-all"
+              className="
+                fixed top-6 right-8
+                cursor-pointer
+                flex items-center justify-center
+                w-6 h-6 rounded-full
+                bg-black
+                transition-colors duration-200
+                hover:bg-white
+                hover:border-black hover:border
+                group
+              "
             >
-              <MdClose className="text-white text-xl" />
+              <MdClose className="text-white text-xl group-hover:text-black transition-colors duration-200" />
             </button>
+
 
             {/* HEADER WITH NAVIGATION */}
             <div className="flex items-center justify-between lg:pt-2 pt-6">
