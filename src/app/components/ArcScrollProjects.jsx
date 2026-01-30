@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { FiArrowUp, FiArrowDown } from "react-icons/fi";
 
 const ArcScrollProjects = ({ openProject, selectedProject }) => {
-  const [scrollOffset, setScrollOffset] = useState(0.5);
+  const [scrollOffset, setScrollOffset] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
   const containerRef = useRef(null);
@@ -22,19 +22,13 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
   const [hasMouseMoved, setHasMouseMoved] = useState(false);
   const scrollTimeoutRef = useRef(null);
 
-  const targetOffsetRef = useRef(0.5); 
-  const currentOffsetRef = useRef(0.5); 
+  const targetOffsetRef = useRef(0);
+  const currentOffsetRef = useRef(0);
   const animationFrameRef = useRef(null);
   const isPausedRef = useRef(false);
   const currentProjectIndexRef = useRef(0);
   const isSnappingRef = useRef(false);
   const lastScrollTimeRef = useRef(0);
-  const baseOffsetRef = useRef(0.5);
-
-  const normalizeIndex = (i) => Math.round(i);
-
-  // FIX: Initialize centerIndex to 0 immediately
-  const [centerIndex, setCenterIndex] = useState(0);
 
   // Touch handling refs
   const touchStartYRef = useRef(0);
@@ -81,24 +75,13 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
 
   const n = projects.length;
 
-  // FIX: Set initial state on mount
-  useEffect(() => {
-    if (mounted && projects.length > 0) {
-      // Refs are already initialized to 0.5, just set the React state
-      setCenterIndex(0);
-      setScrollOffset(0.5);
-    }
-  }, [mounted, projects.length]);
-
-  // FIX: Snap with strict precision to prevent drift
+  // Snap to nearest project
   const snapToNearestProject = () => {
     const projectStep = 1 / projects.length;
-    const currentIndex = Math.round(currentProjectIndexRef.current);
-    
-    // Force exact integer index - this prevents drift
-    currentProjectIndexRef.current = currentIndex;
-    // Calculate exact offset from integer index using baseOffset
-    targetOffsetRef.current = baseOffsetRef.current + (currentIndex * projectStep);
+    const currentIndex = Math.round(targetOffsetRef.current / projectStep);
+    const targetIndex = currentIndex;
+    targetOffsetRef.current = targetIndex * projectStep;
+    currentProjectIndexRef.current = targetIndex;
     isSnappingRef.current = true;
   };
 
@@ -128,24 +111,22 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
         const direction = scrollAccumulator > 0 ? 1 : -1;
         const projectStep = 1 / projects.length;
         
-        // FIX: Update index first, then calculate offset from index
-        currentProjectIndexRef.current = normalizeIndex(
-          currentProjectIndexRef.current + direction
-        );
-        // Use baseOffset to maintain the fractional positioning
-        targetOffsetRef.current = baseOffsetRef.current + (currentProjectIndexRef.current * projectStep);
+        // Move to next/prev project
+        currentProjectIndexRef.current += direction;
+        targetOffsetRef.current = currentProjectIndexRef.current * projectStep;
         
         scrollAccumulator = 0;
         isSnappingRef.current = false;
       }
       
       setIsScrolling(true);
-      setHasMouseMoved(false);
+      setHasMouseMoved(false); // Reset mouse movement on scroll
       clearTimeout(scrollTimeout);
       scrollTimeout = setTimeout(() => {
         if (!isSnappingRef.current) {
           snapToNearestProject();
         }
+        // Delay the isScrolling state change slightly to prevent flicker
         setTimeout(() => setIsScrolling(false), 50);
       }, 150);
     };
@@ -157,42 +138,13 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
         const speed = isSnappingRef.current ? 0.15 : 0.12;
         currentOffsetRef.current += diff * speed;
 
-        // FIX: When snapped, lock to exact target value
-        if (isSnappingRef.current && Math.abs(diff) < 0.0001) {
+        // Stop snapping when close enough
+        if (isSnappingRef.current && Math.abs(diff) < 0.001) {
           currentOffsetRef.current = targetOffsetRef.current;
           isSnappingRef.current = false;
-          
-          // Recalculate index from exact offset to maintain precision
-          const projectStep = 1 / n;
-          currentProjectIndexRef.current = Math.round((currentOffsetRef.current - baseOffsetRef.current) / projectStep);
         }
 
-        // IMPROVED: Calculate normalized scroll with higher precision
-        const normalizedScroll = ((currentOffsetRef.current % 1) + 1) % 1;
-        setScrollOffset(normalizedScroll);
-        
-        // IMPROVED: Find center project with epsilon tolerance
-        let closestIndex = 0;
-        let minDistance = Infinity;
-        const epsilon = 0.01;
-        
-        for (let i = 0; i < n; i++) {
-          const projectOffset = (normalizedScroll + (i / n)) % 1;
-          const normalizedOffset = projectOffset < 0 ? projectOffset + 1 : projectOffset;
-          
-          // Distance from exact center (0.5)
-          const distanceFromCenter = Math.abs(normalizedOffset - 0.5);
-          
-          if (distanceFromCenter < minDistance) {
-            minDistance = distanceFromCenter;
-            closestIndex = i;
-          }
-        }
-        
-        // Only update if truly centered (with epsilon tolerance)
-        if (minDistance < epsilon) {
-          setCenterIndex(closestIndex);
-        }
+        setScrollOffset((currentOffsetRef.current % 1 + 1) % 1);
       }
       animationFrameRef.current = requestAnimationFrame(animate);
     };
@@ -205,7 +157,7 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
       window.removeEventListener("wheel", handleWheel);
       clearTimeout(scrollTimeout);
     };
-  }, [projects.length, n]);
+  }, [projects.length]);
 
   // Touch handling for iPad Pro with snap
   useEffect(() => {
@@ -231,23 +183,22 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
       
       touchScrollAccumulator += deltaY;
       
+      // Threshold for moving to next project
       const threshold = 50;
       
       if (Math.abs(touchScrollAccumulator) > threshold) {
         const direction = touchScrollAccumulator > 0 ? 1 : -1;
         const projectStep = 1 / projects.length;
         
-        currentProjectIndexRef.current = normalizeIndex(
-          currentProjectIndexRef.current + direction
-        );
-        targetOffsetRef.current = baseOffsetRef.current + (currentProjectIndexRef.current * projectStep);
+        currentProjectIndexRef.current += direction;
+        targetOffsetRef.current = currentProjectIndexRef.current * projectStep;
         
         touchScrollAccumulator = 0;
         isSnappingRef.current = false;
       }
       
       setIsScrolling(true);
-      setHasMouseMoved(false);
+      setHasMouseMoved(false); // Reset mouse movement on touch
       clearTimeout(touchTimeout);
       touchTimeout = setTimeout(() => {
         if (!isSnappingRef.current) {
@@ -290,14 +241,12 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
         const direction = e.key === "ArrowDown" ? -1 : 1;
         const projectStep = 1 / projects.length;
         
-        currentProjectIndexRef.current = normalizeIndex(
-          currentProjectIndexRef.current + direction
-        );
-        targetOffsetRef.current = baseOffsetRef.current + (currentProjectIndexRef.current * projectStep);
+        currentProjectIndexRef.current += direction;
+        targetOffsetRef.current = currentProjectIndexRef.current * projectStep;
         isSnappingRef.current = false;
         
         setIsScrolling(true);
-        setHasMouseMoved(false);
+        setHasMouseMoved(false); // Reset mouse movement on keyboard
         clearTimeout(scrollTimeoutRef.current);
         scrollTimeoutRef.current = setTimeout(() => {
           setIsScrolling(false);
@@ -308,15 +257,13 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
         e.preventDefault();
         const direction = e.key === "PageDown" ? -1 : 1;
         const projectStep = 1 / projects.length;
-
-        currentProjectIndexRef.current = normalizeIndex(
-          currentProjectIndexRef.current + direction * 3
-        );
-        targetOffsetRef.current = baseOffsetRef.current + (currentProjectIndexRef.current * projectStep);
+        
+        currentProjectIndexRef.current += direction * 3;
+        targetOffsetRef.current = currentProjectIndexRef.current * projectStep;
         isSnappingRef.current = false;
         
         setIsScrolling(true);
-        setHasMouseMoved(false);
+        setHasMouseMoved(false); // Reset mouse movement on keyboard
         clearTimeout(scrollTimeoutRef.current);
         scrollTimeoutRef.current = setTimeout(() => {
           setIsScrolling(false);
@@ -348,17 +295,15 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
         const direction = scrollAccumulator > 0 ? 1 : -1;
         const projectStep = 1 / projects.length;
         
-        currentProjectIndexRef.current = normalizeIndex(
-          currentProjectIndexRef.current + direction
-        );
-        targetOffsetRef.current = baseOffsetRef.current + (currentProjectIndexRef.current * projectStep);
+        currentProjectIndexRef.current += direction;
+        targetOffsetRef.current = currentProjectIndexRef.current * projectStep;
         
         scrollAccumulator = 0;
         isSnappingRef.current = false;
       }
       
       setIsScrolling(true);
-      setHasMouseMoved(false);
+      setHasMouseMoved(false); // Reset mouse movement on scrollbar
       clearTimeout(scrollbarTimeout);
       scrollbarTimeout = setTimeout(() => {
         if (!isSnappingRef.current) {
@@ -403,11 +348,9 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
     const arcEndAngle = Math.PI * 0.5;
     const angle = arcStartAngle + (arcEndAngle - arcStartAngle) * normalizedOffset;
 
-    // Arc center at exact screen center
     const centerX = windowSize.width * 0.09;
     const centerY = windowSize.height / 2;
-    
-    // Calculate position on arc
+
     const x = centerX + Math.cos(angle) * arcRadius;
     const y = centerY + Math.sin(angle) * arcRadius;
 
@@ -415,10 +358,8 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
     const opacity = Math.max(0.2, 1 - (distanceFromCenter * 1.5));
     const scale = Math.max(0.5, 1 - (distanceFromCenter * 0.8));
     
-    // Precise center detection
-    const isCenter = index === centerIndex;
-    
-    // Smooth rotation based on position
+    const centerThreshold = Math.min(0.05, 0.5 / total);
+    const isCenter = distanceFromCenter < centerThreshold;
     const rotation = isCenter ? 0 : (normalizedOffset - 0.5) * 95;
     
     return { x, y, opacity, scale, normalizedOffset, isCenter, rotation };
@@ -560,7 +501,7 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
               >
                 <div 
                   onClick={isCenter ? () => openProject(project) : undefined}
-                  className={`${isCenter ? 'bg-transparent cursor-pointer py-4' : 'bg-transparent'} w-75 h-20 rounded-xl transition-all flex items-center cursor-arrow select-none justify-start px-4  relative group`}>
+                  className={`${isCenter ? 'bg-transparent cursor-pointer py-4' : 'bg-transparent py-20'} w-75 h-20 rounded-xl transition-all flex items-center cursor-arrow select-none justify-start px-4  relative group`}>
                   <div>
                     <p className={`${isCenter ? 'text-white IBMbold text-lg' : 'text-gray-300 text-sm'}  IBMregular transition-colors leading-none`}>
                       {project.projectName}
@@ -584,7 +525,7 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
             );
           })}
 
-          {/* Centered scroll instructions */}
+          {/* Centered scroll instructions - only show when mouse has moved, hovering non-center, not scrolling, and not hovering center */}
            <div 
             className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none transition-opacity duration-300 ${
               hasMouseMoved && isHoveringNonCenter && !isScrolling && !isHoveringCenter ? 'opacity-100' : 'opacity-0'
