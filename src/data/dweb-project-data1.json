@@ -8,7 +8,7 @@
     "artists": [
       {
         "name": "Grace Adu-Boahen",
-        "bio": "Grace Adu-Boahen is a multidisciplinary creative, researcher, and founder of Mothership Media Collective, a platform dedicated to preserving the history of the Black diaspora. The daughter of Ghanaian Immigrant parents, Grace was raised in PG County, MD, surrounded by Black elders and leadership. Committed to culture, family, legacy, and community. Her work explores how everyday people document their lives and family history, and how we can use innovative technology to make sure our stories aren't stolen, erased, or owned by anyone else or a corporation. With love for diasporic history and digital ownership, Grace is building tools like The Etherdrive to protect the voice of the past, present, and future."
+        "bio:": "Grace Adu-Boahen is a multidisciplinary creative, researcher, and founder of Mothership Media Collective, a platform dedicated to preserving the history of the Black diaspora. The daughter of Ghanaian Immigrant parents, Grace was raised in PG County, MD, surrounded by Black elders and leadership. Committed to culture, family, legacy, and community. Her work explores how everyday people document their lives and family history, and how we can use innovative technology to make sure our stories aren't stolen, erased, or owned by anyone else or a corporation. With love for diasporic history and digital ownership, Grace is building tools like The Etherdrive to protect the voice of the past, present, and future."
       }
     ],
     "videoLink": "https://www.youtube.com/watch?v=LYD6PrC1ggs"
@@ -170,25 +170,21 @@
     "artists": [
       {
         "name": "Myanmar Internet Project Contributors",
-        "bio": "The Myanmar Internet Project was established in 2022 by a collective of researchers, practitioners and advocates with years of experience tracking developments in the Myanmar digital space."
+        "bio:": "The Myanmar Internet Project was established in 2022 by a collective of researchers, practitioners and advocates with years of experience tracking developments in the Myanmar digital space."
       }
     ],
     "videoLink": "https://www.youtube.com/watch?v=wjG3oSw9eAI&t=2396s"
   },
   {
     "projectName": "Digital Memory Keepers: Decentralized Archiving of Zapotec Biocultural Knowledge",
-    "artistName": "Kiado Cruz and SURCO",
+    "artistName": "SURCO",
     "projectDescription": "Servicios Universitarios y Redes de Conocimientos en Oaxaca’s project collaborates with Zapotec communities in Oaxaca to document and preserve traditional agricultural practices, environmental vocabulary, and oral histories. With a focus on indigenous data sovereignty, the project will deploy decentralized storage solutions to safeguard biocultural knowledge while maintaining community control over digital heritage. By integrating decentralized technologies, Digital Memory Keepers will create a bilingual archival system accessible to Zapotec speakers and the broader public.",
     "coverImage": "digital-memory-keepers.webp",
     "website": "https://surcooaxaca.org/",
     "artists": [
       {
-        "name": "Kiado Cruz",
-        "bio": "Kiado Cruz is a distinguished community organizer, communication technology innovator, and Indigenous scholar hailing from the Zapotec community of Yagavila in the Rincón de la Sierra Norte of Oaxaca. Rooted in the Sierra, alongside his ancestors, Kiado’s family continues to reside there, cultivating the fields that surround them. Drawing upon the wealth of knowledge from his community and beyond, Kiado endeavors to reflect, motivate, and explore alternative avenues for regenerating culture through communication. In recent years, Kiado has made meaningful contributions across various sectors, including civil organizations, alternative and independent media, and public institutions. Through these diverse experiences, he has gleaned insights into the democratization of expression and the creation of novel, expansive relationships, fostering the hope that society can forge new and autonomous ways of life. As a Zapotec communicator, activist, and social researcher affiliated with the Xidza People, Kiado co-founded Surco A C, an organization based in the city of Oaxaca. His dedicated work centers around crucial themes such as access to information, open knowledge technologies, and community education. Presently, Kiado is actively engaged in the INDIGITAL initiative, a collaborative effort focused on ensuring access to information in indigenous languages. This initiative represents a significant stride toward the appropriation of digital rights by the Zapotec peoples of Oaxaca, situated in southern Mexico. Kiado Cruz stands as a testament to his unwavering commitment to fostering positive change and empowering communities through his work in communication and technology."
-      },
-      {
         "name": "SURCO",
-         "bio": "Servicios Universitarios y Redes de Conocimientos en Oaxaca (SURCO) is a non-profit organization that seeks to connect diverse community, collective and academic processes in the fields of education, communication, climate change, sustainability and ICT's and linguistic justice with the objective of building networks of action and knowledge in the face of the realities that interact / intersect between Oaxaca and the rest of the world."
+        "bio:": "Servicios Universitarios y Redes de Conocimientos en Oaxaca"
       }
     ],
     "videoLink": "https://www.youtube.com/watch?v=wjG3oSw9eAI&t=1732s"
@@ -202,7 +198,7 @@
     "artists": [
       {
         "name": "Claire Jervert",
-        "bio": "Claire Jervert is an multidisciplinary artist--investigating the evolving boundaries between humanity, technology, and identity using immersive technologies such as AI, VR, and AR, and traditional materials. Her work has been exhibited in museums and galleries throughout the United States and internationally, including: The Museum of the Moving Image, Lincoln Center, New York; Annka Kultys Gallery, London, UK; Streaming Museum and World Council of Peoples for the United Nations, New York; International Symposium of Electronic Art, Hong Kong; Art Basel/Miami Design, Miami, FL; MTV Momentum Technology Videos Film Festival, Institute of Women and Art, Rutgers University, NJ; AR (Augmented Reality) Intervention, Thin Air Gallery, Bushwick, NY; and Sirve Verse, La Paternal Project Space, Buenos Aires, AR. She is a former member of the Stevens Institute of Technology Advisory Committee on Art and Technology who has received awards from the MidAtlantic Arts Foundation, Atlantic Center for the Arts, and Bronx Museum.",
+        "bio:": "Claire Jervert is an multidisciplinary artist--investigating the evolving boundaries between humanity, technology, and identity using immersive technologies such as AI, VR, and AR, and traditional materials. Her work has been exhibited in museums and galleries throughout the United States and internationally, including: The Museum of the Moving Image, Lincoln Center, New York; Annka Kultys Gallery, London, UK; Streaming Museum and World Council of Peoples for the United Nations, New York; International Symposium of Electronic Art, Hong Kong; Art Basel/Miami Design, Miami, FL; MTV Momentum Technology Videos Film Festival, Institute of Women and Art, Rutgers University, NJ; AR (Augmented Reality) Intervention, Thin Air Gallery, Bushwick, NY; and Sirve Verse, La Paternal Project Space, Buenos Aires, AR. She is a former member of the Stevens Institute of Technology Advisory Committee on Art and Technology who has received awards from the MidAtlantic Arts Foundation, Atlantic Center for the Arts, and Bronx Museum.",
         "link": "https://www.clairejervert.com/"
       }
     ],
@@ -217,7 +213,7 @@
     "artists": [
       {
         "name": "Fady Bello",
-        "bio": "Brand & communication strategist working across African markets, focusing on storytelling, decentralized technologies, and tech-for-good initiatives. Fady designs content, education, and brand systems that make complex technologies accessible, culturally relevant, and impact-driven, with a strong emphasis on African ecosystems and futures.",
+        "bio:": "Brand & communication strategist working across African markets, focusing on storytelling, decentralized technologies, and tech-for-good initiatives. Fady designs content, education, and brand systems that make complex technologies accessible, culturally relevant, and impact-driven, with a strong emphasis on African ecosystems and futures.",
         "link": "https://bento.me/hellofady"
       }
     ],
