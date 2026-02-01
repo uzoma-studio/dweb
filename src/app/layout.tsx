@@ -3,7 +3,7 @@ import "./globals.css";
 import { TransitionProvider } from '../util/TransitionProvider';
 
 export const metadata: Metadata = {
-  title: "Dweb for Creators",
+  title: "Dweb for Creators 2025",
   description: "Decentralized Web (DWeb) for Creators is an 8-week online course that empowers artists, designers, archivists, gallerists, curators, and others with the knowledge and tools necessary for exploring the decentralized web.",
    icons: {
     icon: "/favicon.svg",

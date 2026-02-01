@@ -62,6 +62,8 @@ export default function SelectedProjectModal({ project, onClose, projects = [] }
 
   const videoId = activeProject.videoLink ? getYouTubeId(activeProject.videoLink) : null;
 
+  // Irrelevant comment to allow deploy pass v2
+
   return (
     <AnimatePresence mode="wait">
       {!isClosing && (
@@ -93,25 +95,13 @@ export default function SelectedProjectModal({ project, onClose, projects = [] }
                     <MdArrowForwardIos className="mr-[2px]" />
                   </button>
                 </div>
-  
-           {/* CLOSE BUTTON */}
+            {/* CLOSE BUTTON */}
             <button
               onClick={handleClose}
-              className="
-                fixed top-6 right-8
-                cursor-pointer
-                flex items-center justify-center
-                w-6 h-6 rounded-full
-                bg-black
-                transition-colors duration-200
-                hover:bg-white
-                hover:border-black hover:border
-                group
-              "
+              className="fixed top-6 right-8 cursor-pointer flex items-center justify-center w-6 h-6 rounded-full bg-black transition-all"
             >
-              <MdClose className="text-white text-xl group-hover:text-black transition-colors duration-200" />
+              <MdClose className="text-white text-xl" />
             </button>
-
 
             {/* HEADER WITH NAVIGATION */}
             <div className="flex items-center justify-between lg:pt-2 pt-6">
