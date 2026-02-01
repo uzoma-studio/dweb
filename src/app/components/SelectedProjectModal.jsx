@@ -182,9 +182,9 @@ export default function SelectedProjectModal({ project, onClose, projects = [] }
                     <Image
                       src={`/projectimages/${activeProject.coverImage}`}
                       alt={activeProject.projectName}
-                      width={200}
-                      height={200}
-                      className="rounded-lg w-full mt-6 mb-2  object-cover"
+                      width={500}
+                      height={500}
+                      className="rounded-lg mt-6 mb-2  object-cover"
                     />
                   )}
                 {videoId && (
