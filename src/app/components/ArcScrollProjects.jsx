@@ -19,8 +19,8 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
   const [isHoveringCenter, setIsHoveringCenter] = useState(false);
   const [isHoveringNonCenter, setIsHoveringNonCenter] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
-  const [hasMouseMoved, setHasMouseMoved] = useState(false);
   const scrollTimeoutRef = useRef(null);
+  const hoverStartedWhileScrollingRef = useRef(false);
 
   const targetOffsetRef = useRef(0.5); 
   const currentOffsetRef = useRef(0.5); 
@@ -140,7 +140,6 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
       }
       
       setIsScrolling(true);
-      setHasMouseMoved(false);
       clearTimeout(scrollTimeout);
       scrollTimeout = setTimeout(() => {
         if (!isSnappingRef.current) {
@@ -247,7 +246,6 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
       }
       
       setIsScrolling(true);
-      setHasMouseMoved(false);
       clearTimeout(touchTimeout);
       touchTimeout = setTimeout(() => {
         if (!isSnappingRef.current) {
@@ -297,7 +295,6 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
         isSnappingRef.current = false;
         
         setIsScrolling(true);
-        setHasMouseMoved(false);
         clearTimeout(scrollTimeoutRef.current);
         scrollTimeoutRef.current = setTimeout(() => {
           setIsScrolling(false);
@@ -316,7 +313,6 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
         isSnappingRef.current = false;
         
         setIsScrolling(true);
-        setHasMouseMoved(false);
         clearTimeout(scrollTimeoutRef.current);
         scrollTimeoutRef.current = setTimeout(() => {
           setIsScrolling(false);
@@ -358,7 +354,6 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
       }
       
       setIsScrolling(true);
-      setHasMouseMoved(false);
       clearTimeout(scrollbarTimeout);
       scrollbarTimeout = setTimeout(() => {
         if (!isSnappingRef.current) {
@@ -378,18 +373,6 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
   useEffect(() => {
     isPausedRef.current = !!selectedProject;
   }, [selectedProject]);
-
-  // Track mouse movement
-  useEffect(() => {
-    if (windowSize.width < 1280) return;
-
-    const handleMouseMove = () => {
-      setHasMouseMoved(true);
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [windowSize.width]);
 
   const getProjectPosition = (index) => {
     if (!mounted) return { x: 0, y: 0, opacity: 0, scale: 0, normalizedOffset: 0, isCenter: false, rotation: 0 };
@@ -549,6 +532,8 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
                     setIsHoveringCenter(true);
                     setIsHoveringNonCenter(false);
                   } else {
+                    // Track if hover started while scrolling
+                    hoverStartedWhileScrollingRef.current = isScrolling;
                     setIsHoveringNonCenter(true);
                     setIsHoveringCenter(false);
                   }
@@ -556,6 +541,7 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
                 onMouseLeave={() => {
                   setIsHoveringCenter(false);
                   setIsHoveringNonCenter(false);
+                  hoverStartedWhileScrollingRef.current = false;
                 }}
               >
                 <div 
@@ -584,10 +570,10 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
             );
           })}
 
-          {/* Centered scroll instructions */}
+          {/* Centered scroll instructions - ONLY show when hover started AFTER scrolling stopped */}
            <div 
             className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none transition-opacity duration-300 ${
-              hasMouseMoved && isHoveringNonCenter && !isScrolling && !isHoveringCenter ? 'opacity-100' : 'opacity-0'
+              isHoveringNonCenter && !isScrolling && !hoverStartedWhileScrollingRef.current ? 'opacity-100' : 'opacity-0'
             }`}
           >
             <div className="flex items-center gap-2 border border-white p-4 rounded-lg text-white/50 ml-26">
