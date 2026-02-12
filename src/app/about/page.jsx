@@ -62,11 +62,12 @@ export default function AboutPage() {
             transition={{ duration: 1 }}
             className="flex gap-8 justify-start items-center z-10 pt-8">
             <div>
-               <Image src="/partners/FFDW.png" alt="ffdw" width={160} height={160}/>
+               <Image src="/partners/FFDW.png" alt="ffdw" width={160} height={160} className="object-cover"/>
+               
             </div>
              
              <div>
-                <Image src="/partners/techsoup.png" alt="techsoup" width={160} height={160}/>
+                <Image src="/partners/TechSoup.png" alt="techsoup" width={160} height={160}   className="object-cover"/>
             </div>
 
           </motion.div>
