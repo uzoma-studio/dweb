@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import Header from "../components/Header";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function AboutPage() {
   return (
@@ -22,12 +23,11 @@ export default function AboutPage() {
             DWeb for Creators
           </motion.h1>
 
-            <motion.p
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 1 }}
-            className="text-sm Bodytext IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-2"
-          >
+            className="text-sm Bodytext IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-2">
            <Link  href="https://dweb.grayarea.org/" target="_blank" className="Aunderline IBMmedium">Dweb for Creators</Link> is an 8-week online course that empowers artists, designers, archivists, gallerists, curators, and others with the knowledge and tools necessary for exploring the decentralized web. Participants engage with technologies like blockchain and mesh networks; examine case studies in curation, publishing, data sovereignty, and community building; and apply decolonial approaches to world building as they envision the future of DWeb technologies. The 2025 edition of the course culminated in a public salon where students presented their research, sketches, and projects developed during the course.
           </motion.p>
           <motion.p
@@ -46,20 +46,34 @@ export default function AboutPage() {
             DWeb for Creators is made possible by the support of <a className="Aunderline" target="_blank" href="https://ffdweb.org/">Filecoin Foundation for the Decentralized Web ↗</a>
           </motion.p>
 
+
          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 1 }}
-            className="text-sm Bodytext pt-2 IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-0"
-          >
+            className="text-sm Bodytext pt-2 IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-0">
           
               This website was created by <Link className="Aunderline IBMmedium" href="https://uzoma.studio/" target="_blank">uzoma.studio ↗</Link>
         </motion.p>
 
+         <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            className="flex gap-8 justify-start items-center z-10 pt-8">
+            <div>
+               <Image src="/partners/FFDW.png" alt="ffdw" width={160} height={160}/>
+            </div>
+             
+             <div>
+                <Image src="/partners/techsoup.png" alt="techsoup" width={160} height={160}/>
+            </div>
+
+          </motion.div>
+
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="inline-block mt-10"
-        >
+          className="inline-block mt-10">
           <Link
             href="/projects"
            className="lg:px-8 px-4 py-3 IBMregular bg-white/5 backdrop-blur-sm border border-white text-white font-semibold rounded-lg cursor-pointer hover:bg-white/10 transition"
@@ -67,6 +81,7 @@ export default function AboutPage() {
             Explore Projects
           </Link>
         </motion.div>
+
       </motion.div>
     </div>
   );
