@@ -57,13 +57,13 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 1 }}
-            className=" lg:text-sm text-base lg:pr-10 leading-5 IBMregular text-white max-w-4xl z-10 text-left  mb-2">
+            className=" text-sm lg:pr-10 leading-5 IBMregular text-white max-w-4xl z-10 text-left  mb-2">
            Explore research, sketches, and projects developed in DWeb for Creators, Gray Area’s online education program that empowers artists, designers, archivists, gallerists, curators, and others with the knowledge and tools necessary for building and shaping the decentralized web. Program participants engage with technologies like blockchain and mesh networks; examine case studies in curation, publishing, data sovereignty, and community building; and apply decolonial approaches to world building as they envision the future of DWeb technologies.
           </motion.p>
    
       
             
-             <div className="hidden lg:flex items-center justify-start py-6 gap-8">
+             <div className="flex items-center justify-start py-6 gap-8">
                 <motion.button
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -71,7 +71,7 @@ export default function Home() {
                   whileTap={{ scale: 0.95 }}
                   transition={{ type: "spring", stiffness: 200, duration: 1 }}
                   onClick={handleExploreClick}
-                  className="lg:px-8 px-4 py-3 md:text-base text-sm IBMmedium bg-white/5 backdrop-blur-sm border border-white text-white rounded-lg cursor-pointer hover:bg-white/10 transition"
+                  className="lg:px-8 px-4 py-3 text-base lg:text-sm IBMmedium bg-white/5 backdrop-blur-sm border border-white text-white rounded-lg cursor-pointer hover:bg-white/10 transition"
                 >
                   View Projects
                 </motion.button>
@@ -79,17 +79,11 @@ export default function Home() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.3, duration: 1 }}
-                    className=" text-sm text-white max-w-4xl z-10 text-left leading-relaxed mb-2">
+                    className=" lg:text-sm text-base text-white max-w-4xl z-10 text-left leading-relaxed mb-2">
                   <Link  href="/about"  className="Aunderline IBMmedium">Learn More</Link>
                 </motion.p>
               </div>
-               <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.3, duration: 1 }}
-                    className="lg:hidden text-base text-white max-w-4xl z-10 text-left leading-relaxed mt-2">
-                  <Link  href="/about"  className="Aunderline IBMmedium">Learn More</Link>
-                </motion.p>
+            
        </motion.div>
 
         {/* Right Globe */}
@@ -126,24 +120,13 @@ export default function Home() {
             transition={{ duration: 0.5 }}
           >
           {/* Left side */}
-          <div className="w-1/2 flex items-center justify-start md:px-10 px-6 py-4">
+          <div className="w-100 flex items-center justify-start md:px-10 px-6 py-4">
             <h1 className="md:text-xl text-base text-white IBMbold leading-none">
              Student Project Gallery
             </h1>
           </div>
 
-          {/* Right side */}
-        <div className="w-1/2 lg:hidden flex items-center justify-end lg:px-8 px-6 py-4">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 200 }}
-              onClick={handleExploreClick}
-              className="lg:px-8 px-4 py-3 md:text-base text-sm IBMmedium bg-white/5 backdrop-blur-sm border border-white text-white rounded-lg cursor-pointer hover:bg-white/10 transition"
-            >
-              View Projects
-            </motion.button>
-          </div>
+     
        </motion.footer>
     </div>
   );
