@@ -55,7 +55,7 @@ export default function Header() {
               <>
                 
 
-                <Link
+              {/* <Link
                   href="/about"
                   className="flex items-center IBMregular justify-center px-2 sm:px-4 py-2 lg:text-sm text-xs text-white hover:bg-white/10 transition"
                 >
@@ -65,7 +65,7 @@ export default function Header() {
                     <MdOutlineCircle className="pr-1" />
                   )}
                   <span>About</span>
-                </Link>
+                </Link> */} 
               </>
             
             )}

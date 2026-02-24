@@ -28,7 +28,7 @@ export default function AboutPage() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 1 }}
             className="text-sm Bodytext IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-2">
-           <Link  href="https://dweb.grayarea.org/" target="_blank" className="Aunderline IBMmedium">Dweb for Creators</Link> is an 8-week online course that empowers artists, designers, archivists, gallerists, curators, and others with the knowledge and tools necessary for exploring the decentralized web. Participants engage with technologies like blockchain and mesh networks; examine case studies in curation, publishing, data sovereignty, and community building; and apply decolonial approaches to world building as they envision the future of DWeb technologies. The 2025 edition of the course culminated in a public salon where students presented their research, sketches, and projects developed during the course.
+           <Link  href="https://dweb.grayarea.org/" target="_blank" className="Aunderline IBMmedium">Dweb for Creators</Link> is an 8-week online course that empowers artists, designers, archivists, gallerists, curators, and others with the knowledge and tools necessary for exploring the decentralized web.
           </motion.p>
           <motion.p
            initial={{ opacity: 0 }}
@@ -43,7 +43,8 @@ export default function AboutPage() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 1 }}
             className="text-sm Bodytext pt-2 IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-0"> 
-            DWeb for Creators is made possible by the support of <a className="Aunderline" target="_blank" href="https://ffdweb.org/">Filecoin Foundation for the Decentralized Web ↗</a>
+            DWeb for Creators is made possible by the support of  <a className="Aunderline" target="_blank" href="https://ffdweb.org/">Filecoin Foundation for the Decentralized Web ↗</a>, <a className="Aunderline" target="_blank" href="https://techsoup.org">Tech Soup ↗</a>, and <a className="Aunderline" target="_blank" href="https://cciarts.org/index.html">Center for Cultural Innovation ↗</a>
+            
           </motion.p>
 
 
@@ -54,7 +55,7 @@ export default function AboutPage() {
             className="text-sm Bodytext pt-2 IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-0">
           
               This website was created by <Link className="Aunderline IBMmedium" href="https://uzoma.studio/" target="_blank">uzoma.studio ↗</Link>
-        </motion.p>
+          </motion.p>
 
          <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -79,7 +80,7 @@ export default function AboutPage() {
             href="/projects"
            className="lg:px-8 px-4 py-3 IBMregular bg-white/5 backdrop-blur-sm border border-white text-white font-semibold rounded-lg cursor-pointer hover:bg-white/10 transition"
           >
-            Explore Projects
+            View Projects
           </Link>
         </motion.div>
 
