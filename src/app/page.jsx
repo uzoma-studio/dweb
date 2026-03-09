@@ -60,8 +60,6 @@ export default function Home() {
             className=" text-sm lg:pr-10 leading-5 IBMregular text-white max-w-4xl z-10 text-left  mb-2">
            Explore research, sketches, and projects developed in DWeb for Creators, Gray Area’s online education program that empowers artists, designers, archivists, gallerists, curators, and others with the knowledge and tools necessary for building and shaping the decentralized web. Program participants engage with technologies like blockchain and mesh networks; examine case studies in curation, publishing, data sovereignty, and community building; and apply decolonial approaches to world building as they envision the future of DWeb technologies.
           </motion.p>
-   
-      
             
              <div className="flex items-center justify-start py-6 gap-8">
                 <motion.button
