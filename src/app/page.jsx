@@ -79,7 +79,7 @@ export default function Home() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.3, duration: 1 }}
-                    className=" lg:text-sm text-base text-white max-w-4xl z-10 text-left leading-relaxed mb-2">
+                    className=" lg:text-sm text-base text-white max-w-4xl z-10 text-left leading-relaxed">
                   <Link  href="/about"  className="Aunderline IBMmedium">Learn More</Link>
                 </motion.p>
               </div>
