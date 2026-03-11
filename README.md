@@ -1,14 +1,12 @@
 ## Dweb for Creators
 
-A website to showcase and archive the **DWeb for Creators** course — hosting key course information alongside student projects. It serves as both a resource hub for participants and a public platform highlighting program outcomes.
-
+A website to showcase and archive the DWeb for Creators course. The site will host key course information alongside student projects, serving as both a resource hub for participants and a public platform to highlight the outcomes of the program.
 
 ## Tech Stack
 
 - [Next.js](https://nextjs.org) (App Router)
 - Javascript
 - Tailwind CSS
-
 
 ## Getting Started
 
