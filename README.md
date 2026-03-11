@@ -18,12 +18,6 @@ cd dwebforcreators-website
 npm install
 ```
 
-Copy the environment variables and fill them in:
-
-```bash
-cp .env.example .env.local
-```
-
 Run the development server:
 
 ```bash
