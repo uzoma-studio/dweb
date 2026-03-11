@@ -109,7 +109,6 @@ export default function GlobeSection({ projects, openProject }) {
       blobMesh = new THREE.Mesh(geometry, material);
       scene.add(blobMesh);
     }
-  // Replace these two functions in your GlobeSection component:
 
   function createNetworkNodes() {
     const particleCount = 400;
@@ -294,7 +293,6 @@ function createConnections() {
     }
 
     function createHotspots() {
-      // Use projects prop first, fallback to projectData
       const projectsList = projects || projectData.projects || projectData;
       
       // Safety check - ensure we have valid data
@@ -430,7 +428,7 @@ function createConnections() {
 
     function onMouseClick(event) {
       if (!hotspots || !hotspots.userData || hotspots.userData.length === 0) {
-        return; // No hotspots to click
+        return; 
       }
       
       const rect = renderer.domElement.getBoundingClientRect();
@@ -452,7 +450,7 @@ function createConnections() {
 
     function checkHotspotHover() {
       if (!hotspots || !hotspots.userData || hotspots.userData.length === 0) {
-        return; // No hotspots to check
+        return; 
       }
       
       raycaster.setFromCamera(mouseVector, camera);
@@ -506,23 +504,23 @@ function createConnections() {
       tooltip.style.opacity = '1';
 
    const updateTooltipPosition = (e) => {
-  const tooltipRect = tooltip.getBoundingClientRect();
-  let left = e.clientX + 15;
-  let top = e.clientY + 15;
+    const tooltipRect = tooltip.getBoundingClientRect();
+    let left = e.clientX + 15;
+    let top = e.clientY + 15;
 
-  // Keep tooltip inside viewport horizontally
-  if (left + tooltipRect.width > window.innerWidth) {
-    left = e.clientX - tooltipRect.width - 15;
-  }
+    // Keep tooltip inside viewport horizontally
+    if (left + tooltipRect.width > window.innerWidth) {
+      left = e.clientX - tooltipRect.width - 15;
+    }
 
-  // Keep tooltip inside viewport vertically
-  if (top + tooltipRect.height > window.innerHeight) {
-    top = e.clientY - tooltipRect.height - 15;
-  }
+    // Keep tooltip inside viewport vertically
+    if (top + tooltipRect.height > window.innerHeight) {
+      top = e.clientY - tooltipRect.height - 15;
+    }
 
-  tooltip.style.left = left + 'px';
-  tooltip.style.top = top + 'px';
-};
+    tooltip.style.left = left + 'px';
+    tooltip.style.top = top + 'px';
+  };
 
 
       if (!tooltip.positionListener) {

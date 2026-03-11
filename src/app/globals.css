@@ -33,7 +33,6 @@
 }
 
 
-/* Reset */
 * {
   box-sizing: border-box;
 }
@@ -46,7 +45,6 @@ body {
   overflow-y: auto; /* Allow vertical scrolling */
 }
 
-/* Add a fixed background layer */
 body::before {
   content: '';
   position: fixed;

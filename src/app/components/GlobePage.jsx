@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from "next/navigation";
-import GlobeSection from './GlobeSection'; // adjust path
-import SelectedProjectModal from '../components/SelectedProjectModal'; // adjust path
+import GlobeSection from './GlobeSection'; 
+import SelectedProjectModal from '../components/SelectedProjectModal';
 import projectData from "@/data/dweb-project-data.json";
 
 export default function GlobePage() {
@@ -25,7 +25,6 @@ export default function GlobePage() {
 
   // Handle hotspot click - receives hotspotData from GlobeSection
   const handleHotspotClick = (hotspotData) => {
-    // Find the full project data using the hotspot ID
     const project = formattedProjects[hotspotData.id];
     if (project) {
       setSelectedProject(project);

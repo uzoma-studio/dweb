@@ -14,7 +14,7 @@ export default function AboutPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="max-w-2xl space-y-6 pt-10" >
-         <motion.h1
+          <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
@@ -43,8 +43,7 @@ export default function AboutPage() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 1 }}
             className="text-sm Bodytext pt-2 IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-0"> 
-            DWeb for Creators is made possible by the support of  <a className="Aunderline" target="_blank" href="https://ffdweb.org/">Filecoin Foundation for the Decentralized Web ↗</a>, <a className="Aunderline" target="_blank" href="https://techsoup.org">Tech Soup ↗</a>, and <a className="Aunderline" target="_blank" href="https://cciarts.org/index.html">Center for Cultural Innovation ↗</a>
-            
+            DWeb for Creators is made possible by the support of  <a className="Aunderline" target="_blank" href="https://ffdweb.org/">Filecoin Foundation for the Decentralized Web ↗</a>, <a className="Aunderline" target="_blank" href="https://techsoup.org">Tech Soup ↗</a>, and <a className="Aunderline" target="_blank" href="https://cciarts.org/index.html">Center for Cultural Innovation ↗</a>  
           </motion.p>
 
 
@@ -53,7 +52,6 @@ export default function AboutPage() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 1 }}
             className="text-sm Bodytext pt-2 IBMregular text-white max-w-4xl z-10 text-left leading-relaxed mb-0">
-          
               This website was created by <Link className="Aunderline IBMmedium" href="https://uzoma.studio/" target="_blank">uzoma.studio ↗</Link>
           </motion.p>
 
@@ -64,7 +62,6 @@ export default function AboutPage() {
             className="flex gap-8 justify-start items-center z-10 pt-8">
             <div>
                <Image src="/partners/FFDW.png" alt="ffdw" width={160} height={160} className="object-cover" unoptimized/>
-               
             </div>
              
              <div>
