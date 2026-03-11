@@ -107,8 +107,7 @@ export default function SelectedProjectModal({ project, onClose, projects = [] }
                 hover:bg-white
                 hover:border-black hover:border
                 group
-              "
-            >
+              ">
               <MdClose className="text-white text-xl group-hover:text-black transition-colors duration-200" />
             </button>
 
@@ -200,7 +199,7 @@ export default function SelectedProjectModal({ project, onClose, projects = [] }
                 )}
               </div>
 
-         <div className="lg:w-1/2 lg:pl-20">
+              <div className="lg:w-1/2 lg:pl-20">
                 <div className="border border-white rounded-4xl p-6 lg:p-8 bg-offW">
                   <p className="text-sm text-gray-400 pt-2 pb-2">
                     {activeProject.artists && activeProject.artists.length > 1 ? "Artists" : "Artist"}

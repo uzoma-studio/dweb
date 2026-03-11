@@ -9,7 +9,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import projectsData from "../../data/dweb-project-data.json";
 import SelectedProjectModal from "../components/SelectedProjectModal";
 
-// 🧩 Inner component (contains useSearchParams)
 function ProjectsInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -51,7 +50,7 @@ function ProjectsInner() {
       <Header />
 
       {/* Large screen */}
-    <div className="hidden lg:flex  medium-hide h-screen relative">
+      <div className="hidden lg:flex  medium-hide h-screen relative">
         <motion.div
           className="w-1/2 h-screen fixed left-0 z-50"
           initial={{ opacity: 0, scale: 0.8 }}
@@ -81,11 +80,10 @@ function ProjectsInner() {
       {/* Mobile layout */}
       <>
         <div className="lg:hidden h-screen medium-fix flex flex-col relative overflow-hidden">
-      
           <motion.div
             className="w-full h-full flex justify-center items-center"
             layoutId="globe-container"
-          initial={{ opacity: 0, y: -100 }}
+            initial={{ opacity: 0, y: -100 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{
               type: "spring",
@@ -109,6 +107,7 @@ function ProjectsInner() {
                 selectedProject={selectedProject}
               />
             </motion.div>
+              
               <motion.footer
                 className="lg:hidden bottom-0 left-0 w-full flex"
                 transition={{ duration: 0.5 }}>

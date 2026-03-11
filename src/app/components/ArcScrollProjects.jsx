@@ -84,7 +84,6 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
   // FIX: Set initial state on mount
   useEffect(() => {
     if (mounted && projects.length > 0) {
-      // Refs are already initialized to 0.5, just set the React state
       setCenterIndex(0);
       setScrollOffset(0.5);
     }
@@ -149,6 +148,7 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
       }, 150);
     };
 
+
     const animate = () => {
       if (!isPausedRef.current) {
         // Smooth interpolation to target
@@ -195,6 +195,7 @@ const ArcScrollProjects = ({ openProject, selectedProject }) => {
       }
       animationFrameRef.current = requestAnimationFrame(animate);
     };
+    
 
     animationFrameRef.current = requestAnimationFrame(animate);
     window.addEventListener("wheel", handleWheel, { passive: true });

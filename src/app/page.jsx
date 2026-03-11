@@ -13,16 +13,15 @@ export default function Home() {
   const { setIsTransitioning } = useTransition();
   const [isExpanding, setIsExpanding] = useState(false);
 
-      const handleExploreClick = async () => {
-      setIsExpanding(true);
-      setIsTransitioning(true);
+  const handleExploreClick = async () => {
+  setIsExpanding(true);
+  setIsTransitioning(true);
 
-        // Shorter delay to sync with the fade-out
-        setTimeout(() => {
-          router.push('/projects');
-        }, 800);
-      };
-
+    // Shorter delay to sync with the fade-out
+    setTimeout(() => {
+      router.push('/projects');
+    }, 800);
+  };
 
   return (
     <div className="fixed inset-0 flex flex-col text-white overflow-hidden">
@@ -31,7 +30,7 @@ export default function Home() {
       {/* Main Content */}
      <main className="pt-32 lg:pt-10 md:pt-22 flex flex-col md:flex-row justify-between items-center relative md:px-0 overflow-hidden">
       {/* Left Text */}
-        <motion.div 
+      <motion.div 
         className="
           md:w-[70%]
           flex flex-col
@@ -82,7 +81,7 @@ export default function Home() {
                 </motion.p>
               </div>
             
-       </motion.div>
+      </motion.div>
 
         {/* Right Globe */}
       <motion.div 
@@ -94,7 +93,7 @@ export default function Home() {
           x: isExpanding ? "0%" : "0%",
           y: isExpanding ? "-10%" : "0%",
           scale: isExpanding ? 3 : 1,
-          opacity: isExpanding ? 0 : 1, // 👈 Fade out when expanding
+          opacity: isExpanding ? 0 : 1, // Fade out when expanding
         }}
         transition={{
           type: "spring",
@@ -108,16 +107,14 @@ export default function Home() {
           <GlobeSection key="home-globe"/>
         </div>
       </motion.div>
-
       </main>
 
-      {/* Footer with text left, button right */}
+      {/* Footer with text left */}
         <motion.footer 
             className="fixed bottom-0 left-0 w-full flex"
             animate={{ opacity: isExpanding ? 0 : 1 }}
             transition={{ duration: 0.5 }}
           >
-          {/* Left side */}
           <div className="w-100 flex items-center justify-start md:px-10 px-6 py-4">
             <h1 className="md:text-xl text-base text-white IBMbold leading-none">
              Student Project Gallery
