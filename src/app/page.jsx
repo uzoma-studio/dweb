@@ -37,9 +37,7 @@ export default function Home() {
           z-10
           text-left
           lg:pl-16 px-6 lg:pr-0
-         
-          scrollbar-thin scrollbar-thumb-white/20
-        "
+          scrollbar-thin scrollbar-thumb-white/20 "
         animate={{ opacity: isExpanding ? 0 : 1 }}
         transition={{ duration: 0.5 }}>
 
